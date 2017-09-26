@@ -3,7 +3,7 @@
 
 ## 效果图
 
-![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/mtrva_logo.png)
+![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/crazydaily.gif)
 
 ## 简介
 * 知乎日报
