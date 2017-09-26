@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/color_white"
+    app:cardCornerRadius="@dimen/space_8"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/item_zhihu_news_icon"
+            android:layout_width="@dimen/space_80"
+            android:layout_height="@dimen/space_80"
+            android:layout_margin="@dimen/space_10"
+            android:transitionName="shareView"
+            tools:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:id="@+id/item_zhihu_news_title"
+            style="@style/text_16_333333"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/item_zhihu_news_icon"
+            android:layout_marginStart="@dimen/space_8"
+            android:layout_marginTop="@dimen/space_4"
+            android:layout_toEndOf="@id/item_zhihu_news_icon"
+            tools:text="我的天" />
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

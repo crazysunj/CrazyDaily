@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <com.crazysunj.cardslideview.ElasticCardView
+        android:id="@+id/banner_cv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        app:cardCornerRadius="@dimen/space_10"
+        app:cardElevation="@dimen/space_6"
+        app:ratio="0.9">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/banner_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:transitionName="shareView" />
+
+            <TextView
+                android:id="@+id/banner_title"
+                style="@style/text_16_white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@drawable/shape_bottom"
+                android:ellipsize="end"
+                android:gravity="bottom"
+                android:lines="1"
+                android:paddingBottom="@dimen/space_10"
+                android:paddingEnd="@dimen/space_20"
+                android:paddingStart="@dimen/space_20"
+                tools:text="我的天" />
+        </FrameLayout>
+
+
+    </com.crazysunj.cardslideview.ElasticCardView>
+
+
+</FrameLayout>

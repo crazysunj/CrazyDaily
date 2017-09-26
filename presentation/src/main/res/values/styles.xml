@@ -1,0 +1,82 @@
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="colorPrimary">@color/color_white</item>
+    </style>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="HomeTheme" parent="AppTheme.NoActionBar">
+        <item name="colorPrimary">@color/color_white</item>
+        <item name="colorPrimaryDark">@color/color_cccccc</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionModeOverlay">true</item>
+    </style>
+
+    <style name="AppTheme.Transitions">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+
+    <style name="text_36_white">
+        <item name="android:textSize">36sp</item>
+        <item name="android:textColor">@color/color_white</item>
+    </style>
+
+    <style name="text_16_white">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/color_white</item>
+    </style>
+
+    <style name="text_20_333333">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/color_333333</item>
+    </style>
+
+    <style name="text_16_333333">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/color_333333</item>
+    </style>
+
+    <style name="text_14_white">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/color_white</item>
+    </style>
+
+    <style name="text_14_666666">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/color_666666</item>
+    </style>
+
+    <style name="text_14_333333">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/color_333333</item>
+    </style>
+
+    <style name="text_14_489CEB">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/color_489CEB</item>
+    </style>
+
+    <style name="text_12_white">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/color_white</item>
+    </style>
+
+    <style name="text_12_cccccc">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/color_cccccc</item>
+    </style>
+</resources>

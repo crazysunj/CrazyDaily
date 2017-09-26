@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_10"
+        app:cardCornerRadius="@dimen/space_55"
+        app:cardElevation="@dimen/space_6"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/space_110">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_xihu" />
+
+            <TextView
+                android:id="@+id/item_weather_temperature"
+                style="@style/text_36_white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_50"
+                android:layout_marginTop="@dimen/space_12"
+                android:gravity="center"
+                tools:text="22 ℃" />
+
+            <TextView
+                android:id="@+id/item_weather_location"
+                style="@style/text_12_white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/item_weather_temperature"
+                android:layout_marginStart="@dimen/space_20"
+                android:layout_marginTop="@dimen/space_6"
+                android:layout_toEndOf="@id/item_weather_temperature"
+                tools:text="杭州" />
+
+            <TextView
+                android:id="@+id/item_weather_text"
+                style="@style/text_12_white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/item_weather_temperature"
+                android:layout_alignStart="@id/item_weather_location"
+                android:layout_marginBottom="@dimen/space_6"
+                tools:text="晴天" />
+
+            <TextView
+                android:id="@+id/item_weather_time"
+                style="@style/text_16_white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="@dimen/space_12"
+                android:layout_marginEnd="@dimen/space_50"
+                tools:text="16:00" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/item_weather_icon"
+        android:layout_width="@dimen/space_100"
+        android:layout_height="@dimen/space_100"
+        android:layout_gravity="end"
+        android:layout_marginEnd="@dimen/space_20"
+        android:elevation="@dimen/space_10"
+        android:scaleType="centerInside"
+        tools:src="@mipmap/ic_launcher" />
+
+</FrameLayout>

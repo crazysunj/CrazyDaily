@@ -1,0 +1,41 @@
+apply plugin: 'com.android.library'
+apply plugin: 'me.tatarka.retrolambda'
+def configs = rootProject.ext.android //android配置
+android {
+    compileSdkVersion configs.compileSdkVersion
+    buildToolsVersion configs.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion configs.minSdkVersion
+        targetSdkVersion configs.targetSdkVersion
+        versionCode configs.versionCode
+        versionName configs.versionName
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+
+    def domainDependencies = rootProject.ext.domainDependencies
+    def domainTestDependencies = rootProject.ext.domainTestDependencies
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    provided domainDependencies.MTRVA
+    provided domainDependencies.gson
+    provided domainDependencies.niceVieoPlayer
+
+    compile domainDependencies.javaxInject
+    compile domainDependencies.rxjava
+    compile domainDependencies.arrow
+    compile domainDependencies.tray
+
+    testCompile domainTestDependencies.junit
+    testCompile domainTestDependencies.mockito
+    testCompile domainTestDependencies.assertj
+}
+

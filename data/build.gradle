@@ -1,0 +1,44 @@
+apply plugin: 'com.android.library'
+apply plugin: 'me.tatarka.retrolambda'
+
+def configs = rootProject.ext.android //android配置
+android {
+    compileSdkVersion configs.compileSdkVersion
+    buildToolsVersion configs.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion configs.minSdkVersion
+        targetSdkVersion configs.targetSdkVersion
+        versionCode configs.versionCode
+        versionName configs.versionName
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+
+    def dataDependencies = rootProject.ext.dataDependencies //依赖库配置
+    def dataTestDependencies = rootProject.ext.dataTestDependencies //依赖库配置
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':domain')
+
+    provided dataDependencies.MTRVA
+    provided dataDependencies.niceVieoPlayer
+
+    compile dataDependencies.rxandroid
+    compile dataDependencies.retrofit
+    compile dataDependencies.retrofitConverterGson
+    compile dataDependencies.retrofitAdapterRxjava
+    compile dataDependencies.okhttp
+    compile dataDependencies.okhttpLoggingInterceptor
+    compile dataDependencies.dagger
+    compile dataDependencies.daggerCompiler
+    compile dataDependencies.logger
+
+    testCompile dataTestDependencies.robolectric
+}

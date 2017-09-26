@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/space_6"
+        android:paddingEnd="@dimen/space_15"
+        android:paddingStart="@dimen/space_15"
+        android:paddingTop="@dimen/space_6">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/item_neihan_avatar"
+            android:layout_width="@dimen/space_30"
+            android:layout_height="@dimen/space_30"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_launcher"
+            app:civ_border_color="@color/color_FF5C8D"
+            app:civ_border_width="@dimen/space_1" />
+
+        <TextView
+            android:id="@+id/item_neihan_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_20"
+            tools:text="我的天" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/item_neihan_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_white"
+        android:lineSpacingExtra="@dimen/space_3"
+        android:paddingBottom="@dimen/space_6"
+        android:paddingEnd="@dimen/space_15"
+        android:paddingStart="@dimen/space_15"
+        android:paddingTop="@dimen/space_6"
+        android:textSize="@dimen/sp_16"
+        tools:text="我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天" />
+
+    <com.xiao.nicevideoplayer.NiceVideoPlayer
+        android:id="@+id/item_neihan_video"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_240" />
+
+</LinearLayout>

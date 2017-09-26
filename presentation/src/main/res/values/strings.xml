@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">CrazyDaily</string>
+    <string name="appbar_behavior">com.crazysunj.crazydaily.view.behavior.AppBarLayoutOverScrollViewBehavior</string>
+    <string name="bottom_behavior">com.crazysunj.crazydaily.view.behavior.ShowHideBottomBehavior</string>
+    <string name="about_me">关于我</string>
+    <string name="about_me_des">一款程序员日常放松的App，基于Material Design + MVP-Clean + RxJava2 + Retrofit + Dagger2 + Glide + Okhttp + MTRVA + BRVAH + 其它炫酷的控件\n包含：\n\t知乎日报\n\t干货集中营\n\t天气\n\t内涵段子</string>
+    <string name="about_me_github">作者Github：</string>
+    <string name="about_me_blog">作者博客：</string>
+    <string name="about_me_feel">本项目虽然是初始阶段，但基本涵盖了开发中应该用到的方法，架构清晰，都不需要什么注释。如果你一遍看下来就看懂了，说明我成功了！项目开源就应该这样。好了，喜欢的朋友点个star关注一下我吧！后续还会持续更新的。祝你生活愉快！（上面链接可长按复制）</string>
+    <string name="about_me_github_text">https://github.com/crazysunj/</string>
+    <string name="about_me_blog_text">http://crazysunj.com/</string>
+</resources>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/color_white"
+    app:cardCornerRadius="@dimen/space_8"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/space_10"
+        android:paddingEnd="@dimen/space_20"
+        android:paddingStart="@dimen/space_20"
+        android:paddingTop="@dimen/space_10">
+
+        <TextView
+            android:id="@+id/item_gank_io_title"
+            style="@style/text_16_333333"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/space_20"
+            android:ellipsize="end"
+            android:lines="1"
+            tools:text="标题标题标题标题标题标题标题标题标题标题标题标题" />
+
+        <TextView
+            android:id="@+id/item_gank_io_author"
+            style="@style/text_14_666666"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/item_gank_io_title"
+            android:layout_marginTop="@dimen/space_6"
+            tools:text="作者" />
+
+        <TextView
+            android:id="@+id/item_gank_io_date"
+            style="@style/text_12_cccccc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/item_gank_io_author"
+            android:layout_marginTop="@dimen/space_12"
+            tools:text="发布时间" />
+
+        <ImageView
+            android:layout_width="@dimen/space_12"
+            android:layout_height="@dimen/space_12"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/ic_go" />
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

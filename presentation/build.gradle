@@ -1,0 +1,60 @@
+apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.jakewharton.butterknife'
+
+def configs = rootProject.ext.android //android配置
+android {
+    compileSdkVersion configs.compileSdkVersion
+    buildToolsVersion configs.buildToolsVersion
+    defaultConfig {
+        applicationId "com.crazysunj.crazydaily"
+        minSdkVersion configs.minSdkVersion
+        targetSdkVersion configs.targetSdkVersion
+        versionCode configs.versionCode
+        versionName configs.versionName
+        multiDexEnabled true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    dexOptions {
+        javaMaxHeapSize "4g"
+        preDexLibraries = false
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+
+    def libs = rootProject.ext.dependencies //依赖库配置
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile libs.appcompatv7
+    compile libs.recyclerviewv7
+    compile libs.cardviewv7
+    compile libs.design
+    compile libs.glide
+    compile libs.multidex
+    compile libs.butterknife
+    compile libs.MTRVA
+    compile libs.BRVAH
+    compile libs.statusbarutil
+    compile libs.pickerdialog
+    compile libs.circleimageview
+    compile libs.niceVieoPlayer
+    compile libs.cardslideview
+    annotationProcessor libs.butterknifeCompiler
+    compile project(':data')
+}
