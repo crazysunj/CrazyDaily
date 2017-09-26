@@ -3,7 +3,7 @@
 
 ## 效果图
 
-![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/crazydaily.gif)
+![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/app_crazydaily.gif)
 
 ## 简介
 * 知乎日报
