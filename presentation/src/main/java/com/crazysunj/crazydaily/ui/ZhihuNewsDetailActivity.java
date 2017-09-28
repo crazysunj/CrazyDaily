@@ -70,9 +70,8 @@ public class ZhihuNewsDetailActivity extends BaseActivity<ZhihuNewsDetailPresent
     private long mId;
     private String mIconUrl;
 
-    boolean isImageShow = false;
-    boolean isTransitionEnd = false;
-    boolean isNotTransition = false;
+    private boolean mIsImageShow = false;
+    private boolean mIsTransitionEnd = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -124,12 +123,8 @@ public class ZhihuNewsDetailActivity extends BaseActivity<ZhihuNewsDetailPresent
     @Override
     public void showContent(ZhihuNewsDetailEntity zhihuNewsDetailEntity) {
         mIconUrl = zhihuNewsDetailEntity.getImage();
-        if (isNotTransition) {
+        if (!mIsImageShow && mIsTransitionEnd) {
             Glide.with(this).load(mIconUrl).centerCrop().into(mIcon);
-        } else {
-            if (!isImageShow && isTransitionEnd) {
-                Glide.with(this).load(mIconUrl).centerCrop().into(mIcon);
-            }
         }
         mBar.setTitle(zhihuNewsDetailEntity.getTitle());
         String htmlData = HtmlUtil.createHtmlData(zhihuNewsDetailEntity);
@@ -153,9 +148,9 @@ public class ZhihuNewsDetailActivity extends BaseActivity<ZhihuNewsDetailPresent
 
             @Override
             public void onTransitionEnd(Transition transition) {
-                isTransitionEnd = true;
+                mIsTransitionEnd = true;
                 if (!TextUtils.isEmpty(mIconUrl)) {
-                    isImageShow = true;
+                    mIsImageShow = true;
                     Glide.with(ZhihuNewsDetailActivity.this).load(mIconUrl).centerCrop().into(mIcon);
                 }
             }
