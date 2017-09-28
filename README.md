@@ -11,6 +11,7 @@
 * 天气
 * 内涵段子
 
+[下载地址](https://www.pgyer.com/EbHS)
 ## License
 
 > ```
