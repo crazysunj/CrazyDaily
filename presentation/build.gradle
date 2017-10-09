@@ -55,6 +55,8 @@ dependencies {
     compile libs.circleimageview
     compile libs.niceVieoPlayer
     compile libs.cardslideview
+    debugCompile libs.debugLeakcanary
+    releaseCompile libs.releaseLeakcanary
     annotationProcessor libs.butterknifeCompiler
     compile project(':data')
 }

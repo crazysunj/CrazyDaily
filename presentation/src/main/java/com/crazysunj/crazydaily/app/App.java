@@ -27,6 +27,7 @@ import com.crazysunj.crazydaily.di.component.AppComponent;
 import com.crazysunj.crazydaily.di.component.DaggerAppComponent;
 import com.crazysunj.crazydaily.di.module.AppModule;
 import com.crazysunj.data.util.LoggerUtil;
+import com.squareup.leakcanary.LeakCanary;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -52,6 +53,10 @@ public class App extends Application {
         getAppComponent();
         ViewTarget.setTagId(R.id.glide_tag);
         LoggerUtil.init(BuildConfig.DEBUG);
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            return;
+        }
+        LeakCanary.install(this);
     }
 
     protected void attachBaseContext(Context base) {

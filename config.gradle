@@ -35,6 +35,7 @@ ext {
             niceVieoPlayer        : "v2.2",
             gson                  : "2.8.2",
             cardslideview         : "1.2.1",
+            leakcanary            : "1.5.4",
     ]
 
     dataDependencies = [
@@ -67,7 +68,9 @@ ext {
             statusbarutil      : "com.jaeger.statusbarutil:library:${dependVersion.statusbarutil}",
             circleimageview    : "de.hdodenhof:circleimageview:${dependVersion.circleimageview}",
             niceVieoPlayer     : "com.github.xiaoyanger0825:NiceVieoPlayer:${dependVersion.niceVieoPlayer}",
-            cardslideview      : "com.crazysunj:cardslideview:${dependVersion.cardslideview}"
+            cardslideview      : "com.crazysunj:cardslideview:${dependVersion.cardslideview}",
+            debugLeakcanary    : "com.squareup.leakcanary:leakcanary-android:${dependVersion.leakcanary}",
+            releaseLeakcanary  : "com.squareup.leakcanary:leakcanary-android-no-op:${dependVersion.leakcanary}",
     ]
 
     dataTestDependencies = [
