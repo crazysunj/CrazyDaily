@@ -58,6 +58,7 @@ import com.xiao.nicevideoplayer.NiceVideoPlayerManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 
@@ -190,7 +191,9 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
 
     @Override
     public void onBackPressed() {
-        if (NiceVideoPlayerManager.instance().onBackPressd()) return;
+        if (NiceVideoPlayerManager.instance().onBackPressd()) {
+            return;
+        }
         showExitDialog();
     }
 
@@ -254,6 +257,8 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
             case NeihanItemEntity.TYPE_NEIHAN:
                 SnackbarUtil.show(this, "小鸡炖蘑菇");
                 break;
+            default:
+                break;
         }
     }
 
@@ -287,7 +292,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
             if (itemViewType == NeihanItemEntity.TYPE_NEIHAN) {
                 NiceVideoPlayer niceVideoPlayer = (NiceVideoPlayer) view.findViewById(R.id.item_neihan_video);
                 if (niceVideoPlayer.isPlaying()) {
-                    new Thread(niceVideoPlayer::release).start();
+                    Executors.newSingleThreadExecutor().execute(niceVideoPlayer::release);
                 }
             }
         }

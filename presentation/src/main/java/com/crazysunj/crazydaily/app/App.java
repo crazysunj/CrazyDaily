@@ -59,6 +59,7 @@ public class App extends Application {
         LeakCanary.install(this);
     }
 
+    @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         sInstance = this;
@@ -81,9 +82,7 @@ public class App extends Application {
     public void exitApp() {
         if (mActivities != null) {
             synchronized (this) {
-                for (Activity activity : mActivities) {
-                    activity.finish();
-                }
+                mActivities.forEach(Activity::finish);
             }
         }
         android.os.Process.killProcess(android.os.Process.myPid());

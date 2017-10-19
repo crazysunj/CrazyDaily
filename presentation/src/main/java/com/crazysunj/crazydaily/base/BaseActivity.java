@@ -70,7 +70,7 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
         SnackbarUtil.show(this, msg);
     }
 
-
+    @SuppressWarnings("unchecked")
     private void onPrepare() {
         initInject();
         if (mPresenter != null) {
@@ -109,7 +109,13 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
         return new ActivityModule(this);
     }
 
+    /**
+     * @return 返回布局资源id
+     */
     protected abstract int getContentResId();
 
+    /**
+     * 注入
+     */
     protected abstract void initInject();
 }
