@@ -10,6 +10,11 @@ android {
         targetSdkVersion configs.targetSdkVersion
         versionCode configs.versionCode
         versionName configs.versionName
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath = true
+            }
+        }
     }
 
     compileOptions {
@@ -39,5 +44,5 @@ dependencies {
     compile dataDependencies.daggerCompiler
     compile dataDependencies.logger
 
-    testCompile dataTestDependencies.robolectric
+    testImplementation dataTestDependencies.robolectric
 }

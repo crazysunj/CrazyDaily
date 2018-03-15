@@ -43,6 +43,7 @@ import com.crazysunj.crazydaily.presenter.contract.HomeContract;
 import com.crazysunj.crazydaily.ui.adapter.HomeAdapter;
 import com.crazysunj.crazydaily.util.SnackbarUtil;
 import com.crazysunj.crazydaily.view.banner.BannerCardHandler;
+import com.crazysunj.crazydaily.weex.WeexActivity;
 import com.crazysunj.data.util.JsonUtil;
 import com.crazysunj.data.util.LoggerUtil;
 import com.crazysunj.domain.entity.GankioEntity;
@@ -216,10 +217,15 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
                     data.add(GankioEntity.ResultsEntity.PARAMS_ANDROID);
                     data.add(GankioEntity.ResultsEntity.PARAMS_IOS);
                     data.add(GankioEntity.ResultsEntity.PARAMS_H5);
+                    data.add(GankioEntity.ResultsEntity.PARAMS_ALL);
                     mGankioDialog = PhoneOptionsPickerDialog.newInstance(bundle, data);
                     mGankioDialog.setOnoptionsSelectListener((int options1, int option2, int options3) -> {
                         final String selectOption = data.get(options1);
                         if (selectOption.equals(options)) {
+                            return;
+                        }
+                        if (GankioEntity.ResultsEntity.PARAMS_ALL.equals(selectOption)) {
+                            WeexActivity.start(HomeActivity.this);
                             return;
                         }
                         mPresenter.getGankioList(selectOption);

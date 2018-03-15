@@ -36,6 +36,8 @@ ext {
             gson                  : "2.8.2",
             cardslideview         : "1.2.1",
             leakcanary            : "1.5.4",
+            fastjson              : "1.1.68",
+            weex                  : "0.18.0",
     ]
 
     dataDependencies = [
@@ -71,6 +73,8 @@ ext {
             cardslideview      : "com.crazysunj:cardslideview:${dependVersion.cardslideview}",
             debugLeakcanary    : "com.squareup.leakcanary:leakcanary-android:${dependVersion.leakcanary}",
             releaseLeakcanary  : "com.squareup.leakcanary:leakcanary-android-no-op:${dependVersion.leakcanary}",
+            fastjson           : "com.alibaba:fastjson:${dependVersion.fastjson}.android",
+            weex               : "com.taobao.android:weex_sdk:${dependVersion.weex}",
     ]
 
     dataTestDependencies = [

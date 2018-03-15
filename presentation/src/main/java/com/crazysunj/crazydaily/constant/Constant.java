@@ -23,4 +23,5 @@ package com.crazysunj.crazydaily.constant;
 
 public interface Constant {
     String EMPTY = "";
+    String POST = "POST";
 }

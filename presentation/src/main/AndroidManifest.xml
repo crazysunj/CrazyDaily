@@ -45,6 +45,7 @@
             android:name=".ui.AboutMeActivity"
             android:label="@string/about_me"
             android:screenOrientation="portrait" />
+        <activity android:name=".weex.WeexActivity"/>
     </application>
 
 </manifest>

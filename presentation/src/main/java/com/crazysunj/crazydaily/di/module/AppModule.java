@@ -18,6 +18,7 @@ package com.crazysunj.crazydaily.di.module;
 import android.content.Context;
 
 import com.crazysunj.crazydaily.app.App;
+import com.crazysunj.data.api.HttpHelper;
 import com.crazysunj.data.repository.gankio.GankioDataRepository;
 import com.crazysunj.data.repository.neihan.NeihanDataRepository;
 import com.crazysunj.data.repository.weather.WeatherDataRepository;
@@ -32,6 +33,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.OkHttpClient;
 
 /**
  * author: sunjian
@@ -50,6 +52,12 @@ public class AppModule {
     @Singleton
     Context provideContext() {
         return application;
+    }
+
+    @Provides
+    @Singleton
+    OkHttpClient provideOkhttpClient(HttpHelper httpHelper) {
+        return httpHelper.getOkHttpClient();
     }
 
     @Provides

@@ -27,6 +27,7 @@ import com.crazysunj.domain.repository.zhihu.ZhihuRepository;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import okhttp3.OkHttpClient;
 
 /**
  * author: sunjian
@@ -38,6 +39,8 @@ import dagger.Component;
 public interface AppComponent {
 
     Context provideContext();
+
+    OkHttpClient provideOkhttpClient();
 
     ZhihuRepository provideZhihuRepository();
 

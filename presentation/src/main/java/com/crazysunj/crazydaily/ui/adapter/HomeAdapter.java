@@ -107,6 +107,8 @@ public class HomeAdapter extends BaseAdapter<MultiTypeIdEntity, BaseViewHolder, 
             case GankioEntity.ResultsEntity.TYPE_GANK_IO - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:
                 renderFooter(helper, (ExpandCollapseFooterEntity) item);
                 break;
+            default:
+                break;
         }
     }
 

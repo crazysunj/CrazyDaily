@@ -63,6 +63,10 @@ public class HttpHelper {
         }
     }
 
+    public OkHttpClient getOkHttpClient() {
+        return mOkHttpClient;
+    }
+
     public ZhihuService getZhihuService() {
         if (mZhihuService == null) {
             synchronized (this) {

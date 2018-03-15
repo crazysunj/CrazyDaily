@@ -26,8 +26,15 @@ import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.di.component.AppComponent;
 import com.crazysunj.crazydaily.di.component.DaggerAppComponent;
 import com.crazysunj.crazydaily.di.module.AppModule;
+import com.crazysunj.crazydaily.weex.MyText;
+import com.crazysunj.crazydaily.weex.WXHttpAdapter;
+import com.crazysunj.crazydaily.weex.WXImageAdapter;
+import com.crazysunj.crazydaily.weex.WXViewPagerComponent;
 import com.crazysunj.data.util.LoggerUtil;
 import com.squareup.leakcanary.LeakCanary;
+import com.taobao.weex.InitConfig;
+import com.taobao.weex.WXSDKEngine;
+import com.taobao.weex.common.WXException;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -53,6 +60,17 @@ public class App extends Application {
         getAppComponent();
         ViewTarget.setTagId(R.id.glide_tag);
         LoggerUtil.init(BuildConfig.DEBUG);
+        InitConfig config = new InitConfig.Builder()
+                .setImgAdapter(new WXImageAdapter())
+                .setHttpAdapter(new WXHttpAdapter(mAppComponent.provideOkhttpClient()))
+                .build();
+        WXSDKEngine.initialize(this, config);
+        try {
+            WXSDKEngine.registerComponent("tabPager", WXViewPagerComponent.class);
+            WXSDKEngine.registerComponent("mytext", MyText.class);
+        } catch (WXException e) {
+            e.printStackTrace();
+        }
         if (LeakCanary.isInAnalyzerProcess(this)) {
             return;
         }

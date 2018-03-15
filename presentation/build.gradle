@@ -12,6 +12,19 @@ android {
         versionCode configs.versionCode
         versionName configs.versionName
         multiDexEnabled true
+        /**
+         * 必须加，否则64位手机无法加载so文件
+         */
+        ndk {
+            abiFilters "x86"
+            abiFilters "armeabi"
+        }
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath = true
+            }
+        }
     }
 
     compileOptions {
@@ -40,22 +53,24 @@ dependencies {
 
     def libs = rootProject.ext.dependencies //依赖库配置
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile libs.appcompatv7
-    compile libs.recyclerviewv7
-    compile libs.cardviewv7
-    compile libs.design
-    compile libs.glide
-    compile libs.multidex
-    compile libs.butterknife
-    compile libs.MTRVA
-    compile libs.BRVAH
-    compile libs.statusbarutil
-    compile libs.pickerdialog
-    compile libs.circleimageview
-    compile libs.niceVieoPlayer
-    compile libs.cardslideview
-    debugCompile libs.debugLeakcanary
-    releaseCompile libs.releaseLeakcanary
+    implementation libs.appcompatv7
+    implementation libs.recyclerviewv7
+    implementation libs.cardviewv7
+    implementation libs.design
+    implementation libs.glide
+    implementation libs.multidex
+    implementation libs.butterknife
+    implementation libs.MTRVA
+    implementation libs.BRVAH
+    implementation libs.statusbarutil
+    implementation libs.pickerdialog
+    implementation libs.circleimageview
+    implementation libs.niceVieoPlayer
+    implementation libs.cardslideview
+    implementation libs.fastjson
+    implementation libs.weex
+    debugImplementation libs.debugLeakcanary
+    releaseImplementation libs.releaseLeakcanary
     annotationProcessor libs.butterknifeCompiler
-    compile project(':data')
+    implementation project(':data')
 }
