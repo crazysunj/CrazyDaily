@@ -73,12 +73,12 @@ public class WeexActivity extends AppCompatActivity implements IWXRenderListener
 
     @Override
     public void onRenderSuccess(WXSDKInstance instance, int width, int height) {
-
+        LoggerUtil.d("onRenderSuccess ------ width:" + width + " height:" + height);
     }
 
     @Override
     public void onRefreshSuccess(WXSDKInstance instance, int width, int height) {
-
+        LoggerUtil.d("onRefreshSuccess ------ width:" + width + " height:" + height);
     }
 
     @Override

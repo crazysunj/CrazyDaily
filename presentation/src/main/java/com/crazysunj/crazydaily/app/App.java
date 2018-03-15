@@ -26,10 +26,10 @@ import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.di.component.AppComponent;
 import com.crazysunj.crazydaily.di.component.DaggerAppComponent;
 import com.crazysunj.crazydaily.di.module.AppModule;
-import com.crazysunj.crazydaily.weex.MyText;
+import com.crazysunj.crazydaily.weex.RouterModule;
 import com.crazysunj.crazydaily.weex.WXHttpAdapter;
 import com.crazysunj.crazydaily.weex.WXImageAdapter;
-import com.crazysunj.crazydaily.weex.WXViewPagerComponent;
+import com.crazysunj.crazydaily.weex.WXTabPagerComponent;
 import com.crazysunj.data.util.LoggerUtil;
 import com.squareup.leakcanary.LeakCanary;
 import com.taobao.weex.InitConfig;
@@ -66,10 +66,10 @@ public class App extends Application {
                 .build();
         WXSDKEngine.initialize(this, config);
         try {
-            WXSDKEngine.registerComponent("tabPager", WXViewPagerComponent.class);
-            WXSDKEngine.registerComponent("mytext", MyText.class);
+            WXSDKEngine.registerComponent("tabPager", WXTabPagerComponent.class);
+            WXSDKEngine.registerModule("RouterModule", RouterModule.class);
         } catch (WXException e) {
-            e.printStackTrace();
+            LoggerUtil.d(e.getMessage());
         }
         if (LeakCanary.isInAnalyzerProcess(this)) {
             return;

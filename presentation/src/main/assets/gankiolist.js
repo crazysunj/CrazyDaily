@@ -124,7 +124,7 @@ module.exports = {
     "marginBottom": "20",
     "alignItems": "center",
     "flexDirection": "row",
-    "boxShadow": "0px 5px 20px 6px #80888888",
+    "boxShadow": "0px 3px 12px 4px #80888888",
     "borderRadius": "20"
   },
   "panel2": {
@@ -137,7 +137,8 @@ module.exports = {
     "lines": 1,
     "marginLeft": "40",
     "fontSize": "46",
-    "color": "#333333"
+    "color": "#333333",
+    "textOverflow": "ellipsis"
   },
   "text2": {
     "lines": 1,
@@ -153,12 +154,31 @@ module.exports = {
     "fontSize": "26",
     "color": "#999999"
   },
-  "text4": {
-    "lines": 1,
+  "icon": {
     "marginTop": "20",
     "marginLeft": "30",
-    "fontSize": "40",
-    "color": "#333333"
+    "width": "20",
+    "height": "26"
+  },
+  "loading": {
+    "width": 750,
+    "display": "flex",
+    "MsFlexAlign": "center",
+    "WebkitAlignItems": "center",
+    "WebkitBoxAlign": "center",
+    "alignItems": "center"
+  },
+  "indicator-text": {
+    "marginBottom": "16",
+    "color": "#666666",
+    "fontSize": "42",
+    "textAlign": "center"
+  },
+  "indicator": {
+    "marginBottom": "16",
+    "height": "40",
+    "width": "40",
+    "color": "#FF4081"
   }
 }
 
@@ -183,14 +203,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 const modal = weex.requireModule('modal');
 const stream = weex.requireModule('stream');
 const GANK_IO_BASE_URL = "http://gank.io/api/random/data/";
+const gank_io_url = GANK_IO_BASE_URL + weex.config.type + "/10";
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data() {
     return {
+      loadinging: false,
       lists: []
     };
   },
@@ -206,15 +233,15 @@ const GANK_IO_BASE_URL = "http://gank.io/api/random/data/";
       return "神秘大佬 ";
     },
     itemclick: function (item, index) {
-      modal.toast({ message: '你点击了' + item.desc + ",该项是第" + (index + 1), duration: 1 });
+      weex.requireModule('RouterModule').router(item.url);
     },
     loadmore(event) {
-      modal.toast({ message: 'loadmore', duration: 1 });
       const self = this;
+      self.loadinging = true;
       setTimeout(() => {
         stream.fetch({
           method: 'GET',
-          url: GANK_IO_BASE_URL,
+          url: gank_io_url,
           type: 'json'
         }, function (ret) {
           if (!ret.ok) {
@@ -225,14 +252,13 @@ const GANK_IO_BASE_URL = "http://gank.io/api/random/data/";
               self.lists.push(ret.data.results[i]);
             }
           }
+          self.loadinging = false;
         });
       }, 600);
     }
   },
   created: function () {
     const self = this;
-    const gank_io_url = GANK_IO_BASE_URL + weex.config.type + "/10";
-    modal.toast({ message: gank_io_url, duration: 1 });
     stream.fetch({
       method: 'GET',
       url: gank_io_url,
@@ -260,7 +286,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "loadmore": _vm.loadmore
     }
-  }, _vm._l((_vm.lists), function(item, index) {
+  }, [_vm._l((_vm.lists), function(item, index) {
     return _c('cell', {
       staticClass: ["cell"],
       appendAsTree: true,
@@ -291,10 +317,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "lines": "1"
       }
-    }, [_vm._v(_vm._s("发布时间：" + _vm.getLocalTime(item.publishedAt)))])]), _c('text', {
-      staticClass: ["text4"]
-    }, [_vm._v(">")])])])
-  }))
+    }, [_vm._v(_vm._s("发布时间：" + _vm.getLocalTime(item.publishedAt)))])]), _c('image', {
+      staticClass: ["icon"],
+      attrs: {
+        "src": "mipmap://ic_go.png"
+      }
+    })])])
+  }), _c('loading', {
+    staticClass: ["loading"],
+    attrs: {
+      "display": _vm.loadinging ? 'show' : 'hide'
+    }
+  }, [_c('loading-indicator', {
+    staticClass: ["indicator"]
+  }), _c('text', {
+    staticClass: ["indicator-text"]
+  }, [_vm._v("正在加载中...")])])], 2)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 

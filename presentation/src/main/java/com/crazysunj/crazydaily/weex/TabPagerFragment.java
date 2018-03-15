@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,7 @@ import java.util.Map;
 /**
  * author: sunjian
  * created on: 2018/3/14 下午2:14
- * description:
+ * description:https://github.com/crazysunj/CrazyDaily
  */
 
 public class TabPagerFragment extends Fragment implements IWXRenderListener {
@@ -95,12 +94,12 @@ public class TabPagerFragment extends Fragment implements IWXRenderListener {
 
     @Override
     public void onRenderSuccess(WXSDKInstance instance, int width, int height) {
-        Log.d("TabPagerFragment", "onRenderSuccess：width:" + width + " height:" + height);
+        LoggerUtil.d("onRenderSuccess ------ width:" + width + " height:" + height);
     }
 
     @Override
     public void onRefreshSuccess(WXSDKInstance instance, int width, int height) {
-
+        LoggerUtil.d("onRefreshSuccess ------ width:" + width + " height:" + height);
     }
 
     @Override

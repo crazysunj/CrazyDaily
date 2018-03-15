@@ -1,0 +1,105 @@
+package com.crazysunj.crazydaily.weex;
+
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.widget.LinearLayout;
+
+import com.crazysunj.crazydaily.R;
+import com.crazysunj.data.util.LoggerUtil;
+import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.ui.component.WXComponentProp;
+import com.taobao.weex.ui.component.WXVContainer;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * author: sunjian
+ * created on: 2018/3/14 下午1:51
+ * description:https://github.com/crazysunj/CrazyDaily
+ */
+
+public class WXTabPagerComponent extends WXVContainer<LinearLayout> {
+
+
+    private ViewPager mViewPager;
+    private TabPagerAdapter mTabPagerAdapter;
+
+    public WXTabPagerComponent(WXSDKInstance instance, WXDomObject node, WXVContainer parent) {
+        super(instance, node, parent);
+    }
+
+    @Override
+    protected LinearLayout initComponentHostView(@NonNull Context context) {
+        LinearLayout root = (LinearLayout) View.inflate(context, R.layout.layout_tab_pager, null);
+        TabLayout tabLayout = (TabLayout) root.findViewById(R.id.wx_tab);
+        mViewPager = (ViewPager) root.findViewById(R.id.wx_pager);
+        tabLayout.setupWithViewPager(mViewPager);
+        return root;
+    }
+
+    @WXComponentProp(name = "titledata")
+    public void setData(List<String> datas) {
+
+        if (mTabPagerAdapter == null) {
+            final Context context = getContext();
+            if (!(context instanceof FragmentActivity)) {
+                LoggerUtil.d("context不是FragmentActivity");
+                return;
+            }
+            final FragmentActivity activity = (FragmentActivity) context;
+            mTabPagerAdapter = new TabPagerAdapter(activity.getSupportFragmentManager(), datas);
+            mViewPager.setAdapter(mTabPagerAdapter);
+            return;
+        }
+        mTabPagerAdapter.reload(datas);
+    }
+
+    class TabPagerAdapter extends FragmentPagerAdapter {
+
+        List<TabPagerFragment> mFragments;
+        List<String> mTitleDatas;
+
+        TabPagerAdapter(FragmentManager fm, List<String> datas) {
+            super(fm);
+            mTitleDatas = datas;
+            mFragments = new ArrayList<>();
+            for (String data : datas) {
+                mFragments.add(TabPagerFragment.get(data));
+            }
+        }
+
+        void reload(List<String> datas) {
+            mTitleDatas.clear();
+            mTitleDatas.addAll(datas);
+            mFragments.clear();
+            for (String data : datas) {
+                mFragments.add(TabPagerFragment.get(data));
+            }
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragments.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mTitleDatas.get(position);
+        }
+    }
+}
