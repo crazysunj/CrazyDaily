@@ -27,7 +27,7 @@ public class GaoxiaoItemEntity extends MultiTypeIdEntity {
 
     public static final int TYPE_GAOXIAO = 4;
     public static final String HEADER_TITLE = "搞笑视频";
-    public static final String HEADER_OPTIONS = "凑合着看吧";
+    public static final String HEADER_OPTIONS = "换一批";
 
 
     private String id;

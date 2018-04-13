@@ -98,6 +98,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     private PhoneOptionsPickerDialog mWeatherDialog;
     private ArrayList<CityEntity> mCityList;
     private ArgbEvaluator mArgbEvaluator = new ArgbEvaluator();
+    private int gaoxiaoIndex = 1;
 
 
     @Override
@@ -137,7 +138,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         mPresenter.getZhihuNewsList();
         mPresenter.getGankioList(GankioEntity.ResultsEntity.PARAMS_ANDROID);
         mPresenter.getWeather("CHZJ000000");
-        mPresenter.getGaoxiaoList(1);
+        mPresenter.getGaoxiaoList(gaoxiaoIndex);
 //        mPresenter.getNeihanList(mNeihanManager.getAmLocTime(), mNeihanManager.getMinTime(), mNeihanManager.getSceenWidth(),
 //                mNeihanManager.getIid(), mNeihanManager.getDeviceId(), mNeihanManager.getAc(), mNeihanManager.getVersionCode(),
 //                mNeihanManager.getVersionName(), Build.MODEL, Build.BRAND, Build.VERSION.SDK_INT, Build.VERSION.RELEASE, mNeihanManager.getUuid(),
@@ -268,8 +269,8 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
             case HomeAdapterHelper.LEVEL_ZHIHU:
                 SnackbarUtil.show(this, "已经最新了，别点了！");
                 break;
-            case HomeAdapterHelper.LEVEL_NEIHAN:
-                SnackbarUtil.show(this, "小鸡炖蘑菇");
+            case HomeAdapterHelper.LEVEL_GAOXIAO:
+                mPresenter.getGaoxiaoList(++gaoxiaoIndex);
                 break;
             default:
                 break;

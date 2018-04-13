@@ -108,7 +108,7 @@ public class HomeAdapter extends BaseAdapter<MultiTypeIdEntity, BaseViewHolder, 
                 renderGankioHeader(helper, (CommonHeaderEntity) item);
                 break;
             case HomeAdapterHelper.LEVEL_ZHIHU - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
-            case HomeAdapterHelper.LEVEL_NEIHAN - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
+            case HomeAdapterHelper.LEVEL_GAOXIAO - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
                 renderHeader(helper, (CommonHeaderEntity) item);
                 break;
             case HomeAdapterHelper.LEVEL_ZHIHU - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:

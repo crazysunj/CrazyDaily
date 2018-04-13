@@ -92,7 +92,7 @@ public class HomeAdapterHelper extends AsynAdapterHelper<MultiTypeIdEntity, Base
                 return Color.parseColor("#BEE7E9");
             case LEVEL_GANK_IO:
                 return Color.parseColor("#19CAAD");
-            case LEVEL_NEIHAN:
+            case LEVEL_GAOXIAO:
                 return Color.parseColor("#FF5C8D");
             default:
                 return Color.parseColor("#19CAAD");
