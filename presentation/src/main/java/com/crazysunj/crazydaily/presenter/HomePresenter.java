@@ -20,10 +20,12 @@ import com.crazysunj.crazydaily.base.BaseSubscriber;
 import com.crazysunj.crazydaily.di.scope.ActivityScope;
 import com.crazysunj.crazydaily.presenter.contract.HomeContract;
 import com.crazysunj.domain.entity.GankioEntity;
+import com.crazysunj.domain.entity.GaoxiaoItemEntity;
 import com.crazysunj.domain.entity.NeihanItemEntity;
 import com.crazysunj.domain.entity.WeatherRemoteEntity;
 import com.crazysunj.domain.entity.ZhihuNewsEntity;
 import com.crazysunj.domain.interactor.gankio.GankioUseCase;
+import com.crazysunj.domain.interactor.gaoxiao.GaoxiaoUseCase;
 import com.crazysunj.domain.interactor.neihan.NeihanUseCase;
 import com.crazysunj.domain.interactor.weather.WeatherUseCase;
 import com.crazysunj.domain.interactor.zhihu.ZhihuNewsListUseCase;
@@ -44,13 +46,15 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
     private GankioUseCase mGankioUseCase;
     private WeatherUseCase mWeatherUseCase;
     private NeihanUseCase mNeihanUseCase;
+    private GaoxiaoUseCase mGaoxiaoUseCase;
 
     @Inject
-    public HomePresenter(ZhihuNewsListUseCase zhihuUseCase, GankioUseCase gankioUseCase, WeatherUseCase weatherUseCase, NeihanUseCase neihanUseCase) {
+    public HomePresenter(ZhihuNewsListUseCase zhihuUseCase, GankioUseCase gankioUseCase, WeatherUseCase weatherUseCase, NeihanUseCase neihanUseCase, GaoxiaoUseCase gaoxiaoUseCase) {
         mZhihuUseCase = zhihuUseCase;
         mGankioUseCase = gankioUseCase;
         mWeatherUseCase = weatherUseCase;
         mNeihanUseCase = neihanUseCase;
+        mGaoxiaoUseCase = gaoxiaoUseCase;
     }
 
     @Override
@@ -94,11 +98,22 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
     }
 
     @Override
+    public void getGaoxiaoList(int page) {
+        mGaoxiaoUseCase.execute(GaoxiaoUseCase.Params.get(page), new BaseSubscriber<List<GaoxiaoItemEntity>>() {
+            @Override
+            public void onNext(List<GaoxiaoItemEntity> gaoxiaoItemEntities) {
+                mView.showGaoxiao(gaoxiaoItemEntities);
+            }
+        });
+    }
+
+    @Override
     public void detachView() {
         super.detachView();
         mZhihuUseCase.dispose();
         mGankioUseCase.dispose();
         mWeatherUseCase.dispose();
         mNeihanUseCase.dispose();
+        mGaoxiaoUseCase.dispose();
     }
 }

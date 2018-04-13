@@ -18,7 +18,6 @@ package com.crazysunj.crazydaily.ui;
 import android.animation.ArgbEvaluator;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -41,12 +40,14 @@ import com.crazysunj.crazydaily.entity.CityEntity;
 import com.crazysunj.crazydaily.presenter.HomePresenter;
 import com.crazysunj.crazydaily.presenter.contract.HomeContract;
 import com.crazysunj.crazydaily.ui.adapter.HomeAdapter;
+import com.crazysunj.crazydaily.ui.adapter.helper.HomeAdapterHelper;
 import com.crazysunj.crazydaily.util.SnackbarUtil;
 import com.crazysunj.crazydaily.view.banner.BannerCardHandler;
 import com.crazysunj.crazydaily.weex.WeexActivity;
 import com.crazysunj.data.util.JsonUtil;
 import com.crazysunj.data.util.LoggerUtil;
 import com.crazysunj.domain.entity.GankioEntity;
+import com.crazysunj.domain.entity.GaoxiaoItemEntity;
 import com.crazysunj.domain.entity.NeihanItemEntity;
 import com.crazysunj.domain.entity.WeatherRemoteEntity;
 import com.crazysunj.domain.entity.ZhihuNewsEntity;
@@ -136,11 +137,12 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         mPresenter.getZhihuNewsList();
         mPresenter.getGankioList(GankioEntity.ResultsEntity.PARAMS_ANDROID);
         mPresenter.getWeather("CHZJ000000");
-        mPresenter.getNeihanList(mNeihanManager.getAmLocTime(), mNeihanManager.getMinTime(), mNeihanManager.getSceenWidth(),
-                mNeihanManager.getIid(), mNeihanManager.getDeviceId(), mNeihanManager.getAc(), mNeihanManager.getVersionCode(),
-                mNeihanManager.getVersionName(), Build.MODEL, Build.BRAND, Build.VERSION.SDK_INT, Build.VERSION.RELEASE, mNeihanManager.getUuid(),
-                mNeihanManager.getOpenudid(), mNeihanManager.getManifestVersionCode(), mNeihanManager.getResolution(),
-                String.valueOf(getResources().getDisplayMetrics().densityDpi), mNeihanManager.getUpdateVersionCode());
+        mPresenter.getGaoxiaoList(1);
+//        mPresenter.getNeihanList(mNeihanManager.getAmLocTime(), mNeihanManager.getMinTime(), mNeihanManager.getSceenWidth(),
+//                mNeihanManager.getIid(), mNeihanManager.getDeviceId(), mNeihanManager.getAc(), mNeihanManager.getVersionCode(),
+//                mNeihanManager.getVersionName(), Build.MODEL, Build.BRAND, Build.VERSION.SDK_INT, Build.VERSION.RELEASE, mNeihanManager.getUuid(),
+//                mNeihanManager.getOpenudid(), mNeihanManager.getManifestVersionCode(), mNeihanManager.getResolution(),
+//                String.valueOf(getResources().getDisplayMetrics().densityDpi), mNeihanManager.getUpdateVersionCode());
     }
 
     @Override
@@ -180,6 +182,12 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     }
 
     @Override
+    public void showGaoxiao(List<GaoxiaoItemEntity> gaoxiaoList) {
+        stopRefresh();
+        mAdapter.notifyGaoxiaoList(gaoxiaoList);
+    }
+
+    @Override
     protected int getContentResId() {
         return R.layout.activity_main;
     }
@@ -207,9 +215,9 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         builder.show();
     }
 
-    private void handleHeaderOptions(int type, String options) {
-        switch (type) {
-            case GankioEntity.ResultsEntity.TYPE_GANK_IO:
+    private void handleHeaderOptions(int level, String options) {
+        switch (level) {
+            case HomeAdapterHelper.LEVEL_GANK_IO:
                 if (mGankioDialog == null) {
                     Bundle bundle = new Bundle();
                     bundle.putBoolean(BaseOptionsPickerDialog.CYCLIC_FIRST, true);
@@ -234,7 +242,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
                 mGankioDialog.show(getFragmentManager(), "GankioDialog");
                 break;
 
-            case WeatherRemoteEntity.WeatherEntity.TYPE_WEATHER:
+            case HomeAdapterHelper.LEVEL_WEATHER:
                 if (mCityList == null) {
                     String json = JsonUtil.readLocalJson(this, CityEntity.FILE_NAME);
                     if (TextUtils.isEmpty(json)) {
@@ -257,10 +265,10 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
                 }
                 mWeatherDialog.show(getFragmentManager(), "WeatherDialog");
                 break;
-            case ZhihuNewsEntity.StoriesEntity.TYPE_ZHIHU_NEWS:
+            case HomeAdapterHelper.LEVEL_ZHIHU:
                 SnackbarUtil.show(this, "已经最新了，别点了！");
                 break;
-            case NeihanItemEntity.TYPE_NEIHAN:
+            case HomeAdapterHelper.LEVEL_NEIHAN:
                 SnackbarUtil.show(this, "小鸡炖蘑菇");
                 break;
             default:

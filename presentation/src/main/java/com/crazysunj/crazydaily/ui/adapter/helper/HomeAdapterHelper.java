@@ -22,7 +22,7 @@ import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseAdapter;
 import com.crazysunj.crazydaily.ui.adapter.helper.callback.StringDiffCallBack;
 import com.crazysunj.domain.entity.GankioEntity;
-import com.crazysunj.domain.entity.NeihanItemEntity;
+import com.crazysunj.domain.entity.GaoxiaoItemEntity;
 import com.crazysunj.domain.entity.WeatherRemoteEntity;
 import com.crazysunj.domain.entity.ZhihuNewsEntity;
 import com.crazysunj.domain.entity.base.MultiTypeIdEntity;
@@ -43,6 +43,12 @@ public class HomeAdapterHelper extends AsynAdapterHelper<MultiTypeIdEntity, Base
     public static final int MIN_ZHIHU = 2;
     public static final int MIN_GANK_IO = 3;
 
+    public static final int LEVEL_ZHIHU = 0;
+    public static final int LEVEL_GANK_IO = 1;
+    public static final int LEVEL_WEATHER = 2;
+    public static final int LEVEL_NEIHAN = 3;
+    public static final int LEVEL_GAOXIAO = 4;
+
     @Inject
     public HomeAdapterHelper() {
         super(null);
@@ -50,43 +56,43 @@ public class HomeAdapterHelper extends AsynAdapterHelper<MultiTypeIdEntity, Base
 
     @Override
     protected void registerMoudle() {
-        registerMoudle(ZhihuNewsEntity.StoriesEntity.TYPE_ZHIHU_NEWS)
-                .level(0)
-                .headerResId(R.layout.header_common)
+        registerMoudle(LEVEL_ZHIHU)
+                .type(ZhihuNewsEntity.StoriesEntity.TYPE_ZHIHU_NEWS)
                 .layoutResId(R.layout.item_zhihu_news)
+                .headerResId(R.layout.header_common)
                 .footerResId(R.layout.footer_common)
                 .minSize(MIN_ZHIHU)
                 .isFolded(true)
                 .register();
 
-        registerMoudle(GankioEntity.ResultsEntity.TYPE_GANK_IO)
-                .level(1)
-                .headerResId(R.layout.header_common)
+        registerMoudle(LEVEL_GANK_IO)
+                .type(GankioEntity.ResultsEntity.TYPE_GANK_IO)
                 .layoutResId(R.layout.item_gank_io)
+                .headerResId(R.layout.header_common)
                 .footerResId(R.layout.footer_common)
                 .minSize(MIN_GANK_IO)
                 .isFolded(true)
                 .register();
 
-        registerMoudle(WeatherRemoteEntity.WeatherEntity.TYPE_WEATHER)
-                .level(2)
+        registerMoudle(LEVEL_WEATHER)
+                .type(WeatherRemoteEntity.WeatherEntity.TYPE_WEATHER)
                 .layoutResId(R.layout.item_weather)
                 .register();
 
-        registerMoudle(NeihanItemEntity.TYPE_NEIHAN)
-                .level(3)
-                .headerResId(R.layout.header_common)
+        registerMoudle(LEVEL_GAOXIAO)
+                .type(GaoxiaoItemEntity.TYPE_GAOXIAO)
                 .layoutResId(R.layout.item_neihan)
+                .headerResId(R.layout.header_common)
                 .register();
     }
 
-    public static int getColor(int type) {
-        switch (type) {
-            case ZhihuNewsEntity.StoriesEntity.TYPE_ZHIHU_NEWS:
+    public static int getColor(int level) {
+        switch (level) {
+            case LEVEL_ZHIHU:
                 return Color.parseColor("#BEE7E9");
-            case GankioEntity.ResultsEntity.TYPE_GANK_IO:
+            case LEVEL_GANK_IO:
                 return Color.parseColor("#19CAAD");
-            case NeihanItemEntity.TYPE_NEIHAN:
+            case LEVEL_NEIHAN:
                 return Color.parseColor("#FF5C8D");
             default:
                 return Color.parseColor("#19CAAD");

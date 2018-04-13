@@ -35,6 +35,7 @@ import com.crazysunj.crazydaily.util.WeatherUtil;
 import com.crazysunj.crazydaily.view.video.NeihanVideoPlayerController;
 import com.crazysunj.domain.entity.CommonHeaderEntity;
 import com.crazysunj.domain.entity.GankioEntity;
+import com.crazysunj.domain.entity.GaoxiaoItemEntity;
 import com.crazysunj.domain.entity.NeihanItemEntity;
 import com.crazysunj.domain.entity.WeatherRemoteEntity;
 import com.crazysunj.domain.entity.ZhihuNewsEntity;
@@ -68,6 +69,10 @@ public class HomeAdapter extends BaseAdapter<MultiTypeIdEntity, BaseViewHolder, 
     @Inject
     CommonHeaderEntity mNeihanHeaderEntity;
 
+    @Named(EntityModule.NAME_GAOXIAO)
+    @Inject
+    CommonHeaderEntity mGaoxiaoHeaderEntity;
+
     @Named(EntityModule.NAME_ZHIHU)
     @Inject
     ExpandCollapseFooterEntity mZhihuFooterEntity;
@@ -84,8 +89,11 @@ public class HomeAdapter extends BaseAdapter<MultiTypeIdEntity, BaseViewHolder, 
     @Override
     protected void convert(BaseViewHolder helper, MultiTypeIdEntity item) {
         switch (item.getItemType()) {
-            case NeihanItemEntity.TYPE_NEIHAN:
-                renderNeihan(helper, (NeihanItemEntity) item);
+//            case NeihanItemEntity.TYPE_NEIHAN:
+//                renderNeihan(helper, (NeihanItemEntity) item);
+//                break;
+            case GaoxiaoItemEntity.TYPE_GAOXIAO:
+                renderGaoxiao(helper, (GaoxiaoItemEntity) item);
                 break;
             case WeatherRemoteEntity.WeatherEntity.TYPE_WEATHER:
                 renderWeather(helper, (WeatherRemoteEntity.WeatherEntity) item);
@@ -96,20 +104,50 @@ public class HomeAdapter extends BaseAdapter<MultiTypeIdEntity, BaseViewHolder, 
             case ZhihuNewsEntity.StoriesEntity.TYPE_ZHIHU_NEWS:
                 renderZhihuNews(helper, (ZhihuNewsEntity.StoriesEntity) item);
                 break;
-            case GankioEntity.ResultsEntity.TYPE_GANK_IO - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
+            case HomeAdapterHelper.LEVEL_GANK_IO - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
                 renderGankioHeader(helper, (CommonHeaderEntity) item);
                 break;
-            case ZhihuNewsEntity.StoriesEntity.TYPE_ZHIHU_NEWS - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
-            case NeihanItemEntity.TYPE_NEIHAN - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
+            case HomeAdapterHelper.LEVEL_ZHIHU - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
+            case HomeAdapterHelper.LEVEL_NEIHAN - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
                 renderHeader(helper, (CommonHeaderEntity) item);
                 break;
-            case ZhihuNewsEntity.StoriesEntity.TYPE_ZHIHU_NEWS - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:
-            case GankioEntity.ResultsEntity.TYPE_GANK_IO - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:
+            case HomeAdapterHelper.LEVEL_ZHIHU - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:
+            case HomeAdapterHelper.LEVEL_GANK_IO - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:
                 renderFooter(helper, (ExpandCollapseFooterEntity) item);
                 break;
             default:
                 break;
         }
+    }
+
+    // *********************** 搞笑视频 ***********************
+
+    private void renderGaoxiao(BaseViewHolder helper, GaoxiaoItemEntity item) {
+        CircleImageView avatar = helper.getView(R.id.item_neihan_avatar);
+        Glide.with(mContext)
+                .load(item.getAvatar())
+                .placeholder(R.mipmap.ic_huaji)
+                .crossFade()
+                .into(avatar);
+        helper.setText(R.id.item_neihan_name, item.getName());
+        helper.setText(R.id.item_neihan_title, item.getTitle());
+        NiceVideoPlayer videoPlayer = helper.getView(R.id.item_neihan_video);
+        NeihanVideoPlayerController controller = new NeihanVideoPlayerController(mContext);
+        controller.setTitle("");
+        controller.setLenght(item.getDuration());
+        videoPlayer.setUp(item.getVideoUrl(), null);
+        videoPlayer.setController(controller);
+        Glide.with(mContext)
+                .load(item.getThumbnail())
+                .placeholder(R.drawable.img_default)
+                .crossFade()
+                .into(controller.imageView());
+    }
+
+
+    public void notifyGaoxiaoList(List<GaoxiaoItemEntity> data) {
+        final int level = HomeAdapterHelper.LEVEL_GAOXIAO;
+        mHelper.notifyMoudleDataAndHeaderChanged(data, mGaoxiaoHeaderEntity, level);
     }
 
     // *********************** 内涵段子 ***********************
@@ -137,8 +175,8 @@ public class HomeAdapter extends BaseAdapter<MultiTypeIdEntity, BaseViewHolder, 
 
 
     public void notifyNeihanList(List<NeihanItemEntity> data) {
-        final int type = NeihanItemEntity.TYPE_NEIHAN;
-        mHelper.notifyMoudleDataAndHeaderChanged(data, mNeihanHeaderEntity, type);
+        final int level = HomeAdapterHelper.LEVEL_NEIHAN;
+        mHelper.notifyMoudleDataAndHeaderChanged(data, mNeihanHeaderEntity, level);
     }
 
     // *********************** Weather ***********************
@@ -153,14 +191,14 @@ public class HomeAdapter extends BaseAdapter<MultiTypeIdEntity, BaseViewHolder, 
         helper.setImageResource(R.id.item_weather_icon, WeatherUtil.getWeatherIcon(nowEntity.getCode()));
         helper.itemView.setOnClickListener(v -> {
             if (mOnHeaderClickListener != null) {
-                mOnHeaderClickListener.onHeaderClick(item.getItemType(), cityName);
+                mOnHeaderClickListener.onHeaderClick(mHelper.getLevel(item.getItemType()), cityName);
             }
         });
     }
 
     public void notifyWeatherList(List<WeatherRemoteEntity.WeatherEntity> data) {
-        final int type = WeatherRemoteEntity.WeatherEntity.TYPE_WEATHER;
-        mHelper.notifyMoudleDataChanged(data, type);
+        final int level = HomeAdapterHelper.LEVEL_WEATHER;
+        mHelper.notifyMoudleDataChanged(data, level);
     }
 
     // *********************** Gankio ***********************
@@ -173,40 +211,40 @@ public class HomeAdapter extends BaseAdapter<MultiTypeIdEntity, BaseViewHolder, 
     }
 
     private void renderGankioHeader(BaseViewHolder helper, CommonHeaderEntity item) {
-        final int type = item.getItemType() + RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER;
+        final int level = mHelper.getLevel(item.getItemType());
         helper.setText(R.id.header_title, item.getTitle());
         TextView optionsView = helper.getView(R.id.header_options);
         final String options = item.getOptions();
         optionsView.setText(options);
-        optionsView.setTextColor(HomeAdapterHelper.getColor(type));
+        optionsView.setTextColor(HomeAdapterHelper.getColor(level));
         optionsView.setOnClickListener(v -> {
             if (mOnHeaderClickListener != null) {
-                mOnHeaderClickListener.onHeaderClick(type, options);
+                mOnHeaderClickListener.onHeaderClick(level, options);
             }
         });
     }
 
     public void notifyGankioList(List<GankioEntity.ResultsEntity> data) {
-        final int type = GankioEntity.ResultsEntity.TYPE_GANK_IO;
+        final int level = HomeAdapterHelper.LEVEL_GANK_IO;
         final String title = String.format(Locale.getDefault(), "展开（剩余%d个）", data.size() - HomeAdapterHelper.MIN_GANK_IO);
         final String options = data.get(0).getType();
-        CommonHeaderEntity headerEntity = new CommonHeaderEntity(options, type, GankioEntity.ResultsEntity.HEADER_TITLE, options);
+        CommonHeaderEntity headerEntity = new CommonHeaderEntity(options, level, GankioEntity.ResultsEntity.HEADER_TITLE, options);
         mGankioFooterEntity.initStatus(title);
-        mHelper.notifyMoudleDataAndHeaderAndFooterChanged(headerEntity, data, mGankioFooterEntity, type);
+        mHelper.notifyMoudleDataAndHeaderAndFooterChanged(headerEntity, data, mGankioFooterEntity, level);
     }
 
     // ***********************知乎 ***********************
 
     private void renderHeader(BaseViewHolder helper, CommonHeaderEntity item) {
-        final int type = item.getItemType() + RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER;
+        final int level = mHelper.getLevel(item.getItemType());
         helper.setText(R.id.header_title, item.getTitle());
         TextView optionsView = helper.getView(R.id.header_options);
         final String options = item.getOptions();
         optionsView.setText(options);
-        optionsView.setTextColor(HomeAdapterHelper.getColor(type));
+        optionsView.setTextColor(HomeAdapterHelper.getColor(level));
         optionsView.setOnClickListener(v -> {
             if (mOnHeaderClickListener != null) {
-                mOnHeaderClickListener.onHeaderClick(type, options);
+                mOnHeaderClickListener.onHeaderClick(level, options);
             }
         });
     }
@@ -219,10 +257,10 @@ public class HomeAdapter extends BaseAdapter<MultiTypeIdEntity, BaseViewHolder, 
     }
 
     public void notifyZhihuNewsList(List<ZhihuNewsEntity.StoriesEntity> data) {
-        final int type = ZhihuNewsEntity.StoriesEntity.TYPE_ZHIHU_NEWS;
+        final int level = HomeAdapterHelper.LEVEL_ZHIHU;
         final String title = String.format(Locale.getDefault(), "展开（剩余%d个）", data.size() - HomeAdapterHelper.MIN_ZHIHU);
         mZhihuFooterEntity.initStatus(title);
-        mHelper.notifyMoudleDataAndHeaderAndFooterChanged(mZhihuHeaderEntity, data, mZhihuFooterEntity, type);
+        mHelper.notifyMoudleDataAndHeaderAndFooterChanged(mZhihuHeaderEntity, data, mZhihuFooterEntity, level);
     }
 
     private String getUrl(List<String> images) {
@@ -239,7 +277,7 @@ public class HomeAdapter extends BaseAdapter<MultiTypeIdEntity, BaseViewHolder, 
         helper.setImageResource(R.id.footer_icon, item.getIconResId());
         helper.itemView.setOnClickListener(v -> {
             item.switchStatus();
-            mHelper.foldType(item.getItemType() + RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER, item.isFlod());
+            mHelper.foldType(mHelper.getLevel(item.getItemType()), item.isFlod());
             mHelper.setData(mData.indexOf(item), item);
         });
     }
@@ -254,6 +292,6 @@ public class HomeAdapter extends BaseAdapter<MultiTypeIdEntity, BaseViewHolder, 
     }
 
     public interface OnHeaderClickListener {
-        void onHeaderClick(int type, String options);
+        void onHeaderClick(int level, String options);
     }
 }

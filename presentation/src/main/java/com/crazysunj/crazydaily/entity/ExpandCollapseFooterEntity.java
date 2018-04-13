@@ -34,8 +34,8 @@ public class ExpandCollapseFooterEntity extends CommonFooterEntity {
 
     private int status;
 
-    public ExpandCollapseFooterEntity(int type) {
-        super(Constant.EMPTY, type, EXPAND);
+    public ExpandCollapseFooterEntity(int level) {
+        super(Constant.EMPTY, level, EXPAND);
         status = STATUS_COLLAPSE;
     }
 

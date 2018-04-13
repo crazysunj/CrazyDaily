@@ -13,17 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crazysunj.domain.constant;
+package com.crazysunj.data.service;
+
+import com.crazysunj.domain.entity.GaoxiaoEntity;
+
+import io.reactivex.Flowable;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 /**
  * author: sunjian
- * created on: 2017/9/19 下午7:05
+ * created on: 2017/9/19 下午6:36
  * description: https://github.com/crazysunj/CrazyDaily
  */
 
-public interface CodeConstant {
-    int CODE_EMPTY = 0;
-    int CODE_DATA_ERROR = 1;
-    String CODE_OK = "OK";
-    int CODE_SUCCESS = 200;
+public interface GaoxiaoService {
+
+    String HOST = "https://www.apiopen.top/";
+
+    @GET("satinApi")
+    Flowable<GaoxiaoEntity> getGaoxiaoList(@Query("type") int type, @Query("page") int page);
 }

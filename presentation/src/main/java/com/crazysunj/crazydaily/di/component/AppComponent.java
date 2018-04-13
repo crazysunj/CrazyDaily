@@ -20,6 +20,7 @@ import android.content.Context;
 
 import com.crazysunj.crazydaily.di.module.AppModule;
 import com.crazysunj.domain.repository.gankio.GankioRepository;
+import com.crazysunj.domain.repository.gaoxiao.GaoxiaoRepository;
 import com.crazysunj.domain.repository.neihan.NeihanRepository;
 import com.crazysunj.domain.repository.weather.WeatherRepository;
 import com.crazysunj.domain.repository.zhihu.ZhihuRepository;
@@ -49,5 +50,7 @@ public interface AppComponent {
     WeatherRepository provideWeatherRepository();
 
     NeihanRepository provideNeihanRepository();
+
+    GaoxiaoRepository provideGaoxiaoRepository();
 
 }

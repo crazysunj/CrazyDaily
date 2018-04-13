@@ -17,6 +17,7 @@ package com.crazysunj.data.api;
 
 import com.crazysunj.data.logger.HttpLogger;
 import com.crazysunj.data.service.GankioService;
+import com.crazysunj.data.service.GaoxiaoService;
 import com.crazysunj.data.service.NeihanService;
 import com.crazysunj.data.service.WeatherService;
 import com.crazysunj.data.service.ZhihuService;
@@ -44,6 +45,7 @@ public class HttpHelper {
     private GankioService mGankioService;
     private WeatherService mWeatherService;
     private NeihanService mNeihanService;
+    private GaoxiaoService mGaoxiaoService;
     private OkHttpClient mOkHttpClient;
 
     @Inject
@@ -129,5 +131,21 @@ public class HttpHelper {
             }
         }
         return mNeihanService;
+    }
+
+    public GaoxiaoService getGaoxiaoService() {
+        if (mGaoxiaoService == null) {
+            synchronized (this) {
+                if (mGaoxiaoService == null) {
+                    mGaoxiaoService = new Retrofit.Builder()
+                            .baseUrl(GaoxiaoService.HOST)
+                            .client(mOkHttpClient)
+                            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build().create(GaoxiaoService.class);
+                }
+            }
+        }
+        return mGaoxiaoService;
     }
 }

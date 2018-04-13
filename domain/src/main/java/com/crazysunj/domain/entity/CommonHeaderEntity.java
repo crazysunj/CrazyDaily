@@ -31,9 +31,9 @@ public class CommonHeaderEntity extends MultiTypeIdEntity {
     private String title;
     private String options;
 
-    public CommonHeaderEntity(String id, int type, String title, String options) {
+    public CommonHeaderEntity(String id, int level, String title, String options) {
         this.id = id;
-        this.type = type - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER;
+        this.type = level - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER;
         this.title = title;
         this.options = options;
     }

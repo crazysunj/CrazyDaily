@@ -30,9 +30,9 @@ public class CommonFooterEntity extends MultiTypeIdEntity {
     private int type;
     protected String title;
 
-    public CommonFooterEntity(String id, int type, String title) {
+    public CommonFooterEntity(String id, int level, String title) {
         this.id = id;
-        this.type = type - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER;
+        this.type = level - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER;
         this.title = title;
     }
 

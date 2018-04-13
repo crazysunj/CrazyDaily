@@ -9,7 +9,7 @@
 * 知乎日报
 * 干货集中营
 * 天气
-* 内涵段子
+* 搞笑视频
 
 [下载地址](https://www.pgyer.com/EbHS)
 ## License

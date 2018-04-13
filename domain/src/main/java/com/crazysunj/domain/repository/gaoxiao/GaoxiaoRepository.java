@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crazysunj.domain.constant;
+package com.crazysunj.domain.repository.gaoxiao;
+
+import com.crazysunj.domain.entity.GaoxiaoEntity;
+
+import io.reactivex.Flowable;
 
 /**
  * author: sunjian
- * created on: 2017/9/19 下午7:05
- * description: https://github.com/crazysunj/CrazyDaily
+ * created on: 2017/9/19 下午6:40
+ * description:https://github.com/crazysunj/CrazyDaily
  */
 
-public interface CodeConstant {
-    int CODE_EMPTY = 0;
-    int CODE_DATA_ERROR = 1;
-    String CODE_OK = "OK";
-    int CODE_SUCCESS = 200;
+public interface GaoxiaoRepository {
+    Flowable<GaoxiaoEntity> getGaoxiaoList(int type, int page);
 }
