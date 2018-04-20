@@ -15,7 +15,7 @@
  */
 package com.crazysunj.data.service;
 
-import com.crazysunj.domain.entity.WeatherRemoteEntity;
+import com.crazysunj.domain.entity.weather.WeatherRemoteEntity;
 
 import io.reactivex.Flowable;
 import retrofit2.http.GET;

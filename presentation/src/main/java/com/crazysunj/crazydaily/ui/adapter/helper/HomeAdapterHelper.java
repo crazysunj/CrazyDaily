@@ -21,10 +21,10 @@ import android.support.v7.util.DiffUtil;
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseAdapter;
 import com.crazysunj.crazydaily.ui.adapter.helper.callback.StringDiffCallBack;
-import com.crazysunj.domain.entity.GankioEntity;
-import com.crazysunj.domain.entity.GaoxiaoItemEntity;
-import com.crazysunj.domain.entity.WeatherRemoteEntity;
-import com.crazysunj.domain.entity.ZhihuNewsEntity;
+import com.crazysunj.domain.entity.gankio.GankioEntity;
+import com.crazysunj.domain.entity.gaoxiao.GaoxiaoItemEntity;
+import com.crazysunj.domain.entity.weather.WeatherRemoteEntity;
+import com.crazysunj.domain.entity.zhihu.ZhihuNewsEntity;
 import com.crazysunj.domain.entity.base.MultiTypeIdEntity;
 import com.crazysunj.multitypeadapter.helper.AsynAdapterHelper;
 

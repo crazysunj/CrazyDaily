@@ -15,7 +15,7 @@
  */
 package com.crazysunj.domain.repository.weather;
 
-import com.crazysunj.domain.entity.WeatherRemoteEntity;
+import com.crazysunj.domain.entity.weather.WeatherRemoteEntity;
 
 import io.reactivex.Flowable;
 

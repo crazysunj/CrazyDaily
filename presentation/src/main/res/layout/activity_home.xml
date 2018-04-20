@@ -57,17 +57,16 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-        <TextView
-            android:id="@+id/home_bottom"
-            style="@style/text_16_333333"
+        <android.support.design.widget.BottomNavigationView
+            app:itemIconTint="@color/colorPrimary"
+            app:itemTextColor="@color/colorPrimary"
+            app:itemBackground="@drawable/shape_home_bottom_bg"
+            android:id="@+id/home_navigition"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/space_50"
+            android:layout_height="?attr/actionBarSize"
             android:layout_gravity="bottom"
-            android:background="@drawable/shape_home_bottom_bg"
-            android:gravity="center"
-            android:paddingTop="@dimen/space_2"
-            android:text="@string/about_me"
-            app:layout_behavior="@string/bottom_behavior" />
+            app:layout_behavior="@string/bottom_behavior"
+            app:menu="@menu/menu_navigation" />
     </android.support.design.widget.CoordinatorLayout>
 </com.crazysunj.crazydaily.view.banner.VpSwipeRefreshLayout>
 

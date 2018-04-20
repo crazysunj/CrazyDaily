@@ -15,7 +15,7 @@
  */
 package com.crazysunj.data.service;
 
-import com.crazysunj.domain.entity.NeihanEntity;
+import com.crazysunj.domain.entity.neihan.NeihanEntity;
 
 import io.reactivex.Flowable;
 import retrofit2.http.GET;

@@ -15,7 +15,7 @@
  */
 package com.crazysunj.domain.repository.gankio;
 
-import com.crazysunj.domain.entity.GankioEntity;
+import com.crazysunj.domain.entity.gankio.GankioEntity;
 
 import io.reactivex.Flowable;
 

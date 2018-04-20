@@ -18,8 +18,8 @@ package com.crazysunj.domain.interactor.neihan;
 import android.graphics.Color;
 
 import com.crazysunj.domain.constant.CodeConstant;
-import com.crazysunj.domain.entity.NeihanEntity;
-import com.crazysunj.domain.entity.NeihanItemEntity;
+import com.crazysunj.domain.entity.neihan.NeihanEntity;
+import com.crazysunj.domain.entity.neihan.NeihanItemEntity;
 import com.crazysunj.domain.exception.ApiException;
 import com.crazysunj.domain.interactor.UseCase;
 import com.crazysunj.domain.repository.neihan.NeihanRepository;

@@ -15,7 +15,7 @@
  */
 package com.crazysunj.data.service;
 
-import com.crazysunj.domain.entity.GaoxiaoEntity;
+import com.crazysunj.domain.entity.gaoxiao.GaoxiaoEntity;
 
 import io.reactivex.Flowable;
 import retrofit2.http.GET;

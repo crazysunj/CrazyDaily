@@ -16,7 +16,7 @@
 package com.crazysunj.domain.interactor.weather;
 
 import com.crazysunj.domain.constant.CodeConstant;
-import com.crazysunj.domain.entity.WeatherRemoteEntity;
+import com.crazysunj.domain.entity.weather.WeatherRemoteEntity;
 import com.crazysunj.domain.exception.ApiException;
 import com.crazysunj.domain.interactor.UseCase;
 import com.crazysunj.domain.repository.weather.WeatherRepository;

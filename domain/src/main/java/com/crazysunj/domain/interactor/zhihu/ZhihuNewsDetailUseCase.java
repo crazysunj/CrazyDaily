@@ -16,7 +16,7 @@
 package com.crazysunj.domain.interactor.zhihu;
 
 import com.crazysunj.domain.constant.CodeConstant;
-import com.crazysunj.domain.entity.ZhihuNewsDetailEntity;
+import com.crazysunj.domain.entity.zhihu.ZhihuNewsDetailEntity;
 import com.crazysunj.domain.exception.ApiException;
 import com.crazysunj.domain.interactor.UseCase;
 import com.crazysunj.domain.repository.zhihu.ZhihuRepository;

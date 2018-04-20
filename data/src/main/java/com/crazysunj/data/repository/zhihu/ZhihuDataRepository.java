@@ -19,8 +19,8 @@ package com.crazysunj.data.repository.zhihu;
 import com.crazysunj.data.api.HttpHelper;
 import com.crazysunj.data.service.ZhihuService;
 import com.crazysunj.data.util.RxTransformerUtil;
-import com.crazysunj.domain.entity.ZhihuNewsDetailEntity;
-import com.crazysunj.domain.entity.ZhihuNewsEntity;
+import com.crazysunj.domain.entity.zhihu.ZhihuNewsDetailEntity;
+import com.crazysunj.domain.entity.zhihu.ZhihuNewsEntity;
 import com.crazysunj.domain.repository.zhihu.ZhihuRepository;
 
 import javax.inject.Inject;

@@ -18,7 +18,7 @@ package com.crazysunj.data.repository.gaoxiao;
 import com.crazysunj.data.api.HttpHelper;
 import com.crazysunj.data.service.GaoxiaoService;
 import com.crazysunj.data.util.RxTransformerUtil;
-import com.crazysunj.domain.entity.GaoxiaoEntity;
+import com.crazysunj.domain.entity.gaoxiao.GaoxiaoEntity;
 import com.crazysunj.domain.repository.gaoxiao.GaoxiaoRepository;
 
 import javax.inject.Inject;

@@ -72,5 +72,10 @@ dependencies {
     debugImplementation libs.debugLeakcanary
     releaseImplementation libs.releaseLeakcanary
     annotationProcessor libs.butterknifeCompiler
+    implementation('com.miguelcatalan:materialsearchview:1.4.0') {
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+        exclude group: 'com.android.support', module: 'design'
+    }
+    implementation 'com.gjiazhe:wavesidebar:1.3'
     implementation project(':data')
 }

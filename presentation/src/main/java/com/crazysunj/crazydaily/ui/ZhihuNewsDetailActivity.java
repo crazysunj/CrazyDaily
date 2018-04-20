@@ -42,7 +42,7 @@ import com.crazysunj.crazydaily.presenter.ZhihuNewsDetailPresenter;
 import com.crazysunj.crazydaily.presenter.contract.ZhihuNewsDetailContract;
 import com.crazysunj.crazydaily.util.HtmlUtil;
 import com.crazysunj.crazydaily.util.SnackbarUtil;
-import com.crazysunj.domain.entity.ZhihuNewsDetailEntity;
+import com.crazysunj.domain.entity.zhihu.ZhihuNewsDetailEntity;
 import com.jaeger.library.StatusBarUtil;
 
 import butterknife.BindView;

@@ -15,7 +15,7 @@
  */
 package com.crazysunj.domain.repository.gaoxiao;
 
-import com.crazysunj.domain.entity.GaoxiaoEntity;
+import com.crazysunj.domain.entity.gaoxiao.GaoxiaoEntity;
 
 import io.reactivex.Flowable;
 

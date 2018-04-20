@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_D1EFFB"
+    android:orientation="vertical">
+
+    <View style="@style/horizontal_line" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_10"
+        android:background="@color/color_white" />
+
+    <View style="@style/horizontal_line" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/space_8"
+        android:paddingEnd="@dimen/space_10"
+        android:paddingStart="@dimen/space_25"
+        android:paddingTop="@dimen/space_8">
+
+        <TextView
+            android:id="@+id/header_icon"
+            style="@style/text_10_333333"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/space_8"
+            android:fontFamily="@font/contact"
+            android:text="@string/ic_arrow" />
+
+        <TextView
+            android:id="@+id/index"
+            style="@style/text_14_666666"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="A" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/bottom_line"
+        style="@style/horizontal_line"
+        android:layout_marginStart="@dimen/space_25" />
+</LinearLayout>

@@ -15,7 +15,7 @@
  */
 package com.crazysunj.crazydaily.util;
 
-import com.crazysunj.domain.entity.ZhihuNewsDetailEntity;
+import com.crazysunj.domain.entity.zhihu.ZhihuNewsDetailEntity;
 
 import java.util.List;
 

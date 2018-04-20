@@ -17,7 +17,7 @@ package com.crazysunj.crazydaily.entity;
 
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.constant.Constant;
-import com.crazysunj.domain.entity.CommonFooterEntity;
+import com.crazysunj.domain.entity.common.CommonFooterEntity;
 
 /**
  * author: sunjian

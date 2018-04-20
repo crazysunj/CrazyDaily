@@ -19,7 +19,7 @@ import com.crazysunj.crazydaily.base.BasePresenter;
 import com.crazysunj.crazydaily.base.BaseSubscriber;
 import com.crazysunj.crazydaily.di.scope.ActivityScope;
 import com.crazysunj.crazydaily.presenter.contract.ZhihuNewsDetailContract;
-import com.crazysunj.domain.entity.ZhihuNewsDetailEntity;
+import com.crazysunj.domain.entity.zhihu.ZhihuNewsDetailEntity;
 import com.crazysunj.domain.interactor.zhihu.ZhihuNewsDetailUseCase;
 
 import javax.inject.Inject;

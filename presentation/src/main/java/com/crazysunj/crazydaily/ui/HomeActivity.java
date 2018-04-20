@@ -21,6 +21,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -28,6 +29,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -41,16 +43,17 @@ import com.crazysunj.crazydaily.presenter.HomePresenter;
 import com.crazysunj.crazydaily.presenter.contract.HomeContract;
 import com.crazysunj.crazydaily.ui.adapter.HomeAdapter;
 import com.crazysunj.crazydaily.ui.adapter.helper.HomeAdapterHelper;
+import com.crazysunj.crazydaily.ui.contact.ContactActivity;
 import com.crazysunj.crazydaily.util.SnackbarUtil;
 import com.crazysunj.crazydaily.view.banner.BannerCardHandler;
 import com.crazysunj.crazydaily.weex.WeexActivity;
 import com.crazysunj.data.util.JsonUtil;
 import com.crazysunj.data.util.LoggerUtil;
-import com.crazysunj.domain.entity.GankioEntity;
-import com.crazysunj.domain.entity.GaoxiaoItemEntity;
-import com.crazysunj.domain.entity.NeihanItemEntity;
-import com.crazysunj.domain.entity.WeatherRemoteEntity;
-import com.crazysunj.domain.entity.ZhihuNewsEntity;
+import com.crazysunj.domain.entity.gankio.GankioEntity;
+import com.crazysunj.domain.entity.gaoxiao.GaoxiaoItemEntity;
+import com.crazysunj.domain.entity.neihan.NeihanItemEntity;
+import com.crazysunj.domain.entity.weather.WeatherRemoteEntity;
+import com.crazysunj.domain.entity.zhihu.ZhihuNewsEntity;
 import com.crazysunj.domain.util.NeihanManager;
 import com.jaeger.library.StatusBarUtil;
 import com.sunjian.android_pickview_lib.BaseOptionsPickerDialog;
@@ -85,8 +88,10 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     AppBarLayout mAppbar;
     @BindView(R.id.home_title)
     TextView mTitle;
-    @BindView(R.id.home_bottom)
-    TextView mBottom;
+    //    @BindView(R.id.home_bottom)
+//    TextView mBottom;
+    @BindView(R.id.home_navigition)
+    BottomNavigationView mBottomNavigation;
 
     @Inject
     HomeAdapter mAdapter;
@@ -130,7 +135,8 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         mAdapter.setOnHeaderClickListener(this::handleHeaderOptions);
         mHomeList.addOnChildAttachStateChangeListener(new HomeRecyclerViewStateChangeListener());
         mAppbar.addOnOffsetChangedListener(this::handleAppbarOffsetChangedListener);
-        mBottom.setOnClickListener(v -> AboutMeActivity.start(this));
+//        mBottom.setOnClickListener(v -> ContactActivity.start(this));
+        mBottomNavigation.setOnNavigationItemSelectedListener(this::handleNavigationItemClick);
     }
 
     @Override
@@ -190,7 +196,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
 
     @Override
     protected int getContentResId() {
-        return R.layout.activity_main;
+        return R.layout.activity_home;
     }
 
     @Override
@@ -205,6 +211,31 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
             return;
         }
         showExitDialog();
+    }
+
+    private boolean handleNavigationItemClick(MenuItem item) {
+        final int itemId = item.getItemId();
+        switch (itemId) {
+            case R.id.navigation_contact:
+                ContactActivity.start(this);
+                break;
+            case R.id.navigation_live:
+                SnackbarUtil.show(this, "直播模块敬请期待!");
+                break;
+            case R.id.navigation_music:
+                SnackbarUtil.show(this, "音乐模块敬请期待!");
+                break;
+            case R.id.navigation_about_me:
+                AboutMeActivity.start(this);
+                break;
+            case R.id.navigation_more:
+                SnackbarUtil.show(this, "更多模块敬请期待!");
+                break;
+            default:
+                AboutMeActivity.start(this);
+                break;
+        }
+        return true;
     }
 
     private void showExitDialog() {

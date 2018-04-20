@@ -16,8 +16,8 @@
 package com.crazysunj.domain.repository.zhihu;
 
 
-import com.crazysunj.domain.entity.ZhihuNewsDetailEntity;
-import com.crazysunj.domain.entity.ZhihuNewsEntity;
+import com.crazysunj.domain.entity.zhihu.ZhihuNewsDetailEntity;
+import com.crazysunj.domain.entity.zhihu.ZhihuNewsEntity;
 
 import io.reactivex.Flowable;
 

@@ -43,9 +43,16 @@
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".ui.AboutMeActivity"
-            android:label="@string/about_me"
+            android:label="@string/text_about_me"
             android:screenOrientation="portrait" />
         <activity android:name=".weex.WeexActivity"/>
+
+        <activity
+            android:name=".ui.contact.ContactActivity"
+            android:label="@string/page_name_conatct"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".ui.contact.ContactDetailActivity"
+            android:theme="@style/ContactTheme"/>
     </application>
 
 </manifest>

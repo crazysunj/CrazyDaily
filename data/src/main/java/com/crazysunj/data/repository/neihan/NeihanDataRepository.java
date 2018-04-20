@@ -18,7 +18,7 @@ package com.crazysunj.data.repository.neihan;
 import com.crazysunj.data.api.HttpHelper;
 import com.crazysunj.data.service.NeihanService;
 import com.crazysunj.data.util.RxTransformerUtil;
-import com.crazysunj.domain.entity.NeihanEntity;
+import com.crazysunj.domain.entity.neihan.NeihanEntity;
 import com.crazysunj.domain.repository.neihan.NeihanRepository;
 
 import javax.inject.Inject;

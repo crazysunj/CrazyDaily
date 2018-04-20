@@ -15,7 +15,7 @@
  */
 package com.crazysunj.domain.repository.neihan;
 
-import com.crazysunj.domain.entity.NeihanEntity;
+import com.crazysunj.domain.entity.neihan.NeihanEntity;
 
 import io.reactivex.Flowable;
 

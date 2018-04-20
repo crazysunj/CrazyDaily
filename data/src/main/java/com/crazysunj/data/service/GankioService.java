@@ -15,7 +15,7 @@
  */
 package com.crazysunj.data.service;
 
-import com.crazysunj.domain.entity.GankioEntity;
+import com.crazysunj.domain.entity.gankio.GankioEntity;
 
 import io.reactivex.Flowable;
 import retrofit2.http.GET;

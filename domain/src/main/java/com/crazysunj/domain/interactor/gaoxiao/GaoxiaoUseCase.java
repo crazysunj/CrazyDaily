@@ -19,8 +19,8 @@ import android.graphics.Color;
 import android.text.TextUtils;
 
 import com.crazysunj.domain.constant.CodeConstant;
-import com.crazysunj.domain.entity.GaoxiaoEntity;
-import com.crazysunj.domain.entity.GaoxiaoItemEntity;
+import com.crazysunj.domain.entity.gaoxiao.GaoxiaoEntity;
+import com.crazysunj.domain.entity.gaoxiao.GaoxiaoItemEntity;
 import com.crazysunj.domain.exception.ApiException;
 import com.crazysunj.domain.interactor.UseCase;
 import com.crazysunj.domain.repository.gaoxiao.GaoxiaoRepository;

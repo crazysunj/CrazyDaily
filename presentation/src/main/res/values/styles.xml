@@ -23,6 +23,14 @@
         <item name="windowActionModeOverlay">true</item>
     </style>
 
+    <style name="ContactTheme" parent="AppTheme.NoActionBar">
+        <item name="android:windowBackground">@color/colorPrimary</item>
+        <item name="android:windowActivityTransitions">true</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">false</item>
+        <item name="android:windowAllowReturnTransitionOverlap">false</item>
+    </style>
+
     <style name="AppTheme.Transitions">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -78,5 +86,51 @@
     <style name="text_12_cccccc">
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/color_cccccc</item>
+    </style>
+
+    <style name="text_10_333333">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/color_333333</item>
+    </style>
+
+    <style name="text_12_333333">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/color_333333</item>
+    </style>
+
+    <style name="text_12_666666">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/color_666666</item>
+    </style>
+
+    <style name="text_14_color_primary">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="text_16_color_primary">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="text_12_primary">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="text_12_999999">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/color_999999</item>
+    </style>
+
+    <style name="text_20_white">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/color_white</item>
+    </style>
+
+    <style name="horizontal_line">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0.5dp</item>
+        <item name="android:background">@color/color_cccccc</item>
     </style>
 </resources>

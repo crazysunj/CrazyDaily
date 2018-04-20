@@ -18,11 +18,11 @@ package com.crazysunj.crazydaily.presenter.contract;
 
 import com.crazysunj.crazydaily.base.IPresenter;
 import com.crazysunj.crazydaily.base.IView;
-import com.crazysunj.domain.entity.GankioEntity;
-import com.crazysunj.domain.entity.GaoxiaoItemEntity;
-import com.crazysunj.domain.entity.NeihanItemEntity;
-import com.crazysunj.domain.entity.WeatherRemoteEntity;
-import com.crazysunj.domain.entity.ZhihuNewsEntity;
+import com.crazysunj.domain.entity.gankio.GankioEntity;
+import com.crazysunj.domain.entity.gaoxiao.GaoxiaoItemEntity;
+import com.crazysunj.domain.entity.neihan.NeihanItemEntity;
+import com.crazysunj.domain.entity.weather.WeatherRemoteEntity;
+import com.crazysunj.domain.entity.zhihu.ZhihuNewsEntity;
 
 import java.util.List;
 
@@ -34,7 +34,6 @@ import java.util.List;
 public interface HomeContract {
 
     interface View extends IView {
-
         void showZhihu(ZhihuNewsEntity zhihuNewsEntity);
 
         void showGankio(List<GankioEntity.ResultsEntity> gankioList);
@@ -47,7 +46,6 @@ public interface HomeContract {
     }
 
     interface Presenter extends IPresenter<View> {
-
         void getZhihuNewsList();
 
         void getGankioList(String type);

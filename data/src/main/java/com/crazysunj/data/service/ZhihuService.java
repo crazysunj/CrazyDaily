@@ -16,8 +16,8 @@
 package com.crazysunj.data.service;
 
 
-import com.crazysunj.domain.entity.ZhihuNewsDetailEntity;
-import com.crazysunj.domain.entity.ZhihuNewsEntity;
+import com.crazysunj.domain.entity.zhihu.ZhihuNewsDetailEntity;
+import com.crazysunj.domain.entity.zhihu.ZhihuNewsEntity;
 
 import io.reactivex.Flowable;
 import retrofit2.http.GET;

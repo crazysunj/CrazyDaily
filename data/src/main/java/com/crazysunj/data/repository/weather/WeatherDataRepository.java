@@ -18,7 +18,7 @@ package com.crazysunj.data.repository.weather;
 import com.crazysunj.data.api.HttpHelper;
 import com.crazysunj.data.service.WeatherService;
 import com.crazysunj.data.util.RxTransformerUtil;
-import com.crazysunj.domain.entity.WeatherRemoteEntity;
+import com.crazysunj.domain.entity.weather.WeatherRemoteEntity;
 import com.crazysunj.domain.repository.weather.WeatherRepository;
 
 import javax.inject.Inject;

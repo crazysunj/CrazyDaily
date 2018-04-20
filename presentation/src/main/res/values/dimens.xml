@@ -28,4 +28,6 @@
     <dimen name="space_180">180dp</dimen>
     <dimen name="space_220">220dp</dimen>
     <dimen name="space_240">240dp</dimen>
+    <dimen name="space_5">5dp</dimen>
+    <dimen name="space_32">32dp</dimen>
 </resources>

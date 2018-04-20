@@ -17,10 +17,10 @@ package com.crazysunj.crazydaily.di.module;
 
 import com.crazysunj.crazydaily.entity.ExpandCollapseFooterEntity;
 import com.crazysunj.crazydaily.ui.adapter.helper.HomeAdapterHelper;
-import com.crazysunj.domain.entity.CommonHeaderEntity;
-import com.crazysunj.domain.entity.GaoxiaoItemEntity;
-import com.crazysunj.domain.entity.NeihanItemEntity;
-import com.crazysunj.domain.entity.ZhihuNewsEntity;
+import com.crazysunj.domain.entity.common.CommonHeaderEntity;
+import com.crazysunj.domain.entity.gaoxiao.GaoxiaoItemEntity;
+import com.crazysunj.domain.entity.neihan.NeihanItemEntity;
+import com.crazysunj.domain.entity.zhihu.ZhihuNewsEntity;
 
 import javax.inject.Named;
 

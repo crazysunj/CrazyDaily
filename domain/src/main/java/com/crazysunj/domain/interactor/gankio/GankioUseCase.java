@@ -16,7 +16,7 @@
 package com.crazysunj.domain.interactor.gankio;
 
 import com.crazysunj.domain.constant.CodeConstant;
-import com.crazysunj.domain.entity.GankioEntity;
+import com.crazysunj.domain.entity.gankio.GankioEntity;
 import com.crazysunj.domain.exception.ApiException;
 import com.crazysunj.domain.interactor.UseCase;
 import com.crazysunj.domain.repository.gankio.GankioRepository;

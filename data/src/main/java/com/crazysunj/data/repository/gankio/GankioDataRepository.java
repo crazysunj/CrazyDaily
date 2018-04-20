@@ -18,7 +18,7 @@ package com.crazysunj.data.repository.gankio;
 import com.crazysunj.data.api.HttpHelper;
 import com.crazysunj.data.service.GankioService;
 import com.crazysunj.data.util.RxTransformerUtil;
-import com.crazysunj.domain.entity.GankioEntity;
+import com.crazysunj.domain.entity.gankio.GankioEntity;
 import com.crazysunj.domain.repository.gankio.GankioRepository;
 
 import javax.inject.Inject;

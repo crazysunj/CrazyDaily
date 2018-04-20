@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="satellite_menu_radius" format="dimension" />
+    <attr name="satellite_menu_size" format="dimension" />
+    <attr name="satellite_menu_direction" format="integer">
+        <enum name="right_bottom" value="0" />
+        <enum name="left_bottom" value="1" />
+        <enum name="left_top" value="2" />
+        <enum name="right_top" value="3" />
+    </attr>
+    <declare-styleable name="SatelliteMenuView">
+        <attr name="satellite_menu_radius" />
+        <attr name="satellite_menu_size" />
+        <attr name="satellite_menu_direction" />
+    </declare-styleable>
+</resources>
