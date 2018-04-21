@@ -4,10 +4,12 @@
 ## 效果图
 ### 首页
 文章：[带你领略Clean架构的魅力](http://crazysunj.com/2017/09/25/%E5%B8%A6%E4%BD%A0%E9%A2%86%E7%95%A5Clean%E6%9E%B6%E6%9E%84%E7%9A%84%E9%AD%85%E5%8A%9B/)
+
 ![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/app_crazydaily.gif)
 
 ### Weex
 文章：[一起来玩Weex](http://crazysunj.com/2018/03/16/%E4%B8%80%E8%B5%B7%E6%9D%A5%E7%8E%A9Weex/)
+
 ![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/demo_weex.gif)
 
 ### 联系人(待完善)
