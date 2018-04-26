@@ -43,6 +43,8 @@ public interface HomeContract {
         void showNeihan(List<NeihanItemEntity> neihanList);
 
         void showGaoxiao(List<GaoxiaoItemEntity> gaoxiaoList);
+
+        void showMeinv(List<String> meinvList);
     }
 
     interface Presenter extends IPresenter<View> {
@@ -57,5 +59,7 @@ public interface HomeContract {
                            String dpi, String update_version_code);
 
         void getGaoxiaoList(int page);
+
+        void getMeinvList();
     }
 }

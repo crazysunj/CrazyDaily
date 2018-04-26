@@ -61,7 +61,6 @@
             android:layout_marginStart="@dimen/space_25"
             android:layout_marginTop="@dimen/space_10"
             android:scaleType="centerCrop"
-            android:src="@mipmap/ic_huaji"
             app:civ_border_color="@color/color_white"
             app:civ_border_width="@dimen/space_2" />
 

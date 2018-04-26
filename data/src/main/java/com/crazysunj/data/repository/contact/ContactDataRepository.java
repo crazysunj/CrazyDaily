@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crazysunj.data.repository.gankio;
+package com.crazysunj.data.repository.contact;
 
 import com.crazysunj.data.api.HttpHelper;
-import com.crazysunj.data.service.GankioService;
+import com.crazysunj.data.service.GaoxiaoService;
 import com.crazysunj.data.util.RxTransformerUtil;
-import com.crazysunj.domain.entity.gankio.GankioEntity;
-import com.crazysunj.domain.repository.gankio.GankioRepository;
+import com.crazysunj.domain.entity.gaoxiao.GaoxiaoEntity;
+import com.crazysunj.domain.repository.contact.ContactRepository;
 
 import javax.inject.Inject;
 
@@ -31,18 +31,18 @@ import io.reactivex.Flowable;
  * description: https://github.com/crazysunj/CrazyDaily
  */
 
-public class GankioDataRepository implements GankioRepository {
+public class ContactDataRepository implements ContactRepository {
 
-    private GankioService mGankioService;
+    private GaoxiaoService mGaoxiaoService;
 
     @Inject
-    public GankioDataRepository(HttpHelper httpHelper) {
-        mGankioService = httpHelper.getGankioService();
+    public ContactDataRepository(HttpHelper httpHelper) {
+        mGaoxiaoService = httpHelper.getGaoxiaoService();
     }
 
     @Override
-    public Flowable<GankioEntity> getGankio(String type, int count) {
-        return mGankioService.getGankio(type, count)
+    public Flowable<GaoxiaoEntity> getGaoxiaoList(int type, int page) {
+        return mGaoxiaoService.getGaoxiaoList(type, page)
                 .compose(RxTransformerUtil.normalTransformer());
     }
 }

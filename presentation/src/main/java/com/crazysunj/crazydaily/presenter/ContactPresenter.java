@@ -16,9 +16,13 @@
 package com.crazysunj.crazydaily.presenter;
 
 import com.crazysunj.crazydaily.base.BasePresenter;
+import com.crazysunj.crazydaily.base.BaseSubscriber;
 import com.crazysunj.crazydaily.di.scope.ActivityScope;
 import com.crazysunj.crazydaily.presenter.contract.ContactContract;
-import com.crazysunj.domain.entity.contact.Contact;
+import com.crazysunj.domain.entity.contact.MultiTypeIndexEntity;
+import com.crazysunj.domain.interactor.contact.ContactUseCase;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -30,13 +34,26 @@ import javax.inject.Inject;
 @ActivityScope
 public class ContactPresenter extends BasePresenter<ContactContract.View> implements ContactContract.Presenter {
 
-    @Inject
-    public ContactPresenter() {
+    private ContactUseCase mContactUseCase;
 
+    @Inject
+    public ContactPresenter(ContactUseCase contactUseCase) {
+        mContactUseCase = contactUseCase;
     }
 
     @Override
     public void getConactList() {
-        mView.showContent(Contact.getChineseContacts());
+        mContactUseCase.execute(ContactUseCase.Params.get(0), new BaseSubscriber<List<MultiTypeIndexEntity>>() {
+            @Override
+            public void onNext(List<MultiTypeIndexEntity> data) {
+                mView.showContent(data);
+            }
+        });
+    }
+
+    @Override
+    public void detachView() {
+        super.detachView();
+        mContactUseCase.dispose();
     }
 }

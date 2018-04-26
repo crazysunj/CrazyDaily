@@ -15,6 +15,10 @@
  */
 package com.crazysunj.domain.entity.gaoxiao;
 
+import android.text.TextUtils;
+
+import com.crazysunj.domain.entity.contact.Contact;
+
 import java.util.List;
 
 /**
@@ -150,6 +154,33 @@ public class GaoxiaoEntity {
         private String favourite;
         private Object top_cmt;
         private Object themes;
+
+        @Override
+        public int hashCode() {
+            if (TextUtils.isEmpty(name)) {
+                return super.hashCode();
+            }
+            return name.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+
+            Contact contact = (Contact) obj;
+            if (TextUtils.isEmpty(name) || TextUtils.isEmpty(contact.getName())) {
+                return false;
+            }
+            return name.equals(contact.getName());
+        }
 
         public String getType() {
             return type;

@@ -31,6 +31,6 @@ public interface GankioService {
 
     String HOST = "http://gank.io/api/";
 
-    @GET("random/data/{type}/10")
-    Flowable<GankioEntity> getGankio(@Path("type") String type);
+    @GET("random/data/{type}/{count}")
+    Flowable<GankioEntity> getGankio(@Path("type") String type, @Path("count") int count);
 }

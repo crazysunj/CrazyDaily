@@ -42,7 +42,6 @@ ext {
 
     dataDependencies = [
             MTRVA                   : "com.crazysunj:multitypeadapter:${dependVersion.MTRVA}",
-            rxandroid               : "io.reactivex.rxjava2:rxandroid:${dependVersion.rxandroid}",
             retrofit                : "com.squareup.retrofit2:retrofit:${dependVersion.retrofit}",
             retrofitConverterGson   : "com.squareup.retrofit2:converter-gson:${dependVersion.retrofit}",
             retrofitAdapterRxjava   : "com.squareup.retrofit2:adapter-rxjava2:${dependVersion.retrofit}",
@@ -87,6 +86,7 @@ ext {
     domainDependencies = [
             MTRVA          : "com.crazysunj:multitypeadapter:${dependVersion.MTRVA}",
             rxjava         : "io.reactivex.rxjava2:rxjava:${dependVersion.rxjava}",
+            rxandroid      : "io.reactivex.rxjava2:rxandroid:${dependVersion.rxandroid}",
             javaxInject    : "javax.inject:javax.inject:${dependVersion.javaxInjectVersion}",
             javaxAnnotation: "javax.annotation:jsr250-api:${dependVersion.javaxAnnotationVersion}",
             arrow          : "com.fernandocejas:arrow:${dependVersion.arrowVersion}",

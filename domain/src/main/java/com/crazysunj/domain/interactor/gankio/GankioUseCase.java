@@ -26,6 +26,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * author: sunjian
@@ -44,7 +46,8 @@ public class GankioUseCase extends UseCase<List<GankioEntity.ResultsEntity>, Gan
 
     @Override
     protected Flowable<List<GankioEntity.ResultsEntity>> buildUseCaseObservable(Params params) {
-        return mGankioRepository.getGankio(params.type)
+        return mGankioRepository.getGankio(params.type, params.count)
+                .observeOn(Schedulers.io())
                 .flatMap(gankioEntity -> {
                     if (gankioEntity == null) {
                         return Flowable.error(new ApiException(CodeConstant.CODE_EMPTY, "数据为空，请求个毛线！"));
@@ -57,20 +60,23 @@ public class GankioUseCase extends UseCase<List<GankioEntity.ResultsEntity>, Gan
                         return Flowable.error(new ApiException(CodeConstant.CODE_EMPTY, "数据为空，请求个毛线！"));
                     }
                     return Flowable.just(results);
-                });
+                })
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
 
     public static final class Params {
 
         private final String type;
+        private final int count;
 
-        private Params(String type) {
+        private Params(String type, int count) {
             this.type = type;
+            this.count = count;
         }
 
-        public static Params get(String type) {
-            return new Params(type);
+        public static Params get(String type, int count) {
+            return new Params(type, count);
         }
     }
 }

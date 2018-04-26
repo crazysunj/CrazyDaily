@@ -33,6 +33,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.crazysunj.cardslideview.CardViewPager;
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.app.App;
@@ -46,6 +47,7 @@ import com.crazysunj.crazydaily.ui.adapter.helper.HomeAdapterHelper;
 import com.crazysunj.crazydaily.ui.contact.ContactActivity;
 import com.crazysunj.crazydaily.util.SnackbarUtil;
 import com.crazysunj.crazydaily.view.banner.BannerCardHandler;
+import com.crazysunj.crazydaily.view.threed.CubeReversalView;
 import com.crazysunj.crazydaily.weex.WeexActivity;
 import com.crazysunj.data.util.JsonUtil;
 import com.crazysunj.data.util.LoggerUtil;
@@ -93,6 +95,13 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     @BindView(R.id.home_navigition)
     BottomNavigationView mBottomNavigation;
 
+    @BindView(R.id.cube_anchor)
+    CubeReversalView mCubeAnchor;
+    @BindView(R.id.cube_first)
+    CubeReversalView mCubeFirst;
+    @BindView(R.id.cube_second)
+    CubeReversalView mCubeSecond;
+
     @Inject
     HomeAdapter mAdapter;
 
@@ -104,6 +113,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     private ArrayList<CityEntity> mCityList;
     private ArgbEvaluator mArgbEvaluator = new ArgbEvaluator();
     private int gaoxiaoIndex = 1;
+    private boolean isTop = true;
 
 
     @Override
@@ -137,6 +147,9 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         mAppbar.addOnOffsetChangedListener(this::handleAppbarOffsetChangedListener);
 //        mBottom.setOnClickListener(v -> ContactActivity.start(this));
         mBottomNavigation.setOnNavigationItemSelectedListener(this::handleNavigationItemClick);
+        mCubeAnchor.setOnClickListener(v -> clickCubeAnchor());
+        mCubeFirst.setOnClickListener(v -> clickCubeFirst());
+        mCubeSecond.setOnClickListener(v -> clickCubeSecond());
     }
 
     @Override
@@ -145,6 +158,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         mPresenter.getGankioList(GankioEntity.ResultsEntity.PARAMS_ANDROID);
         mPresenter.getWeather("CHZJ000000");
         mPresenter.getGaoxiaoList(gaoxiaoIndex);
+        mPresenter.getMeinvList();
 //        mPresenter.getNeihanList(mNeihanManager.getAmLocTime(), mNeihanManager.getMinTime(), mNeihanManager.getSceenWidth(),
 //                mNeihanManager.getIid(), mNeihanManager.getDeviceId(), mNeihanManager.getAc(), mNeihanManager.getVersionCode(),
 //                mNeihanManager.getVersionName(), Build.MODEL, Build.BRAND, Build.VERSION.SDK_INT, Build.VERSION.RELEASE, mNeihanManager.getUuid(),
@@ -195,6 +209,17 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     }
 
     @Override
+    public void showMeinv(List<String> meinvList) {
+        stopRefresh();
+        Glide.with(this).load(meinvList.get(0)).centerCrop().placeholder(R.drawable.img_default).dontAnimate().into(mCubeAnchor.getForegroundView());
+        Glide.with(this).load(meinvList.get(1)).centerCrop().placeholder(R.drawable.img_default).dontAnimate().into(mCubeAnchor.getBackgroundView());
+        Glide.with(this).load(meinvList.get(2)).centerCrop().placeholder(R.drawable.img_default).dontAnimate().into(mCubeFirst.getForegroundView());
+        Glide.with(this).load(meinvList.get(3)).centerCrop().placeholder(R.drawable.img_default).dontAnimate().into(mCubeFirst.getBackgroundView());
+        Glide.with(this).load(meinvList.get(4)).centerCrop().placeholder(R.drawable.img_default).dontAnimate().into(mCubeSecond.getForegroundView());
+        Glide.with(this).load(meinvList.get(5)).centerCrop().placeholder(R.drawable.img_default).dontAnimate().into(mCubeSecond.getBackgroundView());
+    }
+
+    @Override
     protected int getContentResId() {
         return R.layout.activity_home;
     }
@@ -210,7 +235,29 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         if (NiceVideoPlayerManager.instance().onBackPressd()) {
             return;
         }
+        if (!isTop) {
+            isTop = !isTop;
+            mCubeSecond.start(isTop, 2);
+            mCubeFirst.start(isTop, 1);
+            mCubeAnchor.start(isTop);
+            return;
+        }
         showExitDialog();
+    }
+
+    private void clickCubeAnchor() {
+        isTop = !isTop;
+        mCubeSecond.start(isTop, 2);
+        mCubeFirst.start(isTop, 1);
+        mCubeAnchor.start(isTop);
+    }
+
+    private void clickCubeSecond() {
+        SnackbarUtil.show(this, "我是第三个");
+    }
+
+    private void clickCubeFirst() {
+        SnackbarUtil.show(this, "我是第二个");
     }
 
     private boolean handleNavigationItemClick(MenuItem item) {

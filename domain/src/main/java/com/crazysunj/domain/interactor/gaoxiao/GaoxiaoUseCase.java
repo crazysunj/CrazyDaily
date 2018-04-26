@@ -32,6 +32,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * author: sunjian
@@ -51,6 +53,7 @@ public class GaoxiaoUseCase extends UseCase<List<GaoxiaoItemEntity>, GaoxiaoUseC
     @Override
     protected Flowable<List<GaoxiaoItemEntity>> buildUseCaseObservable(Params params) {
         return mGaoxiaoRepository.getGaoxiaoList(Params.TYPE, params.page)
+                .observeOn(Schedulers.io())
                 .flatMap(gaoxiaoEntity -> {
                     if (gaoxiaoEntity == null) {
                         return Flowable.error(new ApiException(CodeConstant.CODE_EMPTY, "数据为空，请求个毛线！"));
@@ -78,7 +81,8 @@ public class GaoxiaoUseCase extends UseCase<List<GaoxiaoItemEntity>, GaoxiaoUseC
                         gaoxiaoList.add(new GaoxiaoItemEntity(id, avatar, name, realTitle, thumbnail, duration, videouri));
                     }
                     return Flowable.just(gaoxiaoList);
-                });
+                })
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
 

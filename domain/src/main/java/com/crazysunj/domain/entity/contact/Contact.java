@@ -31,9 +31,10 @@ public class Contact extends MultiTypeIndexEntity implements Parcelable {
     public static final int TYPE = 0;
     private String index;
     private String name;
+    private String avatar;
     private String location;
-    private boolean isLast;
     private String phone;
+    private boolean isLast;
 
     public Contact(String index, String name) {
         this.index = index;
@@ -59,11 +60,24 @@ public class Contact extends MultiTypeIndexEntity implements Parcelable {
         this.isLast = isLast;
     }
 
+    public Contact(String index, String name, String avatar, String location, String phone, boolean isLast) {
+        this.index = index;
+        this.name = name;
+        this.avatar = avatar;
+        this.location = location;
+        this.phone = phone;
+        this.isLast = isLast;
+    }
+
     public String getPhone() {
         if (TextUtils.isEmpty(phone)) {
             phone = "10086";
         }
         return phone;
+    }
+
+    public String getAvatar() {
+        return avatar;
     }
 
     @Override

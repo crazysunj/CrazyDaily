@@ -31,6 +31,7 @@ import android.view.Window;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.animation.BezierTransition;
 import com.crazysunj.crazydaily.animation.CircularRevealTransition;
@@ -46,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * author: sunjian
@@ -64,6 +66,8 @@ public class ContactDetailActivity extends BaseActivity {
     TextView mLocation;
     @BindView(R.id.tx_name)
     TextView mName;
+    @BindView(R.id.ic_head)
+    CircleImageView mHead;
 
     private Contact mContact;
 
@@ -93,6 +97,7 @@ public class ContactDetailActivity extends BaseActivity {
         mContact = intent.getParcelableExtra(CONTACT);
         mLocation.setText(mContact.getLocation());
         mName.setText(mContact.getName());
+        Glide.with(this).load(mContact.getAvatar()).centerCrop().into(mHead);
 
         List<ImgResEntity> data = new ArrayList<>();
         Resources resources = getResources();

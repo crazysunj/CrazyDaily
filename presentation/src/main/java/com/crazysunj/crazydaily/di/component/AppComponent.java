@@ -19,6 +19,7 @@ package com.crazysunj.crazydaily.di.component;
 import android.content.Context;
 
 import com.crazysunj.crazydaily.di.module.AppModule;
+import com.crazysunj.domain.repository.contact.ContactRepository;
 import com.crazysunj.domain.repository.gankio.GankioRepository;
 import com.crazysunj.domain.repository.gaoxiao.GaoxiaoRepository;
 import com.crazysunj.domain.repository.neihan.NeihanRepository;
@@ -53,4 +54,5 @@ public interface AppComponent {
 
     GaoxiaoRepository provideGaoxiaoRepository();
 
+    ContactRepository provideContactRepository();
 }

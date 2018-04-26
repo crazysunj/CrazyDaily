@@ -34,7 +34,6 @@ dependencies {
     provided dataDependencies.MTRVA
     provided dataDependencies.niceVieoPlayer
 
-    compile dataDependencies.rxandroid
     compile dataDependencies.retrofit
     compile dataDependencies.retrofitConverterGson
     compile dataDependencies.retrofitAdapterRxjava

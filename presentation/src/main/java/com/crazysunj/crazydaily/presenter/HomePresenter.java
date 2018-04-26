@@ -30,7 +30,9 @@ import com.crazysunj.domain.interactor.neihan.NeihanUseCase;
 import com.crazysunj.domain.interactor.weather.WeatherUseCase;
 import com.crazysunj.domain.interactor.zhihu.ZhihuNewsListUseCase;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.inject.Inject;
 
@@ -69,7 +71,7 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
 
     @Override
     public void getGankioList(String type) {
-        mGankioUseCase.execute(GankioUseCase.Params.get(type), new BaseSubscriber<List<GankioEntity.ResultsEntity>>() {
+        mGankioUseCase.execute(GankioUseCase.Params.get(type, 10), new BaseSubscriber<List<GankioEntity.ResultsEntity>>() {
             @Override
             public void onNext(List<GankioEntity.ResultsEntity> resultsEntities) {
                 mView.showGankio(resultsEntities);
@@ -103,6 +105,21 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
             @Override
             public void onNext(List<GaoxiaoItemEntity> gaoxiaoItemEntities) {
                 mView.showGaoxiao(gaoxiaoItemEntities);
+            }
+        });
+    }
+
+    @Override
+    public void getMeinvList() {
+        mGankioUseCase.execute(GankioUseCase.Params.get("福利", 10), new BaseSubscriber<List<GankioEntity.ResultsEntity>>() {
+            @Override
+            public void onNext(List<GankioEntity.ResultsEntity> resultsEntities) {
+                List<String> urls = new ArrayList<>();
+                Random random = new Random();
+                for (int i = 0; i < 6; i++) {
+                    urls.add(resultsEntities.remove(random.nextInt(resultsEntities.size())).getUrl());
+                }
+                mView.showMeinv(urls);
             }
         });
     }

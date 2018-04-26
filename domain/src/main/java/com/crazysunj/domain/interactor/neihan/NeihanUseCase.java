@@ -32,6 +32,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * author: sunjian
@@ -54,6 +56,7 @@ public class NeihanUseCase extends UseCase<List<NeihanItemEntity>, NeihanUseCase
                 params.min_time, params.screen_width, params.double_col_mode, params.iid, params.device_id, params.ac, params.channel, params.aid, params.app_name, params.version_code, params.version_name,
                 params.device_platform, params.ssmix, params.device_type, params.device_brand, params.os_api, params.os_version, params.uuid, params.openudid, params.manifest_version_code, params.resolution, params.dpi,
                 params.update_version_code)
+                .observeOn(Schedulers.io())
                 .flatMap(neihanEntity -> {
                     if (neihanEntity == null) {
                         return Flowable.error(new ApiException(CodeConstant.CODE_EMPTY, "数据为空，请求个毛线！"));
@@ -128,7 +131,8 @@ public class NeihanUseCase extends UseCase<List<NeihanItemEntity>, NeihanUseCase
                         neihanList.add(new NeihanItemEntity(id, avatar, name, realTitle, thumbnail, duration, clarityList));
                     }
                     return Flowable.just(neihanList);
-                });
+                })
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
 

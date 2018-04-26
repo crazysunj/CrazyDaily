@@ -58,15 +58,74 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <android.support.design.widget.BottomNavigationView
-            app:itemIconTint="@color/colorPrimary"
-            app:itemTextColor="@color/colorPrimary"
-            app:itemBackground="@drawable/shape_home_bottom_bg"
             android:id="@+id/home_navigition"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layout_gravity="bottom"
+            app:itemBackground="@drawable/shape_home_bottom_bg"
+            app:itemIconTint="@color/colorPrimary"
+            app:itemTextColor="@color/colorPrimary"
             app:layout_behavior="@string/bottom_behavior"
             app:menu="@menu/menu_navigation" />
+
+        <com.crazysunj.crazydaily.view.threed.CubeReversalView
+            android:id="@+id/cube_second"
+            android:layout_width="@dimen/cube_size"
+            android:layout_height="@dimen/cube_size"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="@dimen/space_100"
+            android:layout_marginEnd="@dimen/space_30">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </com.crazysunj.crazydaily.view.threed.CubeReversalView>
+
+        <com.crazysunj.crazydaily.view.threed.CubeReversalView
+            android:id="@+id/cube_first"
+            android:layout_width="@dimen/cube_size"
+            android:layout_height="@dimen/cube_size"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="@dimen/space_100"
+            android:layout_marginEnd="@dimen/space_30">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </com.crazysunj.crazydaily.view.threed.CubeReversalView>
+
+        <com.crazysunj.crazydaily.view.threed.CubeReversalView
+            android:id="@+id/cube_anchor"
+            android:layout_width="@dimen/cube_size"
+            android:layout_height="@dimen/cube_size"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="@dimen/space_100"
+            android:layout_marginEnd="@dimen/space_30">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </com.crazysunj.crazydaily.view.threed.CubeReversalView>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="@dimen/space_70"
+            android:layout_marginEnd="@dimen/space_32"
+            android:src="@mipmap/ic_shadow" />
     </android.support.design.widget.CoordinatorLayout>
 </com.crazysunj.crazydaily.view.banner.VpSwipeRefreshLayout>
 

@@ -21,6 +21,7 @@ import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.subscribers.DisposableSubscriber;
+
 /**
  * author: sunjian
  * created on: 2017/9/5 下午5:34
@@ -42,6 +43,12 @@ public abstract class UseCase<T, Params> {
         final Flowable<T> flowable = this.buildUseCaseObservable(params);
         addDisposable(flowable.subscribeWith(subscriber));
     }
+
+//    public void execute(Params params, Consumer<T> onNext) {
+//        Preconditions.checkNotNull(onNext);
+//        final Flowable<T> flowable = this.buildUseCaseObservable(params);
+//        addDisposable(flowable.subscribe(onNext));
+//    }
 
     public void execute(DisposableSubscriber<T> subscriber) {
         execute(null, subscriber);

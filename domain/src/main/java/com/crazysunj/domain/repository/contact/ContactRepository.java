@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crazysunj.domain.repository.gankio;
+package com.crazysunj.domain.repository.contact;
 
-import com.crazysunj.domain.entity.gankio.GankioEntity;
+import com.crazysunj.domain.entity.gaoxiao.GaoxiaoEntity;
 
 import io.reactivex.Flowable;
 
@@ -25,6 +25,6 @@ import io.reactivex.Flowable;
  * description:https://github.com/crazysunj/CrazyDaily
  */
 
-public interface GankioRepository {
-    Flowable<GankioEntity> getGankio(String type, int count);
+public interface ContactRepository {
+    Flowable<GaoxiaoEntity> getGaoxiaoList(int type, int page);
 }

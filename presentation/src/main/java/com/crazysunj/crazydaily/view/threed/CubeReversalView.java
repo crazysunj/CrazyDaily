@@ -38,30 +38,30 @@ import android.widget.ImageView;
  * created on: 2018/4/24 下午1:38
  * description:https://github.com/crazysunj/CrazyDaily
  */
-public class ThreeDimensionalReversalView extends FrameLayout {
+public class CubeReversalView extends FrameLayout {
 
     private static final int DEGREE = 90;
-    private static final int DURATION = 1000;
+    private static final int DURATION = 800;
     private TopInAnimation mTopInAnimation;
     private TopOutAnimation mTopOutAnimation;
     private BottomInAnimation mBottomInAnimation;
     private BottomOutAnimation mBottomOutAnimation;
-    private View mBackgroundView;
-    private View mForegroundView;
-    private final float mTranslationYDistance = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, getResources().getDisplayMetrics());
+    private FrameLayout mBackgroundView;
+    private FrameLayout mForegroundView;
+    private final float mTranslationYDistance = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getResources().getDisplayMetrics());
     private GradientDrawable mBackgroundDrawable;
     private GradientDrawable mForegroundDrawable;
     private ArgbEvaluator mArgbEvaluator;
 
-    public ThreeDimensionalReversalView(@NonNull Context context) {
+    public CubeReversalView(@NonNull Context context) {
         this(context, null);
     }
 
-    public ThreeDimensionalReversalView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public CubeReversalView(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ThreeDimensionalReversalView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public CubeReversalView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mBottomOutAnimation = new BottomOutAnimation();
         mBottomOutAnimation.setDuration(DURATION);
@@ -87,28 +87,29 @@ public class ThreeDimensionalReversalView extends FrameLayout {
         if (childCount != 2) {
             throw new RuntimeException("必须两个哦");
         }
+
         Context context = getContext();
-        FrameLayout foregroundLayout = new FrameLayout(context);
         FrameLayout backgroundLayout = new FrameLayout(context);
         View backgroundView = getChildAt(0);
         View foregroundView = getChildAt(1);
 
+        FrameLayout foregroundLayout = new FrameLayout(context);
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
         removeAllViewsInLayout();
-        ImageView foregroundImg = new ImageView(context);
         ImageView backgroundImg = new ImageView(context);
-        foregroundImg.setImageDrawable(mForegroundDrawable);
+        ImageView foregroundImg = new ImageView(context);
         backgroundImg.setImageDrawable(mBackgroundDrawable);
-        foregroundLayout.addView(foregroundView);
-        foregroundLayout.addView(foregroundImg);
+        foregroundImg.setImageDrawable(mForegroundDrawable);
         backgroundLayout.addView(backgroundView);
         backgroundLayout.addView(backgroundImg);
+        foregroundLayout.addView(foregroundView);
+        foregroundLayout.addView(foregroundImg);
 
         addViewInLayout(foregroundLayout, 0, params);
-        addViewInLayout(backgroundView, 0, params);
-        mBackgroundView = getChildAt(0);
-        mForegroundView = getChildAt(1);
+        addViewInLayout(backgroundLayout, 0, params);
+        mBackgroundView = (FrameLayout) getChildAt(0);
+        mForegroundView = (FrameLayout) getChildAt(1);
     }
 
     public void start(boolean isTop) {
@@ -125,13 +126,14 @@ public class ThreeDimensionalReversalView extends FrameLayout {
             animator.setInterpolator(new AccelerateDecelerateInterpolator());
             animator.addUpdateListener(animation -> {
                 final float value = (float) animation.getAnimatedValue();
-                int startColor1 = (int) mArgbEvaluator.evaluate(value * 0.8f, 0x00000000, 0xff000000);
-                int centerColor1 = (int) mArgbEvaluator.evaluate(value * 0.4f, 0x00000000, 0xff000000);
+                final float oppositeValue = 1 - value;
+
+                int startColor1 = (int) mArgbEvaluator.evaluate(oppositeValue * 0.8f, 0x00000000, 0xff000000);
+                int centerColor1 = (int) mArgbEvaluator.evaluate(oppositeValue * 0.4f, 0x00000000, 0xff000000);
                 int colors1[] = {startColor1, centerColor1, 0x00000000};
 
-                final float oppositeValue = 1 - value;
-                int startColor2 = (int) mArgbEvaluator.evaluate(oppositeValue * 0.8f, 0x00000000, 0xff000000);
-                int centerColor2 = (int) mArgbEvaluator.evaluate(oppositeValue * 0.4f, 0x00000000, 0xff000000);
+                int startColor2 = (int) mArgbEvaluator.evaluate(value * 0.8f, 0x00000000, 0xff000000);
+                int centerColor2 = (int) mArgbEvaluator.evaluate(value * 0.4f, 0x00000000, 0xff000000);
                 int colors2[] = {startColor2, centerColor2, 0x00000000};
 
                 mForegroundDrawable.setColors(colors1);
@@ -148,12 +150,13 @@ public class ThreeDimensionalReversalView extends FrameLayout {
             animator.addUpdateListener(animation -> {
                 final float value = (float) animation.getAnimatedValue();
                 final float oppositeValue = 1 - value;
-                int startColor1 = (int) mArgbEvaluator.evaluate(oppositeValue * 0.8f, 0x00000000, 0xff000000);
-                int centerColor1 = (int) mArgbEvaluator.evaluate(oppositeValue * 0.4f, 0x00000000, 0xff000000);
+
+                int startColor1 = (int) mArgbEvaluator.evaluate(value * 0.8f, 0x00000000, 0xff000000);
+                int centerColor1 = (int) mArgbEvaluator.evaluate(value * 0.4f, 0x00000000, 0xff000000);
                 int colors1[] = {startColor1, centerColor1, 0x00000000};
 
-                int startColor2 = (int) mArgbEvaluator.evaluate(value * 0.8f, 0x00000000, 0xff000000);
-                int centerColor2 = (int) mArgbEvaluator.evaluate(value * 0.4f, 0x00000000, 0xff000000);
+                int startColor2 = (int) mArgbEvaluator.evaluate(oppositeValue * 0.8f, 0x00000000, 0xff000000);
+                int centerColor2 = (int) mArgbEvaluator.evaluate(oppositeValue * 0.4f, 0x00000000, 0xff000000);
                 int colors2[] = {startColor2, centerColor2, 0x00000000};
 
                 mForegroundDrawable.setColors(colors1);
@@ -162,6 +165,28 @@ public class ThreeDimensionalReversalView extends FrameLayout {
             });
             animator.start();
         }
+    }
+
+    public ImageView getForegroundView() {
+        if (mForegroundView == null) {
+            return null;
+        }
+        View foregroundView = mForegroundView.getChildAt(0);
+        if (foregroundView instanceof ImageView) {
+            return (ImageView) foregroundView;
+        }
+        return null;
+    }
+
+    public ImageView getBackgroundView() {
+        if (mBackgroundView == null) {
+            return null;
+        }
+        View backgroundView = mBackgroundView.getChildAt(0);
+        if (backgroundView instanceof ImageView) {
+            return (ImageView) backgroundView;
+        }
+        return null;
     }
 
     static class BottomInAnimation extends Animation {

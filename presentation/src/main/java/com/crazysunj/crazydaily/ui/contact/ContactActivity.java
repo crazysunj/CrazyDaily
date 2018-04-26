@@ -77,6 +77,8 @@ public class ContactActivity extends BaseActivity<ContactPresenter> implements C
                 .inject(this);
     }
 
+    private static final String[] LETTER = {"#", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+
     @Override
     protected void initView() {
         setSupportActionBar(mToolbar);
@@ -85,6 +87,8 @@ public class ContactActivity extends BaseActivity<ContactPresenter> implements C
         mItemTouchHelper.attachToRecyclerView(mContacts);
         mAdapter = new ContactsAdapter(mItemTouchHelper);
         mContacts.setAdapter(mAdapter);
+
+        mSideBar.setIndexItems(LETTER);
 
         mSearchView.setHint(getString(R.string.search_contact));
         mSearchView.setVoiceSearch(false);

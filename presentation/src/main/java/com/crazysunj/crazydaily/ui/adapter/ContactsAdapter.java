@@ -23,6 +23,7 @@ import android.net.Uri;
 import android.support.v4.util.Pair;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseAdapter;
@@ -36,6 +37,8 @@ import com.crazysunj.domain.entity.contact.MultiTypeIndexEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * author: sunjian
@@ -110,6 +113,8 @@ public class ContactsAdapter extends BaseAdapter<MultiTypeIndexEntity, ContactsA
     }
 
     private void renderContact(ContactViewHolder helper, Contact contact) {
+        CircleImageView icon = helper.getView(R.id.ic_head);
+        Glide.with(mContext).load(contact.getAvatar()).centerCrop().dontAnimate().into(icon);
         helper.setText(R.id.tx_name, contact.getName());
         helper.setText(R.id.tx_location, contact.getLocation());
         helper.getView(R.id.content).setOnClickListener(v -> enterContactDetail(v.getContext(), helper, contact));

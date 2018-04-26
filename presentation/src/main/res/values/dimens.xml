@@ -6,11 +6,16 @@
     <dimen name="space_8">8dp</dimen>
     <dimen name="space_200">200dp</dimen>
     <dimen name="space_60">60dp</dimen>
+    <dimen name="space_70">70dp</dimen>
+    <dimen name="space_46">46dp</dimen>
     <dimen name="space_50">50dp</dimen>
     <dimen name="space_15">15dp</dimen>
     <dimen name="space_20">20dp</dimen>
     <dimen name="space_40">40dp</dimen>
     <dimen name="space_30">30dp</dimen>
+    <dimen name="space_31">31dp</dimen>
+    <dimen name="space_32">32dp</dimen>
+    <dimen name="space_33">33dp</dimen>
     <dimen name="space_36">36dp</dimen>
     <dimen name="space_18">18dp</dimen>
     <dimen name="space_6">6dp</dimen>
@@ -29,5 +34,5 @@
     <dimen name="space_220">220dp</dimen>
     <dimen name="space_240">240dp</dimen>
     <dimen name="space_5">5dp</dimen>
-    <dimen name="space_32">32dp</dimen>
+    <dimen name="cube_size">46dp</dimen>
 </resources>
