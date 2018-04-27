@@ -15,9 +15,13 @@
  */
 package com.crazysunj.domain.entity.neihan;
 
+import android.graphics.Color;
+
 import com.crazysunj.domain.entity.base.MultiTypeIdEntity;
+import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.xiao.nicevideoplayer.Clarity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,6 +43,62 @@ public class NeihanItemEntity extends MultiTypeIdEntity {
     private String thumbnail;
     private long duration;
     private List<Clarity> clarityList;
+
+    public static NeihanItemEntity get(NeihanEntity.DataEntityX.DataEntity entity) {
+        NeihanEntity.DataEntityX.DataEntity.GroupEntity group = entity.getGroup();
+        NeihanEntity.DataEntityX.DataEntity.GroupEntity.UserEntity user = group.getUser();
+        final String avatar = user.getAvatar_url();
+        final String name = user.getName();
+        final String id = String.valueOf(group.getId());
+        long duration = (long) (group.getDuration() * 1000);
+        String categoryName = group.getCategory_name();
+        String title = group.getContent();
+        String temTitle = String.format("[%s] %s", categoryName, title);
+        CharSequence realTitle = RecyclerViewAdapterHelper.handleKeyWordHighLight(temTitle, String.format("\\[%s\\]", categoryName), Color.parseColor("#FF5C8D"));
+        List<Clarity> clarityList = new ArrayList<Clarity>();
+        NeihanEntity.DataEntityX.DataEntity.GroupEntity.Video360pEntity video360P = group.getVideo_360p();
+        if (video360P != null) {
+            List<NeihanEntity.DataEntityX.DataEntity.GroupEntity.Video360pEntity.UrlListEntity> urlList = video360P.getUrl_list();
+            if (urlList != null && urlList.size() > 0) {
+                clarityList.add(new Clarity("标清", "360P", urlList.get(0).getUrl()));
+            }
+        }
+
+        NeihanEntity.DataEntityX.DataEntity.GroupEntity.Video480pEntity video480P = group.getVideo480pEntity();
+        if (video480P != null) {
+            List<NeihanEntity.DataEntityX.DataEntity.GroupEntity.Video480pEntity.UrlListEntityXX> urlList = video480P.getUrl_list();
+            if (urlList != null && urlList.size() > 0) {
+                clarityList.add(new Clarity("高清", "480P", urlList.get(0).getUrl()));
+            }
+        }
+
+        NeihanEntity.DataEntityX.DataEntity.GroupEntity.Video720pEntity video720P = group.getVideo720pEntity();
+        if (video720P != null) {
+            List<NeihanEntity.DataEntityX.DataEntity.GroupEntity.Video720pEntity.UrlListEntityX> urlList = video720P.getUrl_list();
+            if (urlList != null && urlList.size() > 0) {
+                clarityList.add(new Clarity("超清", "720P", urlList.get(0).getUrl()));
+            }
+        }
+
+        NeihanEntity.DataEntityX.DataEntity.GroupEntity.OriginVideoEntity videoOrigin = group.getOrigin_video();
+        if (videoOrigin != null) {
+            List<NeihanEntity.DataEntityX.DataEntity.GroupEntity.OriginVideoEntity.UrlListEntityXXXXX> urlList = videoOrigin.getUrl_list();
+            if (urlList != null && urlList.size() > 0) {
+                clarityList.add(new Clarity("天然", "1080P", urlList.get(0).getUrl()));
+            }
+        }
+
+        NeihanEntity.DataEntityX.DataEntity.GroupEntity.LargeCoverEntity largeCover = group.getLarge_cover();
+        String thumbnail = null;
+        if (largeCover != null) {
+            List<NeihanEntity.DataEntityX.DataEntity.GroupEntity.LargeCoverEntity.UrlListEntityXXX> urlList = largeCover.getUrl_list();
+            if (urlList != null && urlList.size() > 0) {
+                thumbnail = urlList.get(0).getUrl();
+            }
+        }
+
+        return new NeihanItemEntity(id, avatar, name, realTitle, thumbnail, duration, clarityList);
+    }
 
     public NeihanItemEntity(String id, String avatar, String name, CharSequence title, String thumbnail, long duration, List<Clarity> clarityList) {
         this.id = id;

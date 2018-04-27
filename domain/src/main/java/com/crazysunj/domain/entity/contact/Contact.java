@@ -19,8 +19,12 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
+import com.crazysunj.domain.entity.gaoxiao.GaoxiaoEntity;
+import com.github.promeg.pinyinhelper.Pinyin;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * author: sunjian
@@ -35,6 +39,26 @@ public class Contact extends MultiTypeIndexEntity implements Parcelable {
     private String location;
     private String phone;
     private boolean isLast;
+
+    private static Pattern LETTER_PATTERN = Pattern.compile("[A-Z]{1}");
+
+    private static String getFirstChar(String name) {
+        final String pinyin = Pinyin.toPinyin(name, "").toUpperCase();
+        if (TextUtils.isEmpty(pinyin)) {
+            return "#";
+        }
+        final String letter = String.valueOf(pinyin.charAt(0));
+        if (LETTER_PATTERN.matcher(letter).matches()) {
+            return letter;
+        }
+        return "#";
+    }
+
+    public static Contact get(GaoxiaoEntity.DataEntity dataEntity) {
+        final String avatar = dataEntity.getProfile_image();
+        final String name = dataEntity.getName();
+        return new Contact(getFirstChar(name), name, avatar, "中国", "10086", false);
+    }
 
     public Contact(String index, String name) {
         this.index = index;
@@ -215,6 +239,7 @@ public class Contact extends MultiTypeIndexEntity implements Parcelable {
         return contacts;
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -224,17 +249,19 @@ public class Contact extends MultiTypeIndexEntity implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.index);
         dest.writeString(this.name);
+        dest.writeString(this.avatar);
         dest.writeString(this.location);
-        dest.writeByte(this.isLast ? (byte) 1 : (byte) 0);
         dest.writeString(this.phone);
+        dest.writeByte(this.isLast ? (byte) 1 : (byte) 0);
     }
 
     protected Contact(Parcel in) {
         this.index = in.readString();
         this.name = in.readString();
+        this.avatar = in.readString();
         this.location = in.readString();
-        this.isLast = in.readByte() != 0;
         this.phone = in.readString();
+        this.isLast = in.readByte() != 0;
     }
 
     public static final Creator<Contact> CREATOR = new Creator<Contact>() {

@@ -21,13 +21,13 @@ import com.crazysunj.domain.exception.ApiException;
 import com.crazysunj.domain.interactor.UseCase;
 import com.crazysunj.domain.repository.gankio.GankioRepository;
 
+import org.reactivestreams.Publisher;
+
 import java.util.List;
 
 import javax.inject.Inject;
 
 import io.reactivex.Flowable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * author: sunjian
@@ -47,21 +47,21 @@ public class GankioUseCase extends UseCase<List<GankioEntity.ResultsEntity>, Gan
     @Override
     protected Flowable<List<GankioEntity.ResultsEntity>> buildUseCaseObservable(Params params) {
         return mGankioRepository.getGankio(params.type, params.count)
-                .observeOn(Schedulers.io())
-                .flatMap(gankioEntity -> {
-                    if (gankioEntity == null) {
-                        return Flowable.error(new ApiException(CodeConstant.CODE_EMPTY, "数据为空，请求个毛线！"));
-                    }
-                    if (gankioEntity.isError()) {
-                        return Flowable.error(new ApiException(CodeConstant.CODE_DATA_ERROR, "数据错误，没法快乐玩耍！"));
-                    }
-                    List<GankioEntity.ResultsEntity> results = gankioEntity.getResults();
-                    if (results == null || results.isEmpty()) {
-                        return Flowable.error(new ApiException(CodeConstant.CODE_EMPTY, "数据为空，请求个毛线！"));
-                    }
-                    return Flowable.just(results);
-                })
-                .observeOn(AndroidSchedulers.mainThread());
+                .flatMap(this::handleException);
+    }
+
+    private Publisher<List<GankioEntity.ResultsEntity>> handleException(GankioEntity gankioEntity) {
+        if (gankioEntity == null) {
+            return Flowable.error(new ApiException(CodeConstant.CODE_EMPTY, "数据为空，请求个毛线！"));
+        }
+        if (gankioEntity.isError()) {
+            return Flowable.error(new ApiException(CodeConstant.CODE_DATA_ERROR, "数据错误，没法快乐玩耍！"));
+        }
+        List<GankioEntity.ResultsEntity> results = gankioEntity.getResults();
+        if (results == null || results.isEmpty()) {
+            return Flowable.error(new ApiException(CodeConstant.CODE_EMPTY, "数据为空，请求个毛线！"));
+        }
+        return Flowable.just(results);
     }
 
 

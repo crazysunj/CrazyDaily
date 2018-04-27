@@ -21,6 +21,8 @@ import com.crazysunj.domain.exception.ApiException;
 import com.crazysunj.domain.interactor.UseCase;
 import com.crazysunj.domain.repository.weather.WeatherRepository;
 
+import org.reactivestreams.Publisher;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -45,19 +47,21 @@ public class WeatherUseCase extends UseCase<List<WeatherRemoteEntity.WeatherEnti
     @Override
     protected Flowable<List<WeatherRemoteEntity.WeatherEntity>> buildUseCaseObservable(Params params) {
         return mWeatherRepository.getWeatherList(params.city, params.language)
-                .flatMap(weatherRemoteEntity -> {
-                    if (weatherRemoteEntity == null) {
-                        return Flowable.error(new ApiException(CodeConstant.CODE_EMPTY, "数据为空，请求个毛线！"));
-                    }
-                    if (!CodeConstant.CODE_OK.equals(weatherRemoteEntity.getStatus())) {
-                        return Flowable.error(new ApiException(CodeConstant.CODE_DATA_ERROR, "数据错误，没法快乐玩耍！"));
-                    }
-                    List<WeatherRemoteEntity.WeatherEntity> weather = weatherRemoteEntity.getWeather();
-                    if (weather == null || weather.isEmpty()) {
-                        return Flowable.error(new ApiException(CodeConstant.CODE_EMPTY, "数据为空，请求个毛线！"));
-                    }
-                    return Flowable.just(weather);
-                });
+                .flatMap(this::handleException);
+    }
+
+    private Publisher<List<WeatherRemoteEntity.WeatherEntity>> handleException(WeatherRemoteEntity weatherRemoteEntity) {
+        if (weatherRemoteEntity == null) {
+            return Flowable.error(new ApiException(CodeConstant.CODE_EMPTY, "数据为空，请求个毛线！"));
+        }
+        if (!CodeConstant.CODE_OK.equals(weatherRemoteEntity.getStatus())) {
+            return Flowable.error(new ApiException(CodeConstant.CODE_DATA_ERROR, "数据错误，没法快乐玩耍！"));
+        }
+        List<WeatherRemoteEntity.WeatherEntity> weather = weatherRemoteEntity.getWeather();
+        if (weather == null || weather.isEmpty()) {
+            return Flowable.error(new ApiException(CodeConstant.CODE_EMPTY, "数据为空，请求个毛线！"));
+        }
+        return Flowable.just(weather);
     }
 
 

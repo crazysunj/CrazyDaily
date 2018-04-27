@@ -15,7 +15,6 @@
  */
 package com.crazysunj.domain.interactor.gaoxiao;
 
-import android.graphics.Color;
 import android.text.TextUtils;
 
 import com.crazysunj.domain.constant.CodeConstant;
@@ -24,9 +23,9 @@ import com.crazysunj.domain.entity.gaoxiao.GaoxiaoItemEntity;
 import com.crazysunj.domain.exception.ApiException;
 import com.crazysunj.domain.interactor.UseCase;
 import com.crazysunj.domain.repository.gaoxiao.GaoxiaoRepository;
-import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 
-import java.util.ArrayList;
+import org.reactivestreams.Publisher;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -53,36 +52,24 @@ public class GaoxiaoUseCase extends UseCase<List<GaoxiaoItemEntity>, GaoxiaoUseC
     @Override
     protected Flowable<List<GaoxiaoItemEntity>> buildUseCaseObservable(Params params) {
         return mGaoxiaoRepository.getGaoxiaoList(Params.TYPE, params.page)
-                .observeOn(Schedulers.io())
-                .flatMap(gaoxiaoEntity -> {
-                    if (gaoxiaoEntity == null) {
-                        return Flowable.error(new ApiException(CodeConstant.CODE_EMPTY, "数据为空，请求个毛线！"));
-                    }
-                    List<GaoxiaoEntity.DataEntity> data = gaoxiaoEntity.getData();
-                    if (data == null || data.isEmpty()) {
-                        return Flowable.error(new ApiException(CodeConstant.CODE_EMPTY, "数据为空，请求个毛线！"));
-                    }
-                    List<GaoxiaoItemEntity> gaoxiaoList = new ArrayList<>();
-                    for (GaoxiaoEntity.DataEntity entity : data) {
-                        final String videouri = entity.getVideouri();
-                        if (TextUtils.isEmpty(videouri)) {
-                            continue;
-                        }
-                        final String avatar = entity.getProfile_image();
-                        final String name = entity.getName();
-                        final String id = videouri;
-                        long duration = entity.getVideotime() * 1000L;
-                        final String themeName = entity.getTheme_name();
-                        final String categoryName = TextUtils.isEmpty(themeName) ? "其它" : themeName;
-                        final String title = entity.getText();
-                        final String temTitle = String.format("[%s] %s", categoryName, title);
-                        CharSequence realTitle = RecyclerViewAdapterHelper.handleKeyWordHighLight(temTitle, String.format("\\[%s\\]", categoryName), Color.parseColor("#FF5C8D"));
-                        final String thumbnail = entity.getBimageuri();
-                        gaoxiaoList.add(new GaoxiaoItemEntity(id, avatar, name, realTitle, thumbnail, duration, videouri));
-                    }
-                    return Flowable.just(gaoxiaoList);
-                })
+                .observeOn(Schedulers.computation())
+                .flatMap(this::handleException)
+                .filter(entity -> !TextUtils.isEmpty(entity.getVideouri()))
+                .map(GaoxiaoItemEntity::get)
+                .toList()
+                .toFlowable()
                 .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    private Publisher<GaoxiaoEntity.DataEntity> handleException(GaoxiaoEntity gaoxiaoEntity) {
+        if (gaoxiaoEntity == null) {
+            return Flowable.error(new ApiException(CodeConstant.CODE_EMPTY, "数据为空，请求个毛线！"));
+        }
+        List<GaoxiaoEntity.DataEntity> data = gaoxiaoEntity.getData();
+        if (data == null || data.isEmpty()) {
+            return Flowable.error(new ApiException(CodeConstant.CODE_EMPTY, "数据为空，请求个毛线！"));
+        }
+        return Flowable.fromIterable(data);
     }
 
 

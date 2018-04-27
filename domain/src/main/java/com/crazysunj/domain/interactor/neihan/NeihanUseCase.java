@@ -15,18 +15,15 @@
  */
 package com.crazysunj.domain.interactor.neihan;
 
-import android.graphics.Color;
-
 import com.crazysunj.domain.constant.CodeConstant;
 import com.crazysunj.domain.entity.neihan.NeihanEntity;
 import com.crazysunj.domain.entity.neihan.NeihanItemEntity;
 import com.crazysunj.domain.exception.ApiException;
 import com.crazysunj.domain.interactor.UseCase;
 import com.crazysunj.domain.repository.neihan.NeihanRepository;
-import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
-import com.xiao.nicevideoplayer.Clarity;
 
-import java.util.ArrayList;
+import org.reactivestreams.Publisher;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -56,83 +53,29 @@ public class NeihanUseCase extends UseCase<List<NeihanItemEntity>, NeihanUseCase
                 params.min_time, params.screen_width, params.double_col_mode, params.iid, params.device_id, params.ac, params.channel, params.aid, params.app_name, params.version_code, params.version_name,
                 params.device_platform, params.ssmix, params.device_type, params.device_brand, params.os_api, params.os_version, params.uuid, params.openudid, params.manifest_version_code, params.resolution, params.dpi,
                 params.update_version_code)
-                .observeOn(Schedulers.io())
-                .flatMap(neihanEntity -> {
-                    if (neihanEntity == null) {
-                        return Flowable.error(new ApiException(CodeConstant.CODE_EMPTY, "数据为空，请求个毛线！"));
-                    }
-                    NeihanEntity.DataEntityX data = neihanEntity.getData();
-                    if (data == null) {
-                        return Flowable.error(new ApiException(CodeConstant.CODE_EMPTY, "数据为空，请求个毛线！"));
-                    }
-                    List<NeihanEntity.DataEntityX.DataEntity> entities = data.getData();
-                    if (entities == null || entities.isEmpty()) {
-                        return Flowable.error(new ApiException(CodeConstant.CODE_EMPTY, "数据为空，请求个毛线！"));
-                    }
-                    List<NeihanItemEntity> neihanList = new ArrayList<NeihanItemEntity>();
-                    for (NeihanEntity.DataEntityX.DataEntity entity : entities) {
-                        NeihanEntity.DataEntityX.DataEntity.GroupEntity group = entity.getGroup();
-                        if (group == null) {
-                            continue;
-                        }
-                        NeihanEntity.DataEntityX.DataEntity.GroupEntity.UserEntity user = group.getUser();
-                        if (user == null) {
-                            continue;
-                        }
-                        final String avatar = user.getAvatar_url();
-                        final String name = user.getName();
-                        final String id = String.valueOf(group.getId());
-                        long duration = (long) (group.getDuration() * 1000);
-                        String categoryName = group.getCategory_name();
-                        String title = group.getContent();
-                        String temTitle = String.format("[%s] %s", categoryName, title);
-                        CharSequence realTitle = RecyclerViewAdapterHelper.handleKeyWordHighLight(temTitle, String.format("\\[%s\\]", categoryName), Color.parseColor("#FF5C8D"));
-                        List<Clarity> clarityList = new ArrayList<Clarity>();
-                        NeihanEntity.DataEntityX.DataEntity.GroupEntity.Video360pEntity video360P = group.getVideo_360p();
-                        if (video360P != null) {
-                            List<NeihanEntity.DataEntityX.DataEntity.GroupEntity.Video360pEntity.UrlListEntity> urlList = video360P.getUrl_list();
-                            if (urlList != null && urlList.size() > 0) {
-                                clarityList.add(new Clarity("标清", "360P", urlList.get(0).getUrl()));
-                            }
-                        }
-
-                        NeihanEntity.DataEntityX.DataEntity.GroupEntity.Video480pEntity video480P = group.getVideo480pEntity();
-                        if (video480P != null) {
-                            List<NeihanEntity.DataEntityX.DataEntity.GroupEntity.Video480pEntity.UrlListEntityXX> urlList = video480P.getUrl_list();
-                            if (urlList != null && urlList.size() > 0) {
-                                clarityList.add(new Clarity("高清", "480P", urlList.get(0).getUrl()));
-                            }
-                        }
-
-                        NeihanEntity.DataEntityX.DataEntity.GroupEntity.Video720pEntity video720P = group.getVideo720pEntity();
-                        if (video720P != null) {
-                            List<NeihanEntity.DataEntityX.DataEntity.GroupEntity.Video720pEntity.UrlListEntityX> urlList = video720P.getUrl_list();
-                            if (urlList != null && urlList.size() > 0) {
-                                clarityList.add(new Clarity("超清", "720P", urlList.get(0).getUrl()));
-                            }
-                        }
-
-                        NeihanEntity.DataEntityX.DataEntity.GroupEntity.OriginVideoEntity videoOrigin = group.getOrigin_video();
-                        if (videoOrigin != null) {
-                            List<NeihanEntity.DataEntityX.DataEntity.GroupEntity.OriginVideoEntity.UrlListEntityXXXXX> urlList = videoOrigin.getUrl_list();
-                            if (urlList != null && urlList.size() > 0) {
-                                clarityList.add(new Clarity("天然", "1080P", urlList.get(0).getUrl()));
-                            }
-                        }
-
-                        NeihanEntity.DataEntityX.DataEntity.GroupEntity.LargeCoverEntity largeCover = group.getLarge_cover();
-                        String thumbnail = null;
-                        if (largeCover != null) {
-                            List<NeihanEntity.DataEntityX.DataEntity.GroupEntity.LargeCoverEntity.UrlListEntityXXX> urlList = largeCover.getUrl_list();
-                            if (urlList != null && urlList.size() > 0) {
-                                thumbnail = urlList.get(0).getUrl();
-                            }
-                        }
-                        neihanList.add(new NeihanItemEntity(id, avatar, name, realTitle, thumbnail, duration, clarityList));
-                    }
-                    return Flowable.just(neihanList);
-                })
+                .observeOn(Schedulers.computation())
+                .flatMap(this::handleException)
+                //Objects nonNull api24
+                .filter(entity -> entity != null && entity.getGroup() != null && entity.getGroup().getUser() != null)
+                .map(NeihanItemEntity::get)
+                .toList()
+                .toFlowable()
                 .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    private Publisher<NeihanEntity.DataEntityX.DataEntity> handleException(NeihanEntity neihanEntity) {
+        if (neihanEntity == null) {
+            return Flowable.error(new ApiException(CodeConstant.CODE_EMPTY, "数据为空，请求个毛线！"));
+        }
+        NeihanEntity.DataEntityX data = neihanEntity.getData();
+        if (data == null) {
+            return Flowable.error(new ApiException(CodeConstant.CODE_EMPTY, "数据为空，请求个毛线！"));
+        }
+        List<NeihanEntity.DataEntityX.DataEntity> entities = data.getData();
+        if (entities == null || entities.isEmpty()) {
+            return Flowable.error(new ApiException(CodeConstant.CODE_EMPTY, "数据为空，请求个毛线！"));
+        }
+        return Flowable.fromIterable(entities);
     }
 
 

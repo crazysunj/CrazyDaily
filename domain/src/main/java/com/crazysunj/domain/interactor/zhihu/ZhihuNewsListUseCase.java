@@ -21,6 +21,8 @@ import com.crazysunj.domain.exception.ApiException;
 import com.crazysunj.domain.interactor.UseCase;
 import com.crazysunj.domain.repository.zhihu.ZhihuRepository;
 
+import org.reactivestreams.Publisher;
+
 import javax.inject.Inject;
 
 import io.reactivex.Flowable;
@@ -43,11 +45,13 @@ public class ZhihuNewsListUseCase extends UseCase<ZhihuNewsEntity, Void> {
     @Override
     protected Flowable<ZhihuNewsEntity> buildUseCaseObservable(Void aVoid) {
         return mZhihuRepository.getZhihuNewsList()
-                .flatMap(zhihuNewsList -> {
-                    if (zhihuNewsList == null) {
-                        return Flowable.error(new ApiException(CodeConstant.CODE_EMPTY, "数据为空，请求个毛线！"));
-                    }
-                    return Flowable.just(zhihuNewsList);
-                });
+                .flatMap(this::handleException);
+    }
+
+    private Publisher<ZhihuNewsEntity> handleException(ZhihuNewsEntity zhihuNewsList) {
+        if (zhihuNewsList == null) {
+            return Flowable.error(new ApiException(CodeConstant.CODE_EMPTY, "数据为空，请求个毛线！"));
+        }
+        return Flowable.just(zhihuNewsList);
     }
 }

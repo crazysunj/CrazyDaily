@@ -35,7 +35,7 @@
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/home_toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
+                    android:layout_height="?android:attr/actionBarSize"
                     app:layout_collapseMode="pin"
                     app:popupTheme="@style/AppTheme.PopupOverlay">
 
@@ -60,7 +60,7 @@
         <android.support.design.widget.BottomNavigationView
             android:id="@+id/home_navigition"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="?android:attr/actionBarSize"
             android:layout_gravity="bottom"
             app:itemBackground="@drawable/shape_home_bottom_bg"
             app:itemIconTint="@color/colorPrimary"
@@ -78,11 +78,11 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
         </com.crazysunj.crazydaily.view.threed.CubeReversalView>
 
         <com.crazysunj.crazydaily.view.threed.CubeReversalView
@@ -99,7 +99,7 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
         </com.crazysunj.crazydaily.view.threed.CubeReversalView>
 
         <com.crazysunj.crazydaily.view.threed.CubeReversalView
@@ -112,11 +112,11 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
         </com.crazysunj.crazydaily.view.threed.CubeReversalView>
 
         <ImageView

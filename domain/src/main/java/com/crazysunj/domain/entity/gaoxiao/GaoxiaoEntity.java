@@ -182,6 +182,56 @@ public class GaoxiaoEntity {
             return name.equals(contact.getName());
         }
 
+        @Override
+        public String toString() {
+            return "DataEntity{" +
+                    "type='" + type + '\'' +
+                    ", text='" + text + '\'' +
+                    ", user_id='" + user_id + '\'' +
+                    ", name='" + name + '\'' +
+                    ", screen_name='" + screen_name + '\'' +
+                    ", profile_image='" + profile_image + '\'' +
+                    ", created_at='" + created_at + '\'' +
+                    ", create_time=" + create_time +
+                    ", passtime='" + passtime + '\'' +
+                    ", love='" + love + '\'' +
+                    ", hate='" + hate + '\'' +
+                    ", comment='" + comment + '\'' +
+                    ", repost='" + repost + '\'' +
+                    ", bookmark='" + bookmark + '\'' +
+                    ", bimageuri='" + bimageuri + '\'' +
+                    ", voiceuri=" + voiceuri +
+                    ", voicetime=" + voicetime +
+                    ", voicelength=" + voicelength +
+                    ", status='" + status + '\'' +
+                    ", theme_id='" + theme_id + '\'' +
+                    ", theme_name='" + theme_name + '\'' +
+                    ", theme_type='" + theme_type + '\'' +
+                    ", videouri='" + videouri + '\'' +
+                    ", videotime=" + videotime +
+                    ", original_pid='" + original_pid + '\'' +
+                    ", cache_version=" + cache_version +
+                    ", playcount='" + playcount + '\'' +
+                    ", playfcount='" + playfcount + '\'' +
+                    ", cai='" + cai + '\'' +
+                    ", weixin_url=" + weixin_url +
+                    ", image1='" + image1 + '\'' +
+                    ", image2='" + image2 + '\'' +
+                    ", is_gif=" + is_gif +
+                    ", image0='" + image0 + '\'' +
+                    ", image_small='" + image_small + '\'' +
+                    ", cdn_img='" + cdn_img + '\'' +
+                    ", width='" + width + '\'' +
+                    ", height='" + height + '\'' +
+                    ", tag='" + tag + '\'' +
+                    ", t=" + t +
+                    ", ding='" + ding + '\'' +
+                    ", favourite='" + favourite + '\'' +
+                    ", top_cmt=" + top_cmt +
+                    ", themes=" + themes +
+                    '}';
+        }
+
         public String getType() {
             return type;
         }

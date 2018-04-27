@@ -15,7 +15,11 @@
  */
 package com.crazysunj.domain.entity.gaoxiao;
 
+import android.graphics.Color;
+import android.text.TextUtils;
+
 import com.crazysunj.domain.entity.base.MultiTypeIdEntity;
+import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 
 /**
  * author: sunjian
@@ -37,6 +41,20 @@ public class GaoxiaoItemEntity extends MultiTypeIdEntity {
     private String thumbnail;
     private long duration;
     private String videoUrl;
+
+    public static GaoxiaoItemEntity get(GaoxiaoEntity.DataEntity entity) {
+        final String videouri = entity.getVideouri();
+        final String avatar = entity.getProfile_image();
+        final String name = entity.getName();
+        long duration = entity.getVideotime() * 1000L;
+        final String themeName = entity.getTheme_name();
+        final String categoryName = TextUtils.isEmpty(themeName) ? "其它" : themeName;
+        final String title = entity.getText();
+        final String temTitle = String.format("[%s] %s", categoryName, title);
+        CharSequence realTitle = RecyclerViewAdapterHelper.handleKeyWordHighLight(temTitle, String.format("\\[%s\\]", categoryName), Color.parseColor("#FF5C8D"));
+        final String thumbnail = entity.getBimageuri();
+        return new GaoxiaoItemEntity(videouri, avatar, name, realTitle, thumbnail, duration, videouri);
+    }
 
     public GaoxiaoItemEntity(String id, String avatar, String name, CharSequence title, String thumbnail, long duration, String videoUrl) {
         this.id = id;

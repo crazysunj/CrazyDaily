@@ -23,6 +23,7 @@ import android.graphics.Matrix;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
@@ -97,6 +98,7 @@ public class CubeReversalView extends FrameLayout {
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
         removeAllViewsInLayout();
+        CardView backCard = new CardView(context);
         ImageView backgroundImg = new ImageView(context);
         ImageView foregroundImg = new ImageView(context);
         backgroundImg.setImageDrawable(mBackgroundDrawable);
@@ -128,16 +130,16 @@ public class CubeReversalView extends FrameLayout {
                 final float value = (float) animation.getAnimatedValue();
                 final float oppositeValue = 1 - value;
 
-                int startColor1 = (int) mArgbEvaluator.evaluate(oppositeValue * 0.8f, 0x00000000, 0xff000000);
-                int centerColor1 = (int) mArgbEvaluator.evaluate(oppositeValue * 0.4f, 0x00000000, 0xff000000);
-                int colors1[] = {startColor1, centerColor1, 0x00000000};
+                int foreStartColor = (int) mArgbEvaluator.evaluate(oppositeValue * 0.8f, 0x00000000, 0xff000000);
+                int foreCenterColor = (int) mArgbEvaluator.evaluate(oppositeValue * 0.4f, 0x00000000, 0xff000000);
+                int foreColors[] = {foreStartColor, foreCenterColor, 0x00000000};
 
-                int startColor2 = (int) mArgbEvaluator.evaluate(value * 0.8f, 0x00000000, 0xff000000);
-                int centerColor2 = (int) mArgbEvaluator.evaluate(value * 0.4f, 0x00000000, 0xff000000);
-                int colors2[] = {startColor2, centerColor2, 0x00000000};
+                int backStartColor = (int) mArgbEvaluator.evaluate(value * 0.8f, 0x00000000, 0xff000000);
+                int backCenterColor = (int) mArgbEvaluator.evaluate(value * 0.4f, 0x00000000, 0xff000000);
+                int[] backColors = {backStartColor, backCenterColor, 0x00000000};
 
-                mForegroundDrawable.setColors(colors1);
-                mBackgroundDrawable.setColors(colors2);
+                mForegroundDrawable.setColors(foreColors);
+                mBackgroundDrawable.setColors(backColors);
                 setTranslationY(distance * oppositeValue);
             });
             animator.start();
@@ -151,16 +153,16 @@ public class CubeReversalView extends FrameLayout {
                 final float value = (float) animation.getAnimatedValue();
                 final float oppositeValue = 1 - value;
 
-                int startColor1 = (int) mArgbEvaluator.evaluate(value * 0.8f, 0x00000000, 0xff000000);
-                int centerColor1 = (int) mArgbEvaluator.evaluate(value * 0.4f, 0x00000000, 0xff000000);
-                int colors1[] = {startColor1, centerColor1, 0x00000000};
+                int foreStartColor = (int) mArgbEvaluator.evaluate(value * 0.8f, 0x00000000, 0xff000000);
+                int foreCenterColor = (int) mArgbEvaluator.evaluate(value * 0.4f, 0x00000000, 0xff000000);
+                int foreColors[] = {foreStartColor, foreCenterColor, 0x00000000};
 
-                int startColor2 = (int) mArgbEvaluator.evaluate(oppositeValue * 0.8f, 0x00000000, 0xff000000);
-                int centerColor2 = (int) mArgbEvaluator.evaluate(oppositeValue * 0.4f, 0x00000000, 0xff000000);
-                int colors2[] = {startColor2, centerColor2, 0x00000000};
+                int backStartColor = (int) mArgbEvaluator.evaluate(oppositeValue * 0.8f, 0x00000000, 0xff000000);
+                int backCenterColor = (int) mArgbEvaluator.evaluate(oppositeValue * 0.4f, 0x00000000, 0xff000000);
+                int[] backColors = {backStartColor, backCenterColor, 0x00000000};
 
-                mForegroundDrawable.setColors(colors1);
-                mBackgroundDrawable.setColors(colors2);
+                mForegroundDrawable.setColors(foreColors);
+                mBackgroundDrawable.setColors(backColors);
                 setTranslationY(distance * value);
             });
             animator.start();
