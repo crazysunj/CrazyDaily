@@ -21,11 +21,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.crazysunj.cardslideview.CardHandler;
 import com.crazysunj.cardslideview.CardViewPager;
 import com.crazysunj.cardslideview.ElasticCardView;
 import com.crazysunj.crazydaily.R;
+import com.crazysunj.crazydaily.moudle.ImageLoader;
 import com.crazysunj.crazydaily.ui.ZhihuNewsDetailActivity;
 import com.crazysunj.domain.entity.zhihu.ZhihuNewsEntity;
 
@@ -47,7 +47,7 @@ public class BannerCardHandler implements CardHandler<ZhihuNewsEntity.TopStories
         final boolean isCard = mode == CardViewPager.MODE_CARD;
         cardView.setPreventCornerOverlap(isCard);
         cardView.setUseCompatPadding(isCard);
-        Glide.with(context).load(data.getImage()).into(bg);
+        ImageLoader.load(context, data.getImage(), bg);
         view.setOnClickListener(v -> ZhihuNewsDetailActivity.start((Activity) v.getContext(), data.getId(), bg));
         return view;
     }

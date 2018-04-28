@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
+import com.crazysunj.crazydaily.moudle.ImageLoader;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
 import com.taobao.weex.common.WXImageStrategy;
 import com.taobao.weex.dom.WXImageQuality;
@@ -35,11 +35,7 @@ public class WXImageAdapter implements IWXImgLoaderAdapter {
             view.setImageResource(imgId);
             return;
         }
-
-        Glide.with(context)
-                .load(url)
-                .crossFade()
-                .into(view);
+        ImageLoader.load(context, url, view);
     }
 
     private String getResIdStr(String url) {

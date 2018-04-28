@@ -22,23 +22,21 @@ dependencies {
     def domainDependencies = rootProject.ext.domainDependencies
     def domainTestDependencies = rootProject.ext.domainTestDependencies
 
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    provided domainDependencies.MTRVA
-    provided domainDependencies.gson
-    provided domainDependencies.niceVieoPlayer
+    compileOnly domainDependencies.MTRVA
+    compileOnly domainDependencies.gson
+    compileOnly domainDependencies.niceVieoPlayer
 
-    compile domainDependencies.javaxInject
-    compile domainDependencies.rxjava
-    compile domainDependencies.rxandroid
-    compile domainDependencies.arrow
-    compile domainDependencies.tray
+    api domainDependencies.javaxInject
+    api domainDependencies.rxjava
+    api domainDependencies.rxandroid
+    api domainDependencies.tray
 
-    implementation 'com.github.promeg:tinypinyin:2.0.3' // TinyPinyin核心包，约80KB
-    implementation 'com.github.promeg:tinypinyin-lexicons-android-cncity:2.0.3' // 可选，适用于Android的中国地区词典
-
-    testCompile domainTestDependencies.junit
-    testCompile domainTestDependencies.mockito
-    testCompile domainTestDependencies.assertj
+    implementation domainDependencies.arrow
+    implementation domainDependencies.tinypinyin
+    testImplementation domainTestDependencies.junit
+    testImplementation domainTestDependencies.mockito
+    testImplementation domainTestDependencies.assertj
 }
 

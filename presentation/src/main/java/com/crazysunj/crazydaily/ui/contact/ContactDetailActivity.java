@@ -31,11 +31,11 @@ import android.view.Window;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.animation.BezierTransition;
 import com.crazysunj.crazydaily.animation.CircularRevealTransition;
 import com.crazysunj.crazydaily.base.BaseActivity;
+import com.crazysunj.crazydaily.moudle.ImageLoader;
 import com.crazysunj.crazydaily.util.SnackbarUtil;
 import com.crazysunj.crazydaily.view.contact.CoolBGView;
 import com.crazysunj.crazydaily.view.contact.ImgResEntity;
@@ -97,8 +97,7 @@ public class ContactDetailActivity extends BaseActivity {
         mContact = intent.getParcelableExtra(CONTACT);
         mLocation.setText(mContact.getLocation());
         mName.setText(mContact.getName());
-        Glide.with(this).load(mContact.getAvatar()).centerCrop().into(mHead);
-
+        ImageLoader.load(this, mContact.getAvatar(), mHead);
         List<ImgResEntity> data = new ArrayList<>();
         Resources resources = getResources();
         data.add(new ImgResEntity(R.mipmap.ic_video, resources.getColor(R.color.color_FF4444)));

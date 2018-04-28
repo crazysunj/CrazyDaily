@@ -39,8 +39,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.crazysunj.crazydaily.R;
+import com.crazysunj.crazydaily.moudle.ImageLoader;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -138,7 +138,7 @@ public class SatelliteMenuView extends FrameLayout {
     public void setImgUrl(String url) {
         final Context context = getContext();
         ImageView imageView = new ImageView(context);
-        Glide.with(context).load(url).into(imageView);
+        ImageLoader.load(context, url, imageView);
         final int size = (int) (SIZE * BUTTON_RATIO);
         LayoutParams params = new LayoutParams(size, size);
         params.gravity = Gravity.END | Gravity.BOTTOM;
@@ -243,7 +243,7 @@ public class SatelliteMenuView extends FrameLayout {
         for (int i = 0; i < size; i++) {
             final String url = urls.get(i);
             ImageView imageView = new ImageView(context);
-            Glide.with(context).load(url).into(imageView);
+            ImageLoader.load(context, url, imageView);
             addView(imageView, PARAMS);
             final int position = i;
             imageView.setOnClickListener(v -> {

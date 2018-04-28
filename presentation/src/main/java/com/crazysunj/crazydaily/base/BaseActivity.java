@@ -70,6 +70,16 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
         SnackbarUtil.show(this, msg);
     }
 
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
+        
+    }
+
     @SuppressWarnings("unchecked")
     private void onPrepare() {
         initInject();

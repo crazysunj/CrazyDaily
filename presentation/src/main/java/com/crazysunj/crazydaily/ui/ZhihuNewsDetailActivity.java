@@ -34,10 +34,10 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
 import com.crazysunj.crazydaily.constant.ActivityConstant;
+import com.crazysunj.crazydaily.moudle.ImageLoader;
 import com.crazysunj.crazydaily.presenter.ZhihuNewsDetailPresenter;
 import com.crazysunj.crazydaily.presenter.contract.ZhihuNewsDetailContract;
 import com.crazysunj.crazydaily.util.HtmlUtil;
@@ -124,7 +124,7 @@ public class ZhihuNewsDetailActivity extends BaseActivity<ZhihuNewsDetailPresent
     public void showContent(ZhihuNewsDetailEntity zhihuNewsDetailEntity) {
         mIconUrl = zhihuNewsDetailEntity.getImage();
         if (!mIsImageShow && mIsTransitionEnd) {
-            Glide.with(this).load(mIconUrl).centerCrop().into(mIcon);
+            ImageLoader.load(this, mIconUrl, mIcon);
         }
         mBar.setTitle(zhihuNewsDetailEntity.getTitle());
         String htmlData = HtmlUtil.createHtmlData(zhihuNewsDetailEntity);
@@ -151,7 +151,7 @@ public class ZhihuNewsDetailActivity extends BaseActivity<ZhihuNewsDetailPresent
                 mIsTransitionEnd = true;
                 if (!TextUtils.isEmpty(mIconUrl)) {
                     mIsImageShow = true;
-                    Glide.with(ZhihuNewsDetailActivity.this).load(mIconUrl).centerCrop().into(mIcon);
+                    ImageLoader.load(ZhihuNewsDetailActivity.this, mIconUrl, mIcon);
                 }
             }
 

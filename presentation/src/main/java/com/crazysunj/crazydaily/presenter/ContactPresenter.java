@@ -15,6 +15,8 @@
  */
 package com.crazysunj.crazydaily.presenter;
 
+import android.util.Log;
+
 import com.crazysunj.crazydaily.base.BasePresenter;
 import com.crazysunj.crazydaily.base.BaseSubscriber;
 import com.crazysunj.crazydaily.di.scope.ActivityScope;
@@ -44,6 +46,12 @@ public class ContactPresenter extends BasePresenter<ContactContract.View> implem
     @Override
     public void getConactList() {
         mContactUseCase.execute(ContactUseCase.Params.get(0), new BaseSubscriber<List<MultiTypeIndexEntity>>() {
+            @Override
+            protected void onStart() {
+                super.onStart();
+                mView.showLoading();
+            }
+
             @Override
             public void onNext(List<MultiTypeIndexEntity> data) {
                 mView.showContent(data);

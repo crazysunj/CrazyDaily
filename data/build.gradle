@@ -28,20 +28,20 @@ dependencies {
     def dataDependencies = rootProject.ext.dataDependencies //依赖库配置
     def dataTestDependencies = rootProject.ext.dataTestDependencies //依赖库配置
 
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':domain')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    api project(':domain')
 
-    provided dataDependencies.MTRVA
-    provided dataDependencies.niceVieoPlayer
+    compileOnly dataDependencies.MTRVA
+    compileOnly dataDependencies.niceVieoPlayer
 
-    compile dataDependencies.retrofit
-    compile dataDependencies.retrofitConverterGson
-    compile dataDependencies.retrofitAdapterRxjava
-    compile dataDependencies.okhttp
-    compile dataDependencies.okhttpLoggingInterceptor
-    compile dataDependencies.dagger
-    compile dataDependencies.daggerCompiler
-    compile dataDependencies.logger
+    api dataDependencies.retrofit
+    api dataDependencies.retrofitConverterGson
+    api dataDependencies.retrofitAdapterRxjava
+    api dataDependencies.okhttp
+    api dataDependencies.okhttpLoggingInterceptor
+    api dataDependencies.dagger
+    api dataDependencies.daggerCompiler
+    api dataDependencies.logger
 
     testImplementation dataTestDependencies.robolectric
 }

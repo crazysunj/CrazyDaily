@@ -78,11 +78,17 @@ public class ContactActivity extends BaseActivity<ContactPresenter> implements C
     }
 
     private static final String[] LETTER = {"#", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+    private boolean isCanScroll = true;
 
     @Override
     protected void initView() {
         setSupportActionBar(mToolbar);
-        mContacts.setLayoutManager(new LinearLayoutManager(this));
+        mContacts.setLayoutManager(new LinearLayoutManager(this) {
+            @Override
+            public boolean canScrollVertically() {
+                return isCanScroll && super.canScrollVertically();
+            }
+        });
         mItemTouchHelper = new ItemTouchHelperExtension(new ContactItemTouchHelperCallback());
         mItemTouchHelper.attachToRecyclerView(mContacts);
         mAdapter = new ContactsAdapter(mItemTouchHelper);
@@ -111,7 +117,14 @@ public class ContactActivity extends BaseActivity<ContactPresenter> implements C
     @Override
     public void showContent(List<MultiTypeIndexEntity> contacts) {
         mContactList = contacts;
+        isCanScroll = true;
         mAdapter.notifyContacts(contacts);
+    }
+
+    @Override
+    public void showLoading() {
+        isCanScroll = false;
+        mAdapter.showLoading();
     }
 
     @Override
@@ -136,6 +149,9 @@ public class ContactActivity extends BaseActivity<ContactPresenter> implements C
     }
 
     private void handleSideBarSelect(String index) {
+        if (mContactList == null) {
+            return;
+        }
         for (int i = 0, size = mContactList.size(); i < size; i++) {
             if (mContactList.get(i).getIndex().equals(index)) {
                 ((LinearLayoutManager) mContacts.getLayoutManager()).scrollToPositionWithOffset(i, 0);

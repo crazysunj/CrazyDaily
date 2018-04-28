@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crazysunj.crazydaily.base;
+package com.crazysunj.crazydaily.app;
+
+import com.bumptech.glide.annotation.GlideModule;
+import com.bumptech.glide.module.AppGlideModule;
 
 /**
  * author: sunjian
- * created on: 2017/9/10 上午11:47
- * description: https://github.com/crazysunj/CrazyDaily
+ * created on: 2018/4/28 上午10:02
+ * description:https://github.com/crazysunj/CrazyDaily
  */
-public interface IView {
-    void showError(String msg);
-    void showLoading();
-    void hideLoading();
+@GlideModule
+public class CrazyDailyGlideModule extends AppGlideModule {
 }

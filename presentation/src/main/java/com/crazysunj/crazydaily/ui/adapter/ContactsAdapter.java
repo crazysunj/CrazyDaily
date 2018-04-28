@@ -20,20 +20,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import android.view.View;
 
-import com.bumptech.glide.Glide;
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseAdapter;
+import com.crazysunj.crazydaily.entity.ContactLoadingEntity;
 import com.crazysunj.crazydaily.extension.Extension;
 import com.crazysunj.crazydaily.extension.ItemTouchHelperExtension;
+import com.crazysunj.crazydaily.moudle.ImageLoader;
 import com.crazysunj.crazydaily.ui.adapter.helper.ContactAdapterHelper;
 import com.crazysunj.crazydaily.ui.contact.ContactDetailActivity;
+import com.crazysunj.crazydaily.ui.shimmer.ShimmerViewHolder;
 import com.crazysunj.domain.entity.contact.Contact;
 import com.crazysunj.domain.entity.contact.ContactHeader;
 import com.crazysunj.domain.entity.contact.MultiTypeIndexEntity;
+import com.crazysunj.multitypeadapter.adapter.LoadingEntityAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,10 +55,40 @@ public class ContactsAdapter extends BaseAdapter<MultiTypeIndexEntity, ContactsA
     public ContactsAdapter(ItemTouchHelperExtension touchHelper) {
         super(new ContactAdapterHelper(null));
         mItemTouchHelper = touchHelper;
+        mHelper.setLoadingAdapter(new LoadingEntityAdapter<MultiTypeIndexEntity>() {
+            @Override
+            public MultiTypeIndexEntity createLoadingEntity(int type, int level) {
+                return new ContactLoadingEntity(type);
+            }
+
+            @Override
+            public MultiTypeIndexEntity createLoadingHeaderEntity(int type, int level) {
+                return new ContactLoadingEntity(type);
+            }
+
+            @Override
+            public void bindLoadingEntity(MultiTypeIndexEntity loadingEntity, int position) {
+
+            }
+        });
     }
 
     public void notifyContacts(List<MultiTypeIndexEntity> contacts) {
         mHelper.notifyDataByDiff(contacts);
+    }
+
+    public void showLoading() {
+        mHelper.notifyLoadingDataAndHeaderChanged(ContactAdapterHelper.CONTACT_LEVEL, 10);
+    }
+
+    @Override
+    public void onViewAttachedToWindow(ContactViewHolder helper) {
+        helper.startAnim();
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull ContactViewHolder helper) {
+        helper.stopAnim();
     }
 
     @Override
@@ -114,7 +147,7 @@ public class ContactsAdapter extends BaseAdapter<MultiTypeIndexEntity, ContactsA
 
     private void renderContact(ContactViewHolder helper, Contact contact) {
         CircleImageView icon = helper.getView(R.id.ic_head);
-        Glide.with(mContext).load(contact.getAvatar()).centerCrop().dontAnimate().into(icon);
+        ImageLoader.load(mContext, contact.getAvatar(), R.mipmap.ic_huaji, icon);
         helper.setText(R.id.tx_name, contact.getName());
         helper.setText(R.id.tx_location, contact.getLocation());
         helper.getView(R.id.content).setOnClickListener(v -> enterContactDetail(v.getContext(), helper, contact));
@@ -172,7 +205,7 @@ public class ContactsAdapter extends BaseAdapter<MultiTypeIndexEntity, ContactsA
         context.startActivity(intent);
     }
 
-    public static class ContactViewHolder extends BaseViewHolder implements Extension {
+    public static class ContactViewHolder extends ShimmerViewHolder implements Extension {
 
         private View menu;
 

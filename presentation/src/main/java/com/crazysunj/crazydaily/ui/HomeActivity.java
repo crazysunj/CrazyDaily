@@ -33,13 +33,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.crazysunj.cardslideview.CardViewPager;
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.app.App;
 import com.crazysunj.crazydaily.base.BaseActivity;
 import com.crazysunj.crazydaily.di.module.EntityModule;
 import com.crazysunj.crazydaily.entity.CityEntity;
+import com.crazysunj.crazydaily.moudle.ImageLoader;
 import com.crazysunj.crazydaily.presenter.HomePresenter;
 import com.crazysunj.crazydaily.presenter.contract.HomeContract;
 import com.crazysunj.crazydaily.ui.adapter.HomeAdapter;
@@ -211,12 +211,12 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     @Override
     public void showMeinv(List<String> meinvList) {
         stopRefresh();
-        Glide.with(this).load(meinvList.get(0)).centerCrop().placeholder(R.drawable.img_default).dontAnimate().into(mCubeAnchor.getForegroundView());
-        Glide.with(this).load(meinvList.get(1)).centerCrop().placeholder(R.drawable.img_default).dontAnimate().into(mCubeAnchor.getBackgroundView());
-        Glide.with(this).load(meinvList.get(2)).centerCrop().placeholder(R.drawable.img_default).dontAnimate().into(mCubeFirst.getForegroundView());
-        Glide.with(this).load(meinvList.get(3)).centerCrop().placeholder(R.drawable.img_default).dontAnimate().into(mCubeFirst.getBackgroundView());
-        Glide.with(this).load(meinvList.get(4)).centerCrop().placeholder(R.drawable.img_default).dontAnimate().into(mCubeSecond.getForegroundView());
-        Glide.with(this).load(meinvList.get(5)).centerCrop().placeholder(R.drawable.img_default).dontAnimate().into(mCubeSecond.getBackgroundView());
+        ImageLoader.loadWithVignette(this, meinvList.get(0), R.drawable.img_default, mCubeAnchor.getForegroundView());
+        ImageLoader.loadWithVignette(this, meinvList.get(1), R.drawable.img_default, mCubeAnchor.getBackgroundView());
+        ImageLoader.loadWithVignette(this, meinvList.get(2), R.drawable.img_default, mCubeFirst.getForegroundView());
+        ImageLoader.loadWithVignette(this, meinvList.get(3), R.drawable.img_default, mCubeFirst.getBackgroundView());
+        ImageLoader.loadWithVignette(this, meinvList.get(4), R.drawable.img_default, mCubeSecond.getForegroundView());
+        ImageLoader.loadWithVignette(this, meinvList.get(5), R.drawable.img_default, mCubeSecond.getBackgroundView());
     }
 
     @Override

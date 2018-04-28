@@ -20,12 +20,12 @@ import android.support.v7.widget.AppCompatImageView;
 import android.text.format.DateFormat;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseAdapter;
 import com.crazysunj.crazydaily.di.module.EntityModule;
 import com.crazysunj.crazydaily.entity.ExpandCollapseFooterEntity;
+import com.crazysunj.crazydaily.moudle.ImageLoader;
 import com.crazysunj.crazydaily.ui.BrowserActivity;
 import com.crazysunj.crazydaily.ui.ZhihuNewsDetailActivity;
 import com.crazysunj.crazydaily.ui.adapter.helper.HomeAdapterHelper;
@@ -33,13 +33,13 @@ import com.crazysunj.crazydaily.util.DateUtil;
 import com.crazysunj.crazydaily.util.StringUtil;
 import com.crazysunj.crazydaily.util.WeatherUtil;
 import com.crazysunj.crazydaily.view.video.NeihanVideoPlayerController;
+import com.crazysunj.domain.entity.base.MultiTypeIdEntity;
 import com.crazysunj.domain.entity.common.CommonHeaderEntity;
 import com.crazysunj.domain.entity.gankio.GankioEntity;
 import com.crazysunj.domain.entity.gaoxiao.GaoxiaoItemEntity;
 import com.crazysunj.domain.entity.neihan.NeihanItemEntity;
 import com.crazysunj.domain.entity.weather.WeatherRemoteEntity;
 import com.crazysunj.domain.entity.zhihu.ZhihuNewsEntity;
-import com.crazysunj.domain.entity.base.MultiTypeIdEntity;
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.xiao.nicevideoplayer.NiceVideoPlayer;
 
@@ -124,11 +124,7 @@ public class HomeAdapter extends BaseAdapter<MultiTypeIdEntity, BaseViewHolder, 
 
     private void renderGaoxiao(BaseViewHolder helper, GaoxiaoItemEntity item) {
         CircleImageView avatar = helper.getView(R.id.item_neihan_avatar);
-        Glide.with(mContext)
-                .load(item.getAvatar())
-                .placeholder(R.mipmap.ic_huaji)
-                .crossFade()
-                .into(avatar);
+        ImageLoader.load(mContext, item.getAvatar(), R.mipmap.ic_huaji, avatar);
         helper.setText(R.id.item_neihan_name, item.getName());
         helper.setText(R.id.item_neihan_title, item.getTitle());
         NiceVideoPlayer videoPlayer = helper.getView(R.id.item_neihan_video);
@@ -137,11 +133,8 @@ public class HomeAdapter extends BaseAdapter<MultiTypeIdEntity, BaseViewHolder, 
         controller.setLenght(item.getDuration());
         videoPlayer.setUp(item.getVideoUrl(), null);
         videoPlayer.setController(controller);
-        Glide.with(mContext)
-                .load(item.getThumbnail())
-                .placeholder(R.drawable.img_default)
-                .crossFade()
-                .into(controller.imageView());
+        ImageLoader.load(mContext, item.getThumbnail(), R.drawable.img_default, controller.imageView());
+
     }
 
 
@@ -154,10 +147,7 @@ public class HomeAdapter extends BaseAdapter<MultiTypeIdEntity, BaseViewHolder, 
 
     private void renderNeihan(BaseViewHolder helper, NeihanItemEntity item) {
         CircleImageView avatar = helper.getView(R.id.item_neihan_avatar);
-        Glide.with(mContext)
-                .load(item.getAvatar())
-                .crossFade()
-                .into(avatar);
+        ImageLoader.load(mContext, item.getAvatar(), R.mipmap.ic_huaji, avatar);
         helper.setText(R.id.item_neihan_name, item.getName());
         helper.setText(R.id.item_neihan_title, item.getTitle());
         NiceVideoPlayer videoPlayer = helper.getView(R.id.item_neihan_video);
@@ -166,11 +156,8 @@ public class HomeAdapter extends BaseAdapter<MultiTypeIdEntity, BaseViewHolder, 
         controller.setLenght(item.getDuration());
         controller.setClarity(item.getClarityList(), 0);
         videoPlayer.setController(controller);
-        Glide.with(mContext)
-                .load(item.getThumbnail())
-                .placeholder(R.drawable.img_default)
-                .crossFade()
-                .into(controller.imageView());
+        ImageLoader.load(mContext, item.getThumbnail(), R.drawable.img_default, controller.imageView());
+
     }
 
 
@@ -251,7 +238,7 @@ public class HomeAdapter extends BaseAdapter<MultiTypeIdEntity, BaseViewHolder, 
 
     private void renderZhihuNews(BaseViewHolder helper, ZhihuNewsEntity.StoriesEntity item) {
         final AppCompatImageView icon = helper.getView(R.id.item_zhihu_news_icon);
-        Glide.with(mContext).load(getUrl(item.getImages())).centerCrop().into(icon);
+        ImageLoader.load(mContext, getUrl(item.getImages()), icon);
         helper.setText(R.id.item_zhihu_news_title, item.getTitle());
         helper.itemView.setOnClickListener(v -> ZhihuNewsDetailActivity.start((Activity) v.getContext(), item.getId(), icon));
     }

@@ -78,11 +78,13 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop" />
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop" />
         </com.crazysunj.crazydaily.view.threed.CubeReversalView>
 
         <com.crazysunj.crazydaily.view.threed.CubeReversalView
@@ -95,11 +97,13 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop" />
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop" />
         </com.crazysunj.crazydaily.view.threed.CubeReversalView>
 
         <com.crazysunj.crazydaily.view.threed.CubeReversalView
@@ -112,11 +116,13 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop" />
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop" />
         </com.crazysunj.crazydaily.view.threed.CubeReversalView>
 
         <ImageView

@@ -23,7 +23,6 @@ import android.graphics.Matrix;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
@@ -98,7 +97,6 @@ public class CubeReversalView extends FrameLayout {
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
         removeAllViewsInLayout();
-        CardView backCard = new CardView(context);
         ImageView backgroundImg = new ImageView(context);
         ImageView foregroundImg = new ImageView(context);
         backgroundImg.setImageDrawable(mBackgroundDrawable);

@@ -44,6 +44,9 @@ public class ContactAdapterHelper extends AsynAdapterHelper<MultiTypeIndexEntity
                 .layoutResId(R.layout.item_contacts)
                 .type(ContactHeader.TYPE)
                 .layoutResId(R.layout.item_contacts_header)
+                .loading()
+                .loadingHeaderResId(R.layout.layout_loading_header)
+                .loadingLayoutResId(R.layout.layout_loading_contact)
                 .register();
     }
 }
