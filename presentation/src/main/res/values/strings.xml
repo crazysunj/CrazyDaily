@@ -28,4 +28,5 @@
     <string name="transition_name">name</string>
     <string name="transition_location_icon">location_icon</string>
     <string name="transition_location">location</string>
+    <string name="splash_bottom_text">程序员的生活就是这么酷！</string>
 </resources>

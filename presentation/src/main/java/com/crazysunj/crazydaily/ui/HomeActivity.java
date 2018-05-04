@@ -16,7 +16,9 @@
 package com.crazysunj.crazydaily.ui;
 
 import android.animation.ArgbEvaluator;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -114,6 +116,11 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     private ArgbEvaluator mArgbEvaluator = new ArgbEvaluator();
     private int gaoxiaoIndex = 1;
     private boolean isTop = true;
+
+    public static void start(Context context) {
+        Intent intent = new Intent(context, HomeActivity.class);
+        context.startActivity(intent);
+    }
 
 
     @Override

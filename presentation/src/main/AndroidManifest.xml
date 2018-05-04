@@ -23,11 +23,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/HomeTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".ui.ZhihuNewsDetailActivity"
@@ -45,14 +41,22 @@
             android:name=".ui.AboutMeActivity"
             android:label="@string/text_about_me"
             android:screenOrientation="portrait" />
-        <activity android:name=".weex.WeexActivity"/>
-
+        <activity android:name=".weex.WeexActivity" />
         <activity
             android:name=".ui.contact.ContactActivity"
             android:label="@string/page_name_conatct"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".ui.contact.ContactDetailActivity"
-            android:theme="@style/ContactTheme"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.contact.ContactDetailActivity"
+            android:theme="@style/ContactTheme" />
+        <activity android:name=".ui.splash.SplashActivity"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
