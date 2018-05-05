@@ -35,4 +35,5 @@
     <dimen name="space_240">240dp</dimen>
     <dimen name="space_5">5dp</dimen>
     <dimen name="cube_size">46dp</dimen>
+    <dimen name="splash_height">360dp</dimen>
 </resources>

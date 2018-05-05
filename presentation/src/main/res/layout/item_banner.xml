@@ -13,7 +13,7 @@
         android:layout_gravity="center"
         app:cardCornerRadius="@dimen/space_10"
         app:cardElevation="@dimen/space_6"
-        app:ratio="0.9">
+        app:ratio="0.8">
 
         <FrameLayout
             android:layout_width="match_parent"

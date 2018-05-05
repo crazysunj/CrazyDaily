@@ -27,8 +27,6 @@ import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 
 /**
@@ -43,13 +41,12 @@ public class CoolBGView extends View {
     private Bitmap mBitmap;
     private static final int ZERO = 0;
     private static final int BLUR_RADIUS = 20;//模糊度（radius最大只能设置25f）
-    private static final int BOTTOM_COLOR = Color.parseColor("#489CEB");
-    private final float mHalfHeight;
-    private final float mFifthWidth;
-    private final float mElevenTwentiethsHeight;
-    private final float mThreeTenthsHeight;
-    private final int mWidth;
-    private final int mHeight;
+    private float mHalfHeight;
+    private float mFifthWidth;
+    private float mElevenTwentiethsHeight;
+    private float mThreeTenthsHeight;
+    private int mWidth;
+    private int mHeight;
 
     public CoolBGView(Context context) {
         this(context, null);
@@ -63,9 +60,13 @@ public class CoolBGView extends View {
         super(context, attrs, defStyleAttr);
         mPath = new Path();
         mPaint = new Paint();
-        DisplayMetrics metrics = getResources().getDisplayMetrics();
-        mHeight = metrics.heightPixels;
-        mWidth = metrics.widthPixels;
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        mHeight = getMeasuredHeight();
+        mWidth = getMeasuredWidth();
         mHalfHeight = mHeight * 1.0f / 2;
         mFifthWidth = mWidth * 1.0f / 5;
         mElevenTwentiethsHeight = mHeight * 11.0f / 20;
@@ -112,7 +113,6 @@ public class CoolBGView extends View {
         super.onDetachedFromWindow();
         mBitmap.recycle();
         mBitmap = null;
-        Log.d("CoolBGView", "onDetachedFromWindow");
     }
 
     /**

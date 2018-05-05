@@ -23,6 +23,7 @@ import com.crazysunj.crazydaily.di.scope.ActivityScope;
 import com.crazysunj.crazydaily.ui.HomeActivity;
 import com.crazysunj.crazydaily.ui.ZhihuNewsDetailActivity;
 import com.crazysunj.crazydaily.ui.contact.ContactActivity;
+import com.crazysunj.crazydaily.ui.splash.SplashActivity;
 
 import dagger.Component;
 
@@ -41,4 +42,6 @@ public interface ActivityComponent {
     void inject(ZhihuNewsDetailActivity zhihuNewsDetailActivity);
 
     void inject(ContactActivity contactActivity);
+
+    void inject(SplashActivity splashActivity);
 }
