@@ -12,7 +12,9 @@
 
 ![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/demo_weex.gif)
 
-### 联系人(待完善)
+### 联系人
+
+![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/crazydaily_anim.gif)
 
 ## 简介
 * 知乎日报
