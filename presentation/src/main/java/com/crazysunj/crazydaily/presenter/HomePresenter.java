@@ -33,8 +33,13 @@ import com.crazysunj.domain.interactor.zhihu.ZhihuNewsListUseCase;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 /**
  * author: sunjian
@@ -49,6 +54,7 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
     private WeatherUseCase mWeatherUseCase;
     private NeihanUseCase mNeihanUseCase;
     private GaoxiaoUseCase mGaoxiaoUseCase;
+    private Disposable mBannerDisposable;
 
     @Inject
     public HomePresenter(ZhihuNewsListUseCase zhihuUseCase, GankioUseCase gankioUseCase, WeatherUseCase weatherUseCase, NeihanUseCase neihanUseCase, GaoxiaoUseCase gaoxiaoUseCase) {
@@ -122,6 +128,28 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
                 mView.showMeinv(urls);
             }
         });
+    }
+
+    @Override
+    public void startBanner() {
+        if (mBannerDisposable == null) {
+            mBannerDisposable = Flowable.interval(3, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
+                    .subscribeWith(new BaseSubscriber<Long>() {
+                        @Override
+                        public void onNext(Long aLong) {
+                            mView.switchBanner();
+                        }
+                    });
+        }
+    }
+
+    @Override
+    public void endBanner() {
+        if (mBannerDisposable == null || mBannerDisposable.isDisposed()) {
+            return;
+        }
+        mBannerDisposable.dispose();
+        mBannerDisposable = null;
     }
 
     @Override

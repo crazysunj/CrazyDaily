@@ -45,6 +45,8 @@ public interface HomeContract {
         void showGaoxiao(List<GaoxiaoItemEntity> gaoxiaoList);
 
         void showMeinv(List<String> meinvList);
+
+        void switchBanner();
     }
 
     interface Presenter extends IPresenter<View> {
@@ -61,5 +63,9 @@ public interface HomeContract {
         void getGaoxiaoList(int page);
 
         void getMeinvList();
+
+        void startBanner();
+
+        void endBanner();
     }
 }

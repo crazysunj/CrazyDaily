@@ -49,6 +49,7 @@ import com.crazysunj.crazydaily.ui.adapter.helper.HomeAdapterHelper;
 import com.crazysunj.crazydaily.ui.contact.ContactActivity;
 import com.crazysunj.crazydaily.util.SnackbarUtil;
 import com.crazysunj.crazydaily.view.banner.BannerCardHandler;
+import com.crazysunj.crazydaily.view.banner.WrapBannerView;
 import com.crazysunj.crazydaily.view.threed.CubeReversalView;
 import com.crazysunj.crazydaily.weex.WeexActivity;
 import com.crazysunj.data.util.JsonUtil;
@@ -86,14 +87,14 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     RecyclerView mHomeList;
     @BindView(R.id.home_vp)
     CardViewPager mHomeBanner;
+    @BindView(R.id.wrap_banner)
+    WrapBannerView mWrapBanner;
     @BindView(R.id.home_toolbar)
     Toolbar mToolbar;
     @BindView(R.id.home_appbar)
     AppBarLayout mAppbar;
     @BindView(R.id.home_title)
     TextView mTitle;
-    //    @BindView(R.id.home_bottom)
-//    TextView mBottom;
     @BindView(R.id.home_navigition)
     BottomNavigationView mBottomNavigation;
 
@@ -130,6 +131,18 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        mPresenter.startBanner();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mPresenter.endBanner();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         NiceVideoPlayerManager.instance().releaseNiceVideoPlayer();
@@ -144,6 +157,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         }
         mHomeList.setLayoutManager(new LinearLayoutManager(this));
         mHomeList.setAdapter(mAdapter);
+        mWrapBanner.setOnBannerSlideListener(this::handleWrapBanner);
     }
 
     @Override
@@ -152,7 +166,6 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         mAdapter.setOnHeaderClickListener(this::handleHeaderOptions);
         mHomeList.addOnChildAttachStateChangeListener(new HomeRecyclerViewStateChangeListener());
         mAppbar.addOnOffsetChangedListener(this::handleAppbarOffsetChangedListener);
-//        mBottom.setOnClickListener(v -> ContactActivity.start(this));
         mBottomNavigation.setOnNavigationItemSelectedListener(this::handleNavigationItemClick);
         mCubeAnchor.setOnClickListener(v -> clickCubeAnchor());
         mCubeFirst.setOnClickListener(v -> clickCubeFirst());
@@ -227,6 +240,11 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     }
 
     @Override
+    public void switchBanner() {
+        mHomeBanner.setCurrentItem(mHomeBanner.getCurrentItem() + 1, true);
+    }
+
+    @Override
     protected int getContentResId() {
         return R.layout.activity_home;
     }
@@ -243,13 +261,18 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
             return;
         }
         if (!isTop) {
-            isTop = !isTop;
-            mCubeSecond.start(isTop, 2);
-            mCubeFirst.start(isTop, 1);
-            mCubeAnchor.start(isTop);
+            clickCubeAnchor();
             return;
         }
         showExitDialog();
+    }
+
+    private void handleWrapBanner(boolean isCanSlide) {
+        if (isCanSlide) {
+            mPresenter.startBanner();
+        } else {
+            mPresenter.endBanner();
+        }
     }
 
     private void clickCubeAnchor() {
