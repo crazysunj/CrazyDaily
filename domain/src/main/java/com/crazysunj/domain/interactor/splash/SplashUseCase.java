@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import io.reactivex.Flowable;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
  * author: sunjian
@@ -39,9 +39,9 @@ public class SplashUseCase extends UseCase<Long, SplashUseCase.Params> {
 
     @Override
     protected Flowable<Long> buildUseCaseObservable(Params params) {
-        return Flowable.timer(params.delay, params.unit, Schedulers.computation());
+        return Flowable.timer(params.delay, params.unit, AndroidSchedulers.mainThread());
     }
-    
+
     public static final class Params {
 
         private final long delay;

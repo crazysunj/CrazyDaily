@@ -27,6 +27,7 @@ import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapResource;
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.crazysunj.crazydaily.app.GlideApp;
+import com.crazysunj.data.util.LoggerUtil;
 
 import jp.wasabeef.glide.transformations.gpu.VignetteFilterTransformation;
 
@@ -66,10 +67,14 @@ public class ImageLoader {
                 .into(new DrawableImageViewTarget(imageView) {
                     @Override
                     public void setDrawable(Drawable drawable) {
-                        BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-                        BitmapResource bitmapResource = BitmapResource.obtain(bitmapDrawable.getBitmap(), bitmapPool);
-                        Resource<Bitmap> transform = VIGNETTE_TRANSFORMATION.transform(context, bitmapResource, view.getWidth(), view.getHeight());
-                        view.setImageBitmap(transform.get());
+                        try {
+                            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+                            BitmapResource bitmapResource = BitmapResource.obtain(bitmapDrawable.getBitmap(), bitmapPool);
+                            Resource<Bitmap> transform = VIGNETTE_TRANSFORMATION.transform(context, bitmapResource, view.getWidth(), view.getHeight());
+                            view.setImageBitmap(transform.get());
+                        } catch (Exception e) {
+                            LoggerUtil.e(e.getMessage(), e);
+                        }
                     }
                 });
     }

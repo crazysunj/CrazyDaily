@@ -68,6 +68,7 @@ import com.xiao.nicevideoplayer.NiceVideoPlayerManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
@@ -398,6 +399,8 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         }
     }
 
+    private ExecutorService mExecutor = Executors.newSingleThreadExecutor();
+
     private class HomeRecyclerViewStateChangeListener implements RecyclerView.OnChildAttachStateChangeListener {
 
         @Override
@@ -412,10 +415,10 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
                 return;
             }
             final int itemViewType = mAdapter.getHelper().getItemViewType(position);
-            if (itemViewType == NeihanItemEntity.TYPE_NEIHAN) {
-                NiceVideoPlayer niceVideoPlayer = (NiceVideoPlayer) view.findViewById(R.id.item_neihan_video);
+            if (itemViewType == GaoxiaoItemEntity.TYPE_GAOXIAO) {
+                NiceVideoPlayer niceVideoPlayer = view.findViewById(R.id.item_neihan_video);
                 if (niceVideoPlayer.isPlaying()) {
-                    Executors.newSingleThreadExecutor().execute(niceVideoPlayer::release);
+                    mExecutor.execute(niceVideoPlayer::release);
                 }
             }
         }

@@ -32,7 +32,7 @@ public class LoggerUtil {
      * @param isLogEnable 是否打印log
      */
     public static void init(boolean isLogEnable) {
-        Logger.init("CrazyDailyHttp")
+        Logger.init("CrazyDailyLog")
                 .hideThreadInfo()
                 .logLevel(isLogEnable ? LogLevel.FULL : LogLevel.NONE)
                 .methodOffset(2);

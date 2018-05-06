@@ -44,6 +44,7 @@ ext {
             tinypinyin            : "2.0.3",
             shimmer               : "0.1.0@aar",
             gpuimage              : "1.4.1",
+            lottie                : "2.5.4",
     ]
 
     dataDependencies = [
@@ -86,6 +87,7 @@ ext {
             wavesidebar         : "com.gjiazhe:wavesidebar:${dependVersion.wavesidebar}",
             shimmer             : "com.facebook.shimmer:shimmer:${dependVersion.shimmer}",
             gpuimage            : "jp.co.cyberagent.android.gpuimage:gpuimage-library:${dependVersion.gpuimage}",
+            lottie              : "com.airbnb.android:lottie:${dependVersion.lottie}",
     ]
 
     dataTestDependencies = [

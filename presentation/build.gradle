@@ -72,7 +72,7 @@ dependencies {
     implementation libs.weex
     implementation libs.wavesidebar
     implementation libs.shimmer
-    implementation 'com.airbnb.android:lottie:2.5.4'
+    implementation libs.lottie
     debugImplementation libs.debugLeakcanary
     releaseImplementation libs.releaseLeakcanary
     annotationProcessor libs.butterknifeCompiler
