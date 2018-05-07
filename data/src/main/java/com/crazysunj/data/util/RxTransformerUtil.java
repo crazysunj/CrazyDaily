@@ -28,6 +28,7 @@ public class RxTransformerUtil {
 
     public static <T> FlowableTransformer<T, T> normalTransformer() {
         return observable -> observable.subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 }
