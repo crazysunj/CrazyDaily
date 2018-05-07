@@ -1,5 +1,5 @@
 # CrazyDaily
-一款程序员日常放松的App，基于Material Design + MVP-Clean + Weex + RxJava2 + Retrofit + Dagger2 + Glide + Okhttp + MTRVA + BRVAH + 炫酷控件 + 炫酷动画
+一款程序员日常放松的App，基于Material Design + MVP-Clean + Weex + RxJava2 + Retrofit + Dagger2 + Glide + Okhttp + MTRVA + 炫酷控件 + 炫酷动画
 
 ## 效果图
 ### 首页
@@ -23,9 +23,20 @@
 * 搞笑视频
 * 联系人
 
-本项目涵盖了开发中应该用到的开源框架、自定义控件、自定义动画、项目架构搭建。
+## 技术点
+* 架构采用MVP-Clean，项目简洁、易维护、易测试、高内聚、低耦合
+* UI风格采用Material Design，清新、简洁和直观
+* 跨端采用Weex，涉及weex页面、自定义Module、自定义Component、自定义Adapter等
+* RxJava的操作符巧妙运用
+* Dagger2与Butterknife实现依赖注解，解耦，方便测试等
+* Retrofit和Okhttp实现网络架构，实现多种扩展，例如常见的日志规范打印，不用抓包，直接在日志中游览
+* Glide实现图片加载，配合GlideTransformations实现多种变换，如圆角、遮罩等
+* MTRVA轻松处理RecyclerViewAdapter的数据，实现多列表效果更佳
+* 大量自定义控件，如Camera、Matrix、贝塞尔曲线、高斯模糊、Behavior、事件拦截等等运用
+* 大量动画，如lottie、补间动画、3D动画、属性动画（ObjectAnimator、ValueAnimator、View.animate和PropertyValuesHolder）和转场动画（自定义Transition）运用
+* 视频列表
 
-保持各种库最新状态，我踩坑，我骄傲！
+尽量保持各种开源库最新状态，我踩坑，我骄傲！
 
 有意见或者建议的同学可以联系我哦，持续更新，祝你生活愉快！
 
@@ -33,12 +44,16 @@
 
 [下载地址](https://www.pgyer.com/EbHS "https://www.pgyer.com/EbHS")
 
-下个版本可能要做的是：
+想干的事（暂时先罗列这么多，版本迭代陆续实现，不分先后）：
 * 网络加上缓存机制
 * 加上引导页
 * 添加图片查看，修改等
 * 首页改为多fragment
 * 添加微信精选，稀土掘金模块
+* 游览器内核改为x5
+* 视频列表支持小窗口播放
+* WebView预加载
+...
 
 `[注]`本项目为开源项目，项目中涉及api若有侵犯产品权益，请告知，立刻删除。
 ## License
