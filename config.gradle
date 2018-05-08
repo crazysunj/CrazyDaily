@@ -35,7 +35,7 @@ ext {
             circleimageview       : "2.1.0",
             niceVieoPlayer        : "v2.2",
             gson                  : "2.8.2",
-            cardslideview         : "1.2.1",
+            cardslideview         : "1.3.0",
             leakcanary            : "1.5.4",
             fastjson              : "1.1.68",
             weex                  : "0.18.0",
