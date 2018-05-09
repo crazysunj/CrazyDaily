@@ -46,6 +46,8 @@ public interface HomeContract {
 
         void showMeinv(List<String> meinvList);
 
+        void errorMeinv();
+
         void switchBanner();
     }
 

@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crazysunj.data.service;
+package com.crazysunj.data.util;
 
-import com.crazysunj.domain.entity.weather.WeatherRemoteEntity;
-
-import io.reactivex.Flowable;
-import retrofit2.http.GET;
-import retrofit2.http.Headers;
-import retrofit2.http.Query;
+import java.io.IOException;
 
 /**
  * author: sunjian
- * created on: 2017/9/19 下午6:36
- * description: https://github.com/crazysunj/CrazyDaily
+ * created on: 2018/5/8 下午5:51
+ * description:https://github.com/crazysunj/CrazyDaily
  */
+public class NetworkUtils {
 
-public interface WeatherService {
-
-    String HOST = "http://tj.nineton.cn/";
-
-    @Headers("Cache-Control: public, max-age=60")//缓存时间为1分钟
-    @GET("Heart/index/all")
-    Flowable<WeatherRemoteEntity> getWeatherList(@Query("city") String city, @Query("language") String language);
+    public static boolean isNetworkAvailable() {
+        try {
+            String ip = "www.baidu.com";
+            Process process = Runtime.getRuntime().exec("/system/bin/ping -c 1 -w 100 " + ip);
+            int status = process.waitFor();
+            return status == 0;
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

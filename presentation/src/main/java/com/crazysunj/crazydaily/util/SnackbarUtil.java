@@ -16,6 +16,7 @@
 package com.crazysunj.crazydaily.util;
 
 import android.app.Activity;
+import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 
@@ -34,7 +35,15 @@ public class SnackbarUtil {
         Snackbar.make(view, msg, Snackbar.LENGTH_SHORT).show();
     }
 
+    public static void show(View view, @StringRes int msg) {
+        Snackbar.make(view, msg, Snackbar.LENGTH_SHORT).show();
+    }
+
     public static void show(Activity activity, String msg) {
+        Snackbar.make(activity.findViewById(android.R.id.content), msg, Snackbar.LENGTH_SHORT).show();
+    }
+
+    public static void show(Activity activity, @StringRes int msg) {
         Snackbar.make(activity.findViewById(android.R.id.content), msg, Snackbar.LENGTH_SHORT).show();
     }
 }

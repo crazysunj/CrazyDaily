@@ -29,4 +29,10 @@
     <string name="transition_location_icon">location_icon</string>
     <string name="transition_location">location</string>
     <string name="splash_bottom_text">什么都懂一点，生活更多彩一些</string>
+    <string name="clear_cache">清除缓存</string>
+    <string name="permission_storage_rationale">该操作需要读写存储卡权限</string>
+    <string name="button_allow">允许</string>
+    <string name="button_deny">拒绝</string>
+    <string name="permission_storage_denied">读取存储权限被拒绝</string>
+    <string name="permission_storage_neverask">请到设置页面去允许存储权限</string>
 </resources>

@@ -73,7 +73,7 @@ public class ImageLoader {
                             Resource<Bitmap> transform = VIGNETTE_TRANSFORMATION.transform(context, bitmapResource, view.getWidth(), view.getHeight());
                             view.setImageBitmap(transform.get());
                         } catch (Exception e) {
-                            LoggerUtil.e(e.getMessage(), e);
+                            LoggerUtil.e(LoggerUtil.MSG_IMG, e);
                         }
                     }
                 });

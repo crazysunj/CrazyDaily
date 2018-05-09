@@ -17,7 +17,6 @@ package com.crazysunj.crazydaily.ui;
 
 import android.animation.ArgbEvaluator;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -33,6 +32,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.crazysunj.cardslideview.CardViewPager;
@@ -105,6 +105,8 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     CubeReversalView mCubeFirst;
     @BindView(R.id.cube_second)
     CubeReversalView mCubeSecond;
+    @BindView(R.id.bottom_shadow)
+    ImageView mShadow;
 
     @Inject
     HomeAdapter mAdapter;
@@ -179,7 +181,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         mPresenter.getGankioList(GankioEntity.ResultsEntity.PARAMS_ANDROID);
         mPresenter.getWeather("CHZJ000000");
         mPresenter.getGaoxiaoList(gaoxiaoIndex);
-        mPresenter.getMeinvList();
+//        mPresenter.getMeinvList();
 //        mPresenter.getNeihanList(mNeihanManager.getAmLocTime(), mNeihanManager.getMinTime(), mNeihanManager.getSceenWidth(),
 //                mNeihanManager.getIid(), mNeihanManager.getDeviceId(), mNeihanManager.getAc(), mNeihanManager.getVersionCode(),
 //                mNeihanManager.getVersionName(), Build.MODEL, Build.BRAND, Build.VERSION.SDK_INT, Build.VERSION.RELEASE, mNeihanManager.getUuid(),
@@ -213,31 +215,38 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
 
     @Override
     public void showWeather(List<WeatherRemoteEntity.WeatherEntity> weatherList) {
-        stopRefresh();
+//        stopRefresh();
         mAdapter.notifyWeatherList(weatherList);
     }
 
     @Override
     public void showNeihan(List<NeihanItemEntity> neihanList) {
-        stopRefresh();
+//        stopRefresh();
         mAdapter.notifyNeihanList(neihanList);
     }
 
     @Override
     public void showGaoxiao(List<GaoxiaoItemEntity> gaoxiaoList) {
-        stopRefresh();
+//        stopRefresh();
         mAdapter.notifyGaoxiaoList(gaoxiaoList);
     }
 
     @Override
     public void showMeinv(List<String> meinvList) {
-        stopRefresh();
+//        stopRefresh();
         ImageLoader.loadWithVignette(this, meinvList.get(0), R.drawable.img_default, mCubeAnchor.getForegroundView());
         ImageLoader.loadWithVignette(this, meinvList.get(1), R.drawable.img_default, mCubeAnchor.getBackgroundView());
         ImageLoader.loadWithVignette(this, meinvList.get(2), R.drawable.img_default, mCubeFirst.getForegroundView());
         ImageLoader.loadWithVignette(this, meinvList.get(3), R.drawable.img_default, mCubeFirst.getBackgroundView());
         ImageLoader.loadWithVignette(this, meinvList.get(4), R.drawable.img_default, mCubeSecond.getForegroundView());
         ImageLoader.loadWithVignette(this, meinvList.get(5), R.drawable.img_default, mCubeSecond.getBackgroundView());
+        mShadow.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void errorMeinv() {
+//        stopRefresh();
+        mShadow.setVisibility(View.GONE);
     }
 
     @Override
@@ -321,7 +330,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         builder.setTitle("提示");
         builder.setMessage("确定退出CrazyDaily吗");
         builder.setNegativeButton("留下来", null);
-        builder.setPositiveButton("残忍地弄死", (DialogInterface dialogInterface, int i) -> App.getInstance().exitApp());
+        builder.setPositiveButton("残忍地弄死", (dialogInterface, i) -> App.getInstance().exitApp());
         builder.show();
     }
 
@@ -337,7 +346,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
                     data.add(GankioEntity.ResultsEntity.PARAMS_H5);
                     data.add(GankioEntity.ResultsEntity.PARAMS_ALL);
                     mGankioDialog = PhoneOptionsPickerDialog.newInstance(bundle, data);
-                    mGankioDialog.setOnoptionsSelectListener((int options1, int option2, int options3) -> {
+                    mGankioDialog.setOnoptionsSelectListener((options1, option2, options3) -> {
                         final String selectOption = data.get(options1);
                         if (selectOption.equals(options)) {
                             return;
@@ -365,7 +374,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
                     Bundle bundle = new Bundle();
                     bundle.putBoolean(BaseOptionsPickerDialog.CYCLIC_FIRST, true);
                     mWeatherDialog = PhoneOptionsPickerDialog.newInstance(bundle, mCityList);
-                    mWeatherDialog.setOnoptionsSelectListener((int options1, int option2, int options3) -> {
+                    mWeatherDialog.setOnoptionsSelectListener((options1, option2, options3) -> {
                         final String selectOption = mCityList.get(options1).getTownID();
                         if (selectOption.equals(options)) {
                             return;

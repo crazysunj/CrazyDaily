@@ -19,6 +19,7 @@ import com.crazysunj.domain.entity.gaoxiao.GaoxiaoEntity;
 
 import io.reactivex.Flowable;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.Query;
 
 /**
@@ -31,6 +32,7 @@ public interface GaoxiaoService {
 
     String HOST = "https://www.apiopen.top/";
 
+    @Headers("Cache-Control: public, max-age=300")//缓存时间为5分钟
     @GET("satinApi")
     Flowable<GaoxiaoEntity> getGaoxiaoList(@Query("type") int type, @Query("page") int page);
 }

@@ -88,4 +88,8 @@ dependencies {
         exclude group: 'com.github.bumptech.glide', module: 'glide'
     }
     annotationProcessor libs.glideCompiler
+    implementation("com.github.hotchemi:permissionsdispatcher:3.2.0") {
+        exclude module: "support-v13"
+    }
+    annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:3.2.0"
 }

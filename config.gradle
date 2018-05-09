@@ -28,7 +28,7 @@ ext {
             arrowVersion          : "1.0.0",
             javaxAnnotationVersion: "1.0",
             javaxInjectVersion    : "1",
-            logger                : "1.15",
+            logger                : "2.2.0",
             statusbarutil         : "1.4.0",
             pickerdialog          : "1.1.0",
             tray                  : "0.12.0",

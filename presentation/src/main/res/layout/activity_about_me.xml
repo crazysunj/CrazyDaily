@@ -62,4 +62,15 @@
         android:layout_marginTop="@dimen/space_10"
         android:text="@string/about_me_feel" />
 
+    <TextView
+        android:id="@+id/about_me_clear_cache"
+        style="@style/text_16_white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_20"
+        android:background="@drawable/shape_button"
+        android:gravity="center"
+        android:padding="@dimen/space_10"
+        android:text="@string/clear_cache" />
+
 </LinearLayout>

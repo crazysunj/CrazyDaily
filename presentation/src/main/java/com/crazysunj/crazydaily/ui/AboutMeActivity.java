@@ -15,29 +15,44 @@
  */
 package com.crazysunj.crazydaily.ui;
 
+import android.Manifest;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
 import com.crazysunj.crazydaily.util.SnackbarUtil;
+import com.crazysunj.data.api.HttpHelper;
+
+import java.io.File;
 
 import butterknife.BindView;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 
 /**
  * author: sunjian
  * created on: 2017/9/10 下午5:01
  * description: https://github.com/crazysunj/CrazyDaily
  */
+@RuntimePermissions
 public class AboutMeActivity extends BaseActivity {
 
     @BindView(R.id.about_me_github)
     TextView mGithub;
     @BindView(R.id.about_me_blog)
     TextView mBlog;
+    @BindView(R.id.about_me_clear_cache)
+    TextView mClearCache;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, AboutMeActivity.class);
@@ -57,6 +72,45 @@ public class AboutMeActivity extends BaseActivity {
             copyContent(blog);
             return false;
         });
+
+        mClearCache.setOnClickListener(v -> AboutMeActivityPermissionsDispatcher.clearCacheWithPermissionCheck(this));
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        AboutMeActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
+    @NeedsPermission({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void clearCache() {
+        File cacheDir = new File(getExternalCacheDir(), HttpHelper.CACHE_DIR);
+        boolean isSuccess = false;
+        if (cacheDir.exists() && cacheDir.isDirectory()) {
+            for (File file : cacheDir.listFiles()) {
+                isSuccess = file.delete();
+            }
+        }
+        SnackbarUtil.show(this, "清除缓存" + (isSuccess ? "成功" : "失败"));
+    }
+
+    @OnShowRationale({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void showRationaleForClearCache(final PermissionRequest request) {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.permission_storage_rationale)
+                .setPositiveButton(R.string.button_allow, (dialog, button) -> request.proceed())
+                .setNegativeButton(R.string.button_deny, (dialog, button) -> request.cancel())
+                .show();
+    }
+
+    @OnPermissionDenied({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void showDeniedForClearCache() {
+        SnackbarUtil.show(this, R.string.permission_storage_denied);
+    }
+
+    @OnNeverAskAgain({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void showNeverAskForClearCache() {
+        SnackbarUtil.show(this, R.string.permission_storage_neverask);
     }
 
     @Override

@@ -15,8 +15,12 @@
  */
 package com.crazysunj.data.util;
 
-import com.orhanobut.logger.LogLevel;
+import android.support.annotation.Nullable;
+
+import com.orhanobut.logger.AndroidLogAdapter;
+import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;
+import com.orhanobut.logger.PrettyFormatStrategy;
 
 /**
  * author: sunjian
@@ -26,33 +30,47 @@ import com.orhanobut.logger.Logger;
 
 public class LoggerUtil {
 
+    public static final String TAG = "CrazyDailyLog";
+    public static final String MSG_HTTP = "HttpLog";
+    public static final String MSG_IMG = "ImageLog";
+    public static final String MSG_JSON = "JsonLog";
+
     /**
      * 初始化log工具，在app入口处调用
      *
      * @param isLogEnable 是否打印log
      */
     public static void init(boolean isLogEnable) {
-        Logger.init("CrazyDailyLog")
-                .hideThreadInfo()
-                .logLevel(isLogEnable ? LogLevel.FULL : LogLevel.NONE)
-                .methodOffset(2);
+        FormatStrategy formatStrategy = PrettyFormatStrategy.newBuilder()
+                .showThreadInfo(false)
+                .tag(TAG)
+                .build();
+        Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy) {
+            @Override
+            public boolean isLoggable(int priority, @Nullable String tag) {
+                return isLogEnable;
+            }
+        });
     }
 
     public static void d(String message) {
         Logger.d(message);
     }
 
+    public static void d(String tag, String message) {
+        Logger.d(String.format("[%s]%s", tag, message));
+    }
+
     public static void i(String message) {
         Logger.i(message);
     }
 
-    public static void w(String message, Throwable e) {
-        String info = e != null ? e.toString() : "null";
-        Logger.w(message + "：" + info);
+    public static void i(String tag, String message) {
+        Logger.i(String.format("[%s]%s", tag, message));
     }
 
-    public static void e(String message, Throwable e) {
-        Logger.e(e, message);
+    public static void e(String tag, Throwable e) {
+        Logger.e(String.format("[%s]%s", tag, e.getMessage()));
     }
 
     public static void json(String json) {

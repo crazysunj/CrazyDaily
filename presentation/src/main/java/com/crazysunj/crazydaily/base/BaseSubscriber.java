@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.crazysunj.crazydaily.app.App;
 import com.crazysunj.data.util.LoggerUtil;
+import com.crazysunj.data.util.NetworkUtils;
 
 import io.reactivex.subscribers.DisposableSubscriber;
 
@@ -33,8 +34,12 @@ public abstract class BaseSubscriber<T> extends DisposableSubscriber<T> {
 
     @Override
     public void onError(Throwable e) {
-        Toast.makeText(App.getInstance(), e.getMessage(), Toast.LENGTH_SHORT).show();
-        LoggerUtil.w("HttpError", e);
+        if (NetworkUtils.isNetworkAvailable()) {
+            Toast.makeText(App.getInstance(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(App.getInstance(), "请检测你的网络是否畅通", Toast.LENGTH_SHORT).show();
+        }
+        LoggerUtil.e(LoggerUtil.MSG_HTTP, e);
     }
 
     @Override

@@ -15,19 +15,31 @@
  */
 package com.crazysunj.data.api;
 
+import android.content.Context;
+import android.text.TextUtils;
+
 import com.crazysunj.data.logger.HttpLogger;
 import com.crazysunj.data.service.GankioService;
 import com.crazysunj.data.service.GaoxiaoService;
 import com.crazysunj.data.service.NeihanService;
 import com.crazysunj.data.service.WeatherService;
 import com.crazysunj.data.service.ZhihuService;
+import com.crazysunj.data.util.LoggerUtil;
+import com.crazysunj.data.util.NetworkUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import okhttp3.Cache;
+import okhttp3.CacheControl;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -41,6 +53,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Singleton
 public class HttpHelper {
 
+    public static final String CACHE_DIR = "api";
+
     private ZhihuService mZhihuService;
     private GankioService mGankioService;
     private WeatherService mWeatherService;
@@ -49,12 +63,17 @@ public class HttpHelper {
     private OkHttpClient mOkHttpClient;
 
     @Inject
-    public HttpHelper() {
+    public HttpHelper(Context context) {
         if (mOkHttpClient == null) {
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            //设置缓存 20M
+            Cache cache = new Cache(new File(context.getExternalCacheDir(), CACHE_DIR), 20 * 1024 * 1024);
+            builder.cache(cache);
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(new HttpLogger());
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             builder.addInterceptor(loggingInterceptor);
+            builder.addInterceptor(new CrazyDailyCacheInterceptor());
+            builder.addNetworkInterceptor(new CrazyDailyCacheNetworkInterceptor());
             //设置超时
             builder.connectTimeout(10, TimeUnit.SECONDS);
             builder.readTimeout(20, TimeUnit.SECONDS);
@@ -147,5 +166,45 @@ public class HttpHelper {
             }
         }
         return mGaoxiaoService;
+    }
+
+    /**
+     * 有网才会执行哦
+     */
+    private static class CrazyDailyCacheNetworkInterceptor implements Interceptor {
+
+        private static final String CACHE_CONTROL = "Cache-Control";
+
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            final Request request = chain.request();
+            final Response response = chain.proceed(request);
+            final String requestHeader = request.header(CACHE_CONTROL);
+            //判断条件最好加上TextUtils.isEmpty(response.header(CACHE_CONTROL))来判断服务端是否返回缓存策略，如果返回，就按服务端的来，我这里全部客户端控制了
+            if (!TextUtils.isEmpty(requestHeader)) {
+                LoggerUtil.i(LoggerUtil.MSG_HTTP, "CrazyDailyCacheNetworkInterceptor---cache---host:" + request.url().host());
+                return response.newBuilder().header(CACHE_CONTROL, requestHeader).removeHeader("Pragma").build();
+            }
+            return response;
+        }
+    }
+
+    private static class CrazyDailyCacheInterceptor implements Interceptor {
+
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Request request = chain.request();
+            CacheControl cacheControl = request.cacheControl();
+            //header可控制不走这个逻辑
+            boolean noCache = cacheControl.noCache() || cacheControl.noStore() || cacheControl.maxAgeSeconds() == 0;
+            if (!noCache && !NetworkUtils.isNetworkAvailable()) {
+                Request.Builder builder = request.newBuilder();
+                LoggerUtil.i(LoggerUtil.MSG_HTTP, "CrazyDailyCacheInterceptor---cache---host:" + request.url().host());
+                CacheControl newCacheControl = new CacheControl.Builder().maxStale(1, TimeUnit.DAYS).build();
+                request = builder.cacheControl(newCacheControl).build();
+                return chain.proceed(request);
+            }
+            return chain.proceed(request);
+        }
     }
 }

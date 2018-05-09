@@ -19,6 +19,7 @@ import com.crazysunj.domain.entity.neihan.NeihanEntity;
 
 import io.reactivex.Flowable;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.Query;
 
 /**
@@ -31,6 +32,7 @@ public interface NeihanService {
 
     String HOST = "http://iu.snssdk.com/";
 
+    @Headers("Cache-Control: public, max-age=300")//缓存时间为5分钟
     @GET("neihan/stream/mix/v1/")
     Flowable<NeihanEntity> getNeihanList(@Query("webp") int webp, @Query("essence") int essence, @Query("content_type") int content_type, @Query("message_cursor") int message_cursor, @Query("am_longitude") String am_longitude,
                                          @Query("am_latitude") String am_latitude, @Query("am_city") String am_city, @Query("am_loc_time") long am_loc_time, @Query("count") int count,
