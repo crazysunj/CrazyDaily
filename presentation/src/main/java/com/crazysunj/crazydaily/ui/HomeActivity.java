@@ -60,6 +60,7 @@ import com.crazysunj.domain.entity.neihan.NeihanItemEntity;
 import com.crazysunj.domain.entity.weather.WeatherRemoteEntity;
 import com.crazysunj.domain.entity.zhihu.ZhihuNewsEntity;
 import com.crazysunj.domain.util.NeihanManager;
+import com.crazysunj.domain.util.ThreadManager;
 import com.jaeger.library.StatusBarUtil;
 import com.sunjian.android_pickview_lib.BaseOptionsPickerDialog;
 import com.sunjian.android_pickview_lib.PhoneOptionsPickerDialog;
@@ -68,8 +69,6 @@ import com.xiao.nicevideoplayer.NiceVideoPlayerManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 
@@ -152,6 +151,12 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     }
 
     @Override
+    protected void onDestroy() {
+        ThreadManager.shutdownThread();
+        super.onDestroy();
+    }
+
+    @Override
     protected void initView() {
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -165,7 +170,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
 
     @Override
     protected void initListener() {
-        mRefresh.setOnRefreshListener(this::initData);
+        mRefresh.setOnRefreshListener(this::onRefresh);
         mAdapter.setOnHeaderClickListener(this::handleHeaderOptions);
         mHomeList.addOnChildAttachStateChangeListener(new HomeRecyclerViewStateChangeListener());
         mAppbar.addOnOffsetChangedListener(this::handleAppbarOffsetChangedListener);
@@ -181,7 +186,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         mPresenter.getGankioList(GankioEntity.ResultsEntity.PARAMS_ANDROID);
         mPresenter.getWeather("CHZJ000000");
         mPresenter.getGaoxiaoList(gaoxiaoIndex);
-//        mPresenter.getMeinvList();
+        mPresenter.getMeinvList();
 //        mPresenter.getNeihanList(mNeihanManager.getAmLocTime(), mNeihanManager.getMinTime(), mNeihanManager.getSceenWidth(),
 //                mNeihanManager.getIid(), mNeihanManager.getDeviceId(), mNeihanManager.getAc(), mNeihanManager.getVersionCode(),
 //                mNeihanManager.getVersionName(), Build.MODEL, Build.BRAND, Build.VERSION.SDK_INT, Build.VERSION.RELEASE, mNeihanManager.getUuid(),
@@ -215,25 +220,25 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
 
     @Override
     public void showWeather(List<WeatherRemoteEntity.WeatherEntity> weatherList) {
-//        stopRefresh();
+        stopRefresh();
         mAdapter.notifyWeatherList(weatherList);
     }
 
     @Override
     public void showNeihan(List<NeihanItemEntity> neihanList) {
-//        stopRefresh();
+        stopRefresh();
         mAdapter.notifyNeihanList(neihanList);
     }
 
     @Override
     public void showGaoxiao(List<GaoxiaoItemEntity> gaoxiaoList) {
-//        stopRefresh();
+        stopRefresh();
         mAdapter.notifyGaoxiaoList(gaoxiaoList);
     }
 
     @Override
     public void showMeinv(List<String> meinvList) {
-//        stopRefresh();
+        stopRefresh();
         ImageLoader.loadWithVignette(this, meinvList.get(0), R.drawable.img_default, mCubeAnchor.getForegroundView());
         ImageLoader.loadWithVignette(this, meinvList.get(1), R.drawable.img_default, mCubeAnchor.getBackgroundView());
         ImageLoader.loadWithVignette(this, meinvList.get(2), R.drawable.img_default, mCubeFirst.getForegroundView());
@@ -245,13 +250,18 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
 
     @Override
     public void errorMeinv() {
-//        stopRefresh();
+        stopRefresh();
         mShadow.setVisibility(View.GONE);
     }
 
     @Override
     public void switchBanner() {
         mHomeBanner.setCurrentItem(mHomeBanner.getCurrentItem() + 1, true);
+    }
+
+    @Override
+    public void showError(String msg) {
+        stopRefresh();
     }
 
     @Override
@@ -275,6 +285,11 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
             return;
         }
         showExitDialog();
+    }
+
+    private void onRefresh() {
+        mPresenter.endBanner();
+        initData();
     }
 
     private void handleWrapBanner(boolean isCanSlide) {
@@ -408,8 +423,6 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         }
     }
 
-    private ExecutorService mExecutor = Executors.newSingleThreadExecutor();
-
     private class HomeRecyclerViewStateChangeListener implements RecyclerView.OnChildAttachStateChangeListener {
 
         @Override
@@ -427,7 +440,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
             if (itemViewType == GaoxiaoItemEntity.TYPE_GAOXIAO) {
                 NiceVideoPlayer niceVideoPlayer = view.findViewById(R.id.item_neihan_video);
                 if (niceVideoPlayer.isPlaying()) {
-                    mExecutor.execute(niceVideoPlayer::release);
+                    ThreadManager.singleThread().execute(niceVideoPlayer::release);
                 }
             }
         }

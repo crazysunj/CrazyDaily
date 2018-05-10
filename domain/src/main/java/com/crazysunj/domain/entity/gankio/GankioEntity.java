@@ -57,6 +57,7 @@ public class GankioEntity {
         public static final String PARAMS_ANDROID = "Android";
         public static final String PARAMS_IOS = "iOS";
         public static final String PARAMS_H5 = "前端";
+        public static final String PARAMS_FULI = "福利";
         public static final String PARAMS_ALL = "全部";
 
         public static final int TYPE_GANK_IO = 1;

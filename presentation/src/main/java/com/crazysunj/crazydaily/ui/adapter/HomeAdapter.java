@@ -34,6 +34,7 @@ import com.crazysunj.crazydaily.util.StringUtil;
 import com.crazysunj.crazydaily.util.WeatherUtil;
 import com.crazysunj.crazydaily.view.video.NeihanVideoPlayerController;
 import com.crazysunj.domain.entity.base.MultiTypeIdEntity;
+import com.crazysunj.domain.entity.common.CommonFooterEntity;
 import com.crazysunj.domain.entity.common.CommonHeaderEntity;
 import com.crazysunj.domain.entity.gankio.GankioEntity;
 import com.crazysunj.domain.entity.gaoxiao.GaoxiaoItemEntity;
@@ -81,6 +82,10 @@ public class HomeAdapter extends BaseAdapter<MultiTypeIdEntity, BaseViewHolder, 
     @Inject
     ExpandCollapseFooterEntity mGankioFooterEntity;
 
+    @Named(EntityModule.NAME_GAOXIAO)
+    @Inject
+    CommonFooterEntity mGaoxiaoFooterEntity;
+
     @Inject
     public HomeAdapter(HomeAdapterHelper helper) {
         super(helper);
@@ -113,7 +118,10 @@ public class HomeAdapter extends BaseAdapter<MultiTypeIdEntity, BaseViewHolder, 
                 break;
             case HomeAdapterHelper.LEVEL_ZHIHU - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:
             case HomeAdapterHelper.LEVEL_GANK_IO - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:
-                renderFooter(helper, (ExpandCollapseFooterEntity) item);
+                renderExpandCollapseFooter(helper, (ExpandCollapseFooterEntity) item);
+                break;
+            case HomeAdapterHelper.LEVEL_GAOXIAO - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:
+                renderFooter(helper, (CommonFooterEntity) item);
                 break;
             default:
                 break;
@@ -134,13 +142,12 @@ public class HomeAdapter extends BaseAdapter<MultiTypeIdEntity, BaseViewHolder, 
         videoPlayer.setUp(item.getVideoUrl(), null);
         videoPlayer.setController(controller);
         ImageLoader.load(mContext, item.getThumbnail(), R.drawable.img_default, controller.imageView());
-
     }
 
 
     public void notifyGaoxiaoList(List<GaoxiaoItemEntity> data) {
         final int level = HomeAdapterHelper.LEVEL_GAOXIAO;
-        mHelper.notifyMoudleDataAndHeaderChanged(data, mGaoxiaoHeaderEntity, level);
+        mHelper.notifyMoudleDataAndHeaderAndFooterChanged(mGaoxiaoHeaderEntity, data, mGaoxiaoFooterEntity, level);
     }
 
     // *********************** 内涵段子 ***********************
@@ -258,7 +265,7 @@ public class HomeAdapter extends BaseAdapter<MultiTypeIdEntity, BaseViewHolder, 
     }
 
     //*********************** 公共Footer ***********************
-    private void renderFooter(BaseViewHolder helper, ExpandCollapseFooterEntity item) {
+    private void renderExpandCollapseFooter(BaseViewHolder helper, ExpandCollapseFooterEntity item) {
         String stringId = item.getStringId();
         helper.setText(R.id.footer_title, stringId);
         helper.setImageResource(R.id.footer_icon, item.getIconResId());
@@ -267,6 +274,10 @@ public class HomeAdapter extends BaseAdapter<MultiTypeIdEntity, BaseViewHolder, 
             mHelper.foldType(mHelper.getLevel(item.getItemType()), item.isFlod());
             mHelper.setData(mData.indexOf(item), item);
         });
+    }
+
+    private void renderFooter(BaseViewHolder helper, CommonFooterEntity item) {
+        helper.setText(R.id.footer_title, item.getTitle());
     }
 
 

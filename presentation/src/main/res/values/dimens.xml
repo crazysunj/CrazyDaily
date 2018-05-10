@@ -29,6 +29,7 @@
     <dimen name="space_55">55dp</dimen>
     <dimen name="space_110">110dp</dimen>
     <dimen name="space_1">1dp</dimen>
+    <dimen name="space_0_5">0.5dp</dimen>
     <dimen name="space_3">3dp</dimen>
     <dimen name="space_180">180dp</dimen>
     <dimen name="space_220">220dp</dimen>

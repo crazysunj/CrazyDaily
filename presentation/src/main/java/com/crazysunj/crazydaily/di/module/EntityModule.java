@@ -17,6 +17,7 @@ package com.crazysunj.crazydaily.di.module;
 
 import com.crazysunj.crazydaily.entity.ExpandCollapseFooterEntity;
 import com.crazysunj.crazydaily.ui.adapter.helper.HomeAdapterHelper;
+import com.crazysunj.domain.entity.common.CommonFooterEntity;
 import com.crazysunj.domain.entity.common.CommonHeaderEntity;
 import com.crazysunj.domain.entity.gaoxiao.GaoxiaoItemEntity;
 import com.crazysunj.domain.entity.neihan.NeihanItemEntity;
@@ -68,5 +69,11 @@ public class EntityModule {
     @Provides
     ExpandCollapseFooterEntity providerGankioFooter() {
         return new ExpandCollapseFooterEntity(HomeAdapterHelper.LEVEL_GANK_IO);
+    }
+
+    @Named(NAME_GAOXIAO)
+    @Provides
+    CommonFooterEntity providerGaoxiaoFooter() {
+        return new CommonFooterEntity(GaoxiaoItemEntity.HEADER_TITLE, HomeAdapterHelper.LEVEL_GAOXIAO, "我是有底线的");
     }
 }

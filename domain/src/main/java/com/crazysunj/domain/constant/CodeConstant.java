@@ -26,4 +26,6 @@ public interface CodeConstant {
     int CODE_DATA_ERROR = 1;
     String CODE_OK = "OK";
     int CODE_SUCCESS = 200;
+    int CODE_NO_NET = -1;
+    int CODE_NO_OTHER = -2;
 }

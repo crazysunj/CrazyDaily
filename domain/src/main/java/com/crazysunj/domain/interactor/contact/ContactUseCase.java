@@ -73,7 +73,7 @@ public class ContactUseCase extends UseCase<List<MultiTypeIndexEntity>, ContactU
         return Flowable.merge(mGaoxiaoRepository.getGaoxiaoList(Params.TYPE, params.page),
                 mGaoxiaoRepository.getGaoxiaoList(Params.TYPE, params.page),
                 mGaoxiaoRepository.getGaoxiaoList(Params.TYPE, params.page))
-                .observeOn(Schedulers.computation())
+                .observeOn(Schedulers.io())
                 .flatMap(this::handleException)
                 .filter(dataEntity -> !TextUtils.isEmpty(dataEntity.getName()) && !TextUtils.isEmpty(dataEntity.getProfile_image()))
                 .distinct(GaoxiaoEntity.DataEntity::getName)

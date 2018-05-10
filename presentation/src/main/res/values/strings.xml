@@ -35,4 +35,5 @@
     <string name="button_deny">拒绝</string>
     <string name="permission_storage_denied">读取存储权限被拒绝</string>
     <string name="permission_storage_neverask">请到设置页面去允许存储权限</string>
+    <string name="bottom_line">我是有底线的</string>
 </resources>

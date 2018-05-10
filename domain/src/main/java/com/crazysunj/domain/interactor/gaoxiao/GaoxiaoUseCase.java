@@ -52,7 +52,7 @@ public class GaoxiaoUseCase extends UseCase<List<GaoxiaoItemEntity>, GaoxiaoUseC
     @Override
     protected Flowable<List<GaoxiaoItemEntity>> buildUseCaseObservable(Params params) {
         return mGaoxiaoRepository.getGaoxiaoList(Params.TYPE, params.page)
-                .observeOn(Schedulers.computation())
+                .observeOn(Schedulers.io())
                 .flatMap(this::handleException)
                 .filter(entity -> !TextUtils.isEmpty(entity.getVideouri()))
                 .map(GaoxiaoItemEntity::get)

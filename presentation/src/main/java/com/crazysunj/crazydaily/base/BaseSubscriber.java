@@ -34,11 +34,7 @@ public abstract class BaseSubscriber<T> extends DisposableSubscriber<T> {
 
     @Override
     public void onError(Throwable e) {
-        if (NetworkUtils.isNetworkAvailable()) {
-            Toast.makeText(App.getInstance(), e.getMessage(), Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(App.getInstance(), "请检测你的网络是否畅通", Toast.LENGTH_SHORT).show();
-        }
+        NetworkUtils.isNetworkAvailable(isAvailable -> Toast.makeText(App.getInstance(), isAvailable ? e.getMessage() : "请检测你的网络是否畅通", Toast.LENGTH_SHORT).show());
         LoggerUtil.e(LoggerUtil.MSG_HTTP, e);
     }
 

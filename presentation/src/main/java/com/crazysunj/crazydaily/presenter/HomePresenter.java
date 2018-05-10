@@ -72,6 +72,12 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
             public void onNext(ZhihuNewsEntity zhihuNewsEntity) {
                 mView.showZhihu(zhihuNewsEntity);
             }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                mView.showError(e.getMessage());
+            }
         });
     }
 
@@ -81,6 +87,12 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
             @Override
             public void onNext(List<GankioEntity.ResultsEntity> resultsEntities) {
                 mView.showGankio(resultsEntities);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                mView.showError(e.getMessage());
             }
         });
     }
@@ -92,6 +104,12 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
             public void onNext(List<WeatherRemoteEntity.WeatherEntity> weatherEntities) {
                 mView.showWeather(weatherEntities);
             }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                mView.showError(e.getMessage());
+            }
         });
     }
 
@@ -101,6 +119,12 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
             @Override
             public void onNext(List<NeihanItemEntity> dataEntities) {
                 mView.showNeihan(dataEntities);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                mView.showError(e.getMessage());
             }
         });
     }
@@ -112,12 +136,18 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
             public void onNext(List<GaoxiaoItemEntity> gaoxiaoItemEntities) {
                 mView.showGaoxiao(gaoxiaoItemEntities);
             }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                mView.showError(e.getMessage());
+            }
         });
     }
 
     @Override
     public void getMeinvList() {
-        mGankioUseCase.execute(GankioUseCase.Params.get("福利", 10), new BaseSubscriber<List<GankioEntity.ResultsEntity>>() {
+        mGankioUseCase.execute(GankioUseCase.Params.get(GankioEntity.ResultsEntity.PARAMS_FULI, 10), new BaseSubscriber<List<GankioEntity.ResultsEntity>>() {
             @Override
             public void onNext(List<GankioEntity.ResultsEntity> resultsEntities) {
                 List<String> urls = new ArrayList<>();
@@ -126,6 +156,13 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
                     urls.add(resultsEntities.remove(random.nextInt(resultsEntities.size())).getUrl());
                 }
                 mView.showMeinv(urls);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                mView.errorMeinv();
+                mView.showError(e.getMessage());
             }
         });
     }

@@ -22,8 +22,8 @@ package com.crazysunj.domain.exception;
  */
 
 public class ApiException extends RuntimeException {
-    
-    private int code;
+
+    public int code;
 
     public ApiException(int code, String message) {
         super(message);

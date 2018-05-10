@@ -83,6 +83,7 @@ public class HomeAdapterHelper extends AsynAdapterHelper<MultiTypeIdEntity, Base
                 .type(GaoxiaoItemEntity.TYPE_GAOXIAO)
                 .layoutResId(R.layout.item_neihan)
                 .headerResId(R.layout.header_common)
+                .footerResId(R.layout.footer_bottom_line)
                 .register();
     }
 

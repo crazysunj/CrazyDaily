@@ -53,7 +53,7 @@ public class NeihanUseCase extends UseCase<List<NeihanItemEntity>, NeihanUseCase
                 params.min_time, params.screen_width, params.double_col_mode, params.iid, params.device_id, params.ac, params.channel, params.aid, params.app_name, params.version_code, params.version_name,
                 params.device_platform, params.ssmix, params.device_type, params.device_brand, params.os_api, params.os_version, params.uuid, params.openudid, params.manifest_version_code, params.resolution, params.dpi,
                 params.update_version_code)
-                .observeOn(Schedulers.computation())
+                .observeOn(Schedulers.io())
                 .flatMap(this::handleException)
                 //Objects nonNull api24
                 .filter(entity -> entity != null && entity.getGroup() != null && entity.getGroup().getUser() != null)
