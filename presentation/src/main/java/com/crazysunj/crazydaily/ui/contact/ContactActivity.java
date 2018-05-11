@@ -83,6 +83,7 @@ public class ContactActivity extends BaseActivity<ContactPresenter> implements C
     @Override
     protected void initView() {
         setSupportActionBar(mToolbar);
+        showBack(mToolbar);
         mContacts.setLayoutManager(new LinearLayoutManager(this) {
             @Override
             public boolean canScrollVertically() {

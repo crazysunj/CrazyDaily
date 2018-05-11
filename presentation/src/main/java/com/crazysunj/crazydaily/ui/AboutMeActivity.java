@@ -27,7 +27,7 @@ import android.widget.TextView;
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
 import com.crazysunj.crazydaily.util.SnackbarUtil;
-import com.crazysunj.data.api.HttpHelper;
+import com.crazysunj.domain.constant.CacheConstant;
 
 import java.io.File;
 
@@ -60,6 +60,11 @@ public class AboutMeActivity extends BaseActivity {
     }
 
     @Override
+    protected void initView() {
+        showBack();
+    }
+
+    @Override
     protected void initListener() {
         mGithub.setOnLongClickListener(v -> {
             String github = mGithub.getText().toString().trim();
@@ -84,7 +89,7 @@ public class AboutMeActivity extends BaseActivity {
 
     @NeedsPermission({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
     void clearCache() {
-        File cacheDir = new File(getExternalCacheDir(), HttpHelper.CACHE_DIR);
+        File cacheDir = new File(getExternalCacheDir(), CacheConstant.CACHE_DIR_API);
         boolean isSuccess = false;
         if (cacheDir.exists() && cacheDir.isDirectory()) {
             for (File file : cacheDir.listFiles()) {
@@ -116,11 +121,6 @@ public class AboutMeActivity extends BaseActivity {
     @Override
     protected int getContentResId() {
         return R.layout.activity_about_me;
-    }
-
-    @Override
-    protected void initInject() {
-
     }
 
     private void copyContent(String content) {

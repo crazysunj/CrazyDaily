@@ -18,15 +18,13 @@ package com.crazysunj.crazydaily.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.view.KeyEvent;
-import android.webkit.WebChromeClient;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
 import com.crazysunj.crazydaily.constant.ActivityConstant;
+import com.crazysunj.crazydaily.view.web.CrazyDailyWebView;
 
 import butterknife.BindView;
 
@@ -35,10 +33,11 @@ import butterknife.BindView;
  * created on: 2017/9/10 下午5:01
  * description: https://github.com/crazysunj/CrazyDaily
  */
-public class BrowserActivity extends BaseActivity {
+public class BrowserActivity extends BaseActivity implements CrazyDailyWebView.WebViewCallback {
 
-    @BindView(R.id.browser_web)
-    WebView mWeb;
+    @BindView(R.id.browser_web_container)
+    FrameLayout mWebContainer;
+    private CrazyDailyWebView mWebView;
 
     public static void start(Context context, String url) {
         Intent intent = new Intent(context, BrowserActivity.class);
@@ -47,42 +46,48 @@ public class BrowserActivity extends BaseActivity {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mWebView.onResume();
+        mWebView.resumeTimers();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mWebView.onPause();
+        mWebView.pauseTimers(); //暂停所有布局、解析、JS
+    }
+
+    @Override
+    protected void onDestroy() {
+        mWebView.onDestroy();
+        super.onDestroy();
+    }
+
+    @Override
     protected void initView() {
-        final WebSettings settings = mWeb.getSettings();
-        settings.setJavaScriptEnabled(true);
-        settings.setLoadWithOverviewMode(true);
-        settings.setSupportZoom(true);
+        showBack();
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        mWebView = new CrazyDailyWebView(this); //引用getApplicationContext可以防止webview中弹窗，例如长按弹出菜单等
+        mWebContainer.addView(mWebView, params);
     }
 
     @Override
     protected void initListener() {
-        mWeb.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                view.loadUrl(request.getUrl().toString());
-                return true;
-            }
-        });
-
-        mWeb.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public void onReceivedTitle(WebView view, String title) {
-                super.onReceivedTitle(view, title);
-                setTitle(title);
-            }
-        });
+        mWebView.setWebViewCallback(this);
     }
 
     @Override
     protected void initData() {
         String url = getIntent().getStringExtra(ActivityConstant.URL);
-        mWeb.loadUrl(url);
+        mWebView.loadUrl(url);
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK) && mWeb.canGoBack()) {
-            mWeb.goBack();
+        if ((keyCode == KeyEvent.KEYCODE_BACK) && mWebView.canGoBack()) {
+            mWebView.goBack();
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -94,6 +99,7 @@ public class BrowserActivity extends BaseActivity {
     }
 
     @Override
-    protected void initInject() {
+    public void onReceivedTitle(String title) {
+        setTitle(title);
     }
 }

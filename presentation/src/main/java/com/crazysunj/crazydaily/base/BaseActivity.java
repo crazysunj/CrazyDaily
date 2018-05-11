@@ -17,8 +17,12 @@ package com.crazysunj.crazydaily.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
+import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.app.App;
 import com.crazysunj.crazydaily.di.component.ActivityComponent;
 import com.crazysunj.crazydaily.di.component.DaggerActivityComponent;
@@ -77,7 +81,7 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
 
     @Override
     public void hideLoading() {
-        
+
     }
 
     @SuppressWarnings("unchecked")
@@ -98,6 +102,28 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
 
     protected void initView() {
 
+    }
+
+    protected void showBack() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.mipmap.ic_back);
+        }
+    }
+
+    protected void showBack(Toolbar toolbar) {
+        toolbar.setNavigationIcon(R.mipmap.ic_back);
+        toolbar.setNavigationOnClickListener(v -> finish());
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     protected ActivityComponent getActivityComponent() {
@@ -127,5 +153,6 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
     /**
      * 注入
      */
-    protected abstract void initInject();
+    protected void initInject() {
+    }
 }

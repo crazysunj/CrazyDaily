@@ -28,10 +28,8 @@ import android.text.TextUtils;
 import android.transition.Transition;
 import android.view.KeyEvent;
 import android.view.View;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.crazysunj.crazydaily.R;
@@ -42,6 +40,7 @@ import com.crazysunj.crazydaily.presenter.ZhihuNewsDetailPresenter;
 import com.crazysunj.crazydaily.presenter.contract.ZhihuNewsDetailContract;
 import com.crazysunj.crazydaily.util.HtmlUtil;
 import com.crazysunj.crazydaily.util.SnackbarUtil;
+import com.crazysunj.crazydaily.view.web.CrazyDailyWebView;
 import com.crazysunj.domain.entity.zhihu.ZhihuNewsDetailEntity;
 import com.jaeger.library.StatusBarUtil;
 
@@ -58,8 +57,8 @@ public class ZhihuNewsDetailActivity extends BaseActivity<ZhihuNewsDetailPresent
     ImageView mIcon;
     @BindView(R.id.zhihu_news_detail_toolbar)
     Toolbar mToolbar;
-    @BindView(R.id.zhihu_news_detail_web)
-    WebView mWeb;
+    @BindView(R.id.zhihu_news_detail_web_container)
+    FrameLayout mWebContainer;
     @BindView(R.id.zhihu_news_detail_fab)
     FloatingActionButton mFab;
     @BindView(R.id.zhihu_news_detail_appbar)
@@ -72,6 +71,17 @@ public class ZhihuNewsDetailActivity extends BaseActivity<ZhihuNewsDetailPresent
 
     private boolean mIsImageShow = false;
     private boolean mIsTransitionEnd = false;
+    private CrazyDailyWebView mWebView;
+
+    public static void start(Activity activity, long id, View shareView) {
+        Intent intent = new Intent(activity, ZhihuNewsDetailActivity.class);
+        intent.putExtra(ActivityConstant.ID, id);
+        if (shareView != null) {
+            activity.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity, shareView, "shareView").toBundle());
+        } else {
+            activity.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
+        }
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,29 +90,40 @@ public class ZhihuNewsDetailActivity extends BaseActivity<ZhihuNewsDetailPresent
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mWebView.onResume();
+        mWebView.resumeTimers();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mWebView.onPause();
+        mWebView.pauseTimers(); //暂停所有布局、解析、JS
+    }
+
+    @Override
+    protected void onDestroy() {
+        mWebView.onDestroy();
+        super.onDestroy();
+    }
+
+    @Override
     protected void initView() {
         mId = getIntent().getLongExtra(ActivityConstant.ID, 0L);
         setSupportActionBar(mToolbar);
+        showBack(mToolbar);
 
-        final WebSettings settings = mWeb.getSettings();
-        settings.setJavaScriptEnabled(true);
-        settings.setLoadWithOverviewMode(true);
-        settings.setSupportZoom(true);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        mWebView = new CrazyDailyWebView(this);
+        mWebContainer.addView(mWebView, params);
         handleTranstion();
     }
 
     @Override
     protected void initListener() {
-
         mFab.setOnClickListener(v -> SnackbarUtil.show(this, "喜欢就点个star吧！"));
-
-        mWeb.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                view.loadUrl(request.getUrl().toString());
-                return true;
-            }
-        });
     }
 
     @Override
@@ -128,13 +149,13 @@ public class ZhihuNewsDetailActivity extends BaseActivity<ZhihuNewsDetailPresent
         }
         mBar.setTitle(zhihuNewsDetailEntity.getTitle());
         String htmlData = HtmlUtil.createHtmlData(zhihuNewsDetailEntity);
-        mWeb.loadData(htmlData, HtmlUtil.MIME_TYPE, HtmlUtil.ENCODING);
+        mWebView.loadData(htmlData, HtmlUtil.MIME_TYPE, HtmlUtil.ENCODING);
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK) && mWeb.canGoBack()) {
-            mWeb.goBack();
+        if ((keyCode == KeyEvent.KEYCODE_BACK) && mWebView.canGoBack()) {
+            mWebView.goBack();
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -167,15 +188,5 @@ public class ZhihuNewsDetailActivity extends BaseActivity<ZhihuNewsDetailPresent
             public void onTransitionResume(Transition transition) {
             }
         });
-    }
-
-    public static void start(Activity activity, long id, View shareView) {
-        Intent intent = new Intent(activity, ZhihuNewsDetailActivity.class);
-        intent.putExtra(ActivityConstant.ID, id);
-        if (shareView != null) {
-            activity.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity, shareView, "shareView").toBundle());
-        } else {
-            activity.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
-        }
     }
 }

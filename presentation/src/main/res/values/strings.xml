@@ -24,6 +24,7 @@
     <string name="ic_edit">&#xe6af;</string>
     <string name="ic_video">&#xe64f;</string>
     <string name="ic_add">&#xe620;</string>
+    <string name="transition_photo">photo</string>
     <string name="transition_head">head</string>
     <string name="transition_name">name</string>
     <string name="transition_location_icon">location_icon</string>

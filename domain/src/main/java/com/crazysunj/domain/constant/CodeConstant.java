@@ -21,11 +21,11 @@ package com.crazysunj.domain.constant;
  * description: https://github.com/crazysunj/CrazyDaily
  */
 
-public interface CodeConstant {
-    int CODE_EMPTY = 0;
-    int CODE_DATA_ERROR = 1;
-    String CODE_OK = "OK";
-    int CODE_SUCCESS = 200;
-    int CODE_NO_NET = -1;
-    int CODE_NO_OTHER = -2;
+public class CodeConstant {
+    public static int CODE_EMPTY = 0;
+    public static int CODE_DATA_ERROR = 1;
+    public static String CODE_OK = "OK";
+    public static int CODE_SUCCESS = 200;
+    public static int CODE_NO_NET = -1;
+    public static int CODE_NO_OTHER = -2;
 }

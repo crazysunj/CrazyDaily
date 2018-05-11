@@ -42,15 +42,15 @@ public class ThreadManager {
         return sThreadManager;
     }
 
-    public static ExecutorService singleThread() {
-        return get().single();
+    public static ExecutorService single() {
+        return get().singleInternal();
     }
 
-    public static void shutdownThread() {
-        get().shutdown();
+    public static void shutdown() {
+        get().shutdownInternal();
     }
 
-    public ExecutorService single() {
+    private ExecutorService singleInternal() {
         if (mExecutor == null) {
             mExecutor = Executors.newSingleThreadExecutor();
         }
@@ -58,7 +58,7 @@ public class ThreadManager {
         return mExecutor;
     }
 
-    public void shutdown() {
+    private void shutdownInternal() {
         if (mExecutor != null && !mExecutor.isShutdown()) {
             mExecutor.shutdown();
         }

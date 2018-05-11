@@ -26,6 +26,7 @@ import com.crazysunj.data.service.WeatherService;
 import com.crazysunj.data.service.ZhihuService;
 import com.crazysunj.data.util.LoggerUtil;
 import com.crazysunj.data.util.NetworkUtils;
+import com.crazysunj.domain.constant.CacheConstant;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,8 +54,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Singleton
 public class HttpHelper {
 
-    public static final String CACHE_DIR = "api";
-
     private ZhihuService mZhihuService;
     private GankioService mGankioService;
     private WeatherService mWeatherService;
@@ -67,7 +66,7 @@ public class HttpHelper {
         if (mOkHttpClient == null) {
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
             //设置缓存 20M
-            Cache cache = new Cache(new File(context.getExternalCacheDir(), CACHE_DIR), 20 * 1024 * 1024);
+            Cache cache = new Cache(new File(context.getExternalCacheDir(), CacheConstant.CACHE_DIR_API), 20 * 1024 * 1024);
             builder.cache(cache);
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(new HttpLogger());
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);

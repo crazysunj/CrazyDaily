@@ -16,16 +16,14 @@
 package com.crazysunj.crazydaily.moudle;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
+import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 
-import com.bumptech.glide.load.engine.Resource;
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.resource.bitmap.BitmapResource;
-import com.bumptech.glide.request.target.DrawableImageViewTarget;
+import com.bumptech.glide.load.DecodeFormat;
 import com.crazysunj.crazydaily.app.GlideApp;
 
 import io.reactivex.Single;
@@ -33,6 +31,8 @@ import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import jp.co.cyberagent.android.gpuimage.GPUImage;
+import jp.co.cyberagent.android.gpuimage.GPUImageVignetteFilter;
 import jp.wasabeef.glide.transformations.gpu.VignetteFilterTransformation;
 
 
@@ -61,51 +61,60 @@ public class ImageLoader {
                 .into(imageView);
     }
 
+    @SuppressWarnings("all")
     public static void loadWithVignette(Context context, String url, @DrawableRes int placeholderId, ImageView imageView) {
-        BitmapPool bitmapPool = GlideApp.get(context).getBitmapPool();
-        GlideApp.with(context)
-                .load(url)
-                .centerCrop()
-                .placeholder(placeholderId)
-                .transform(VIGNETTE_TRANSFORMATION)
-                .into(new DrawableImageViewTarget(imageView) {
+        Single.just(placeholderId)
+                .observeOn(Schedulers.io())
+                .map(id -> {
+                    GPUImageVignetteFilter filter = new GPUImageVignetteFilter();
+                    filter.setVignetteCenter(new PointF(0.5f, 0.5f));
+                    filter.setVignetteColor(new float[]{0.0f, 0.0f, 0.0f});
+                    filter.setVignetteStart(0.0f);
+                    filter.setVignetteEnd(0.75f);
+                    GPUImage gpuImage = new GPUImage(context);
+                    BitmapDrawable bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(context, id);
+                    gpuImage.setImage(bitmapDrawable.getBitmap());
+                    gpuImage.setFilter(filter);
+                    return new BitmapDrawable(context.getResources(), gpuImage.getBitmapWithFilterApplied());
+
+                })
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Drawable>() {
+                    private Disposable disposable;
+
                     @Override
-                    public void setDrawable(Drawable drawable) {
-                        Single.just(drawable)
-                                .observeOn(Schedulers.io())
-                                .map(d -> {
-                                    BitmapDrawable bitmapDrawable = (BitmapDrawable) d;
-                                    BitmapResource bitmapResource = BitmapResource.obtain(bitmapDrawable.getBitmap(), bitmapPool);
-                                    Resource<Bitmap> transform = VIGNETTE_TRANSFORMATION.transform(context, bitmapResource, view.getWidth(), view.getHeight());
-                                    return transform.get();
+                    public void onSubscribe(Disposable disposable) {
+                        this.disposable = disposable;
+                    }
 
-                                })
-                                .subscribeOn(Schedulers.io())
-                                .unsubscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(new SingleObserver<Bitmap>() {
-                                    private Disposable disposable;
+                    @Override
+                    public void onSuccess(Drawable drawable) {
+                        GlideApp.with(context)
+                                .load(url)
+                                .placeholder(drawable)
+                                .transform(VIGNETTE_TRANSFORMATION)
+                                .dontAnimate()
+                                .format(DecodeFormat.PREFER_ARGB_8888)
+                                .into(imageView);
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
+                    }
 
-                                    @Override
-                                    public void onSubscribe(Disposable disposable) {
-                                        this.disposable = disposable;
-                                    }
-
-                                    @Override
-                                    public void onSuccess(Bitmap bitmap) {
-                                        view.setImageBitmap(bitmap);
-                                        if (disposable != null && !disposable.isDisposed()) {
-                                            disposable.dispose();
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onError(Throwable e) {
-                                        if (disposable != null && !disposable.isDisposed()) {
-                                            disposable.dispose();
-                                        }
-                                    }
-                                });
+                    @Override
+                    public void onError(Throwable e) {
+                        GlideApp.with(context)
+                                .load(url)
+                                .placeholder(placeholderId)
+                                .transform(VIGNETTE_TRANSFORMATION)
+                                .dontAnimate()
+                                .format(DecodeFormat.PREFER_ARGB_8888)
+                                .into(imageView);
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
                 });
     }

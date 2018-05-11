@@ -119,11 +119,6 @@ public class ContactDetailActivity extends BaseActivity {
     }
 
     @Override
-    protected void initInject() {
-
-    }
-
-    @Override
     public void onBackPressed() {
         if (mSatelliteMenu.isMenuOpen()) {
             mSatelliteMenu.close();

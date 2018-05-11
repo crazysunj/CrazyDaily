@@ -45,6 +45,7 @@ ext {
             shimmer               : "0.1.0@aar",
             gpuimage              : "1.4.1",
             lottie                : "2.5.4",
+            permission            : "3.2.0",
     ]
 
     dataDependencies = [
@@ -88,6 +89,8 @@ ext {
             shimmer             : "com.facebook.shimmer:shimmer:${dependVersion.shimmer}",
             gpuimage            : "jp.co.cyberagent.android.gpuimage:gpuimage-library:${dependVersion.gpuimage}",
             lottie              : "com.airbnb.android:lottie:${dependVersion.lottie}",
+            permission          : "com.github.hotchemi:permissionsdispatcher:${dependVersion.permission}",
+            permissionCompiler  : "com.github.hotchemi:permissionsdispatcher-processor:${dependVersion.permission}",
     ]
 
     dataTestDependencies = [

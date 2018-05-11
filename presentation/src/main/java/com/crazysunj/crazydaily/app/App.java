@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
+import android.util.Log;
 
 import com.bumptech.glide.request.target.ViewTarget;
 import com.crazysunj.crazydaily.BuildConfig;
@@ -35,6 +36,7 @@ import com.squareup.leakcanary.LeakCanary;
 import com.taobao.weex.InitConfig;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.common.WXException;
+import com.tencent.smtt.sdk.QbSdk;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -60,6 +62,18 @@ public class App extends Application {
         getAppComponent();
         ViewTarget.setTagId(R.id.glide_tag);
         LoggerUtil.init(BuildConfig.DEBUG);
+        initWeex();
+        initX5WebView();
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            return;
+        }
+        LeakCanary.install(this);
+    }
+
+    /**
+     * 初始化Weex
+     */
+    private void initWeex() {
         InitConfig config = new InitConfig.Builder()
                 .setImgAdapter(new WXImageAdapter())
                 .setHttpAdapter(new WXHttpAdapter(mAppComponent.provideOkhttpClient()))
@@ -71,10 +85,25 @@ public class App extends Application {
         } catch (WXException e) {
             LoggerUtil.d(e.getMessage());
         }
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            return;
-        }
-        LeakCanary.install(this);
+    }
+
+    /**
+     * 初始化x5内核
+     */
+    private void initX5WebView() {
+        QbSdk.PreInitCallback cb = new QbSdk.PreInitCallback() {
+
+            @Override
+            public void onViewInitFinished(boolean isLoadSuccess) {
+                LoggerUtil.i(LoggerUtil.MSG_WEB, String.format("X5内核加载%s", isLoadSuccess ? "成功" : "失败"));
+            }
+
+            @Override
+            public void onCoreInitFinished() {
+            }
+        };
+        //x5内核初始化接口
+        QbSdk.initX5Environment(getApplicationContext(), cb);
     }
 
     @Override

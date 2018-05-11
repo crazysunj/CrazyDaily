@@ -32,6 +32,7 @@ public class LoggerUtil {
 
     public static final String TAG = "CrazyDailyLog";
     public static final String MSG_HTTP = "HttpLog";
+    public static final String MSG_WEB = "WebLog";
     public static final String MSG_IMG = "ImageLog";
     public static final String MSG_JSON = "JsonLog";
 

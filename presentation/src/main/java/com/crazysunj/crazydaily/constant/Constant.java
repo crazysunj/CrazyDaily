@@ -21,7 +21,7 @@ package com.crazysunj.crazydaily.constant;
  * description: https://github.com/crazysunj/CrazyDaily
  */
 
-public interface Constant {
-    String EMPTY = "";
-    String POST = "POST";
+public class Constant {
+    public static String EMPTY = "";
+    public static String POST = "POST";
 }

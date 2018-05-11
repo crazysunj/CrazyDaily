@@ -152,7 +152,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
 
     @Override
     protected void onDestroy() {
-        ThreadManager.shutdownThread();
+        ThreadManager.shutdown();
         super.onDestroy();
     }
 
@@ -344,8 +344,8 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("提示");
         builder.setMessage("确定退出CrazyDaily吗");
-        builder.setNegativeButton("留下来", null);
-        builder.setPositiveButton("残忍地弄死", (dialogInterface, i) -> App.getInstance().exitApp());
+        builder.setNegativeButton("再玩玩", null);
+        builder.setPositiveButton("忍住泪水离开", (dialogInterface, i) -> App.getInstance().exitApp());
         builder.show();
     }
 
@@ -440,7 +440,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
             if (itemViewType == GaoxiaoItemEntity.TYPE_GAOXIAO) {
                 NiceVideoPlayer niceVideoPlayer = view.findViewById(R.id.item_neihan_video);
                 if (niceVideoPlayer.isPlaying()) {
-                    ThreadManager.singleThread().execute(niceVideoPlayer::release);
+                    ThreadManager.single().execute(niceVideoPlayer::release);
                 }
             }
         }

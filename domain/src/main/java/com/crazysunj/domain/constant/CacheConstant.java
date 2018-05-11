@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crazysunj.crazydaily.constant;
+package com.crazysunj.domain.constant;
 
 /**
  * author: sunjian
- * created on: 2017/9/10 下午6:08
- * description: https://github.com/crazysunj/CrazyDaily
+ * created on: 2018/5/11 上午10:06
+ * description:https://github.com/crazysunj/CrazyDaily
  */
-
-public class ActivityConstant {
-    public static String ID = "id";
-    public static String URL = "url";
+public class CacheConstant {
+    public static final String CACHE_DIR_API = "api";//网络接口缓存目录
+    public static final String CACHE_DIR_WEB = "web";//webview缓存目录
 }
