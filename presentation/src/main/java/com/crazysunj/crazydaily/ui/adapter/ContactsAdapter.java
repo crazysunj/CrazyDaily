@@ -128,7 +128,7 @@ public class ContactsAdapter extends BaseAdapter<MultiTypeIndexEntity, ContactsA
             mHelper.addData(index + 1, item.getChilds());
         } else {
             icon.animate().rotation(-90).setDuration(500).start();
-            List<MultiTypeIndexEntity> childs = new ArrayList<>();
+            List<MultiTypeIndexEntity> childs;
             int count = 0;
             for (MultiTypeIndexEntity entity : mData) {
                 if (entity.getIndex().equals(flag)) {
@@ -136,8 +136,10 @@ public class ContactsAdapter extends BaseAdapter<MultiTypeIndexEntity, ContactsA
                 }
             }
             count--;
-            for (int i = 0; i < count; i++) {
-                childs.add(mHelper.removeData(index + 1));
+            if (count == 0) {
+                childs = new ArrayList<>();
+            } else {
+                childs = mHelper.removeData(index + 1, count);
             }
             item.setChilds(childs);
         }

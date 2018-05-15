@@ -130,7 +130,7 @@ public class CubeReversalView extends FrameLayout {
 
                 int foreStartColor = (int) mArgbEvaluator.evaluate(oppositeValue * 0.8f, 0x00000000, 0xff000000);
                 int foreCenterColor = (int) mArgbEvaluator.evaluate(oppositeValue * 0.4f, 0x00000000, 0xff000000);
-                int foreColors[] = {foreStartColor, foreCenterColor, 0x00000000};
+                int[] foreColors = {foreStartColor, foreCenterColor, 0x00000000};
 
                 int backStartColor = (int) mArgbEvaluator.evaluate(value * 0.8f, 0x00000000, 0xff000000);
                 int backCenterColor = (int) mArgbEvaluator.evaluate(value * 0.4f, 0x00000000, 0xff000000);
@@ -153,7 +153,7 @@ public class CubeReversalView extends FrameLayout {
 
                 int foreStartColor = (int) mArgbEvaluator.evaluate(value * 0.8f, 0x00000000, 0xff000000);
                 int foreCenterColor = (int) mArgbEvaluator.evaluate(value * 0.4f, 0x00000000, 0xff000000);
-                int foreColors[] = {foreStartColor, foreCenterColor, 0x00000000};
+                int[] foreColors = {foreStartColor, foreCenterColor, 0x00000000};
 
                 int backStartColor = (int) mArgbEvaluator.evaluate(oppositeValue * 0.8f, 0x00000000, 0xff000000);
                 int backCenterColor = (int) mArgbEvaluator.evaluate(oppositeValue * 0.4f, 0x00000000, 0xff000000);

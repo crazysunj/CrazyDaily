@@ -19,7 +19,7 @@ ext {
             butterknife           : "8.4.0",
             glide                 : "4.7.1",
             glideTransformations  : "3.3.0",
-            MTRVA                 : "2.0.0",
+            MTRVA                 : "2.0.3",
             BRVAH                 : "2.9.28",
             robolectricVersion    : "3.1.1",
             jUnitVersion          : "4.12",
