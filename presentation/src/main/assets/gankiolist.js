@@ -209,65 +209,67 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
-const modal = weex.requireModule('modal');
-const stream = weex.requireModule('stream');
-const GANK_IO_BASE_URL = "http://gank.io/api/random/data/";
-const gank_io_url = GANK_IO_BASE_URL + weex.config.type + "/10";
+var modal = weex.requireModule('modal');
+var stream = weex.requireModule('stream');
+var GANK_IO_BASE_URL = 'http://gank.io/api/random/data/';
+var gankIoUrl = '' + GANK_IO_BASE_URL + weex.config.type + '/10';
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  data() {
+  data: function data() {
     return {
       loadinging: false,
       lists: []
     };
   },
+
   methods: {
-    getLocalTime: function (time) {
+    getLocalTime: function getLocalTime(time) {
       var date = new Date(time);
       return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
     },
-    isWhoEmpty: function (who) {
+    isWhoEmpty: function isWhoEmpty(who) {
       if (who) {
         return who;
       }
-      return "神秘大佬 ";
+      return '神秘大佬';
     },
-    itemclick: function (item, index) {
+    itemclick: function itemclick(item) {
       weex.requireModule('RouterModule').router(item.url);
     },
-    loadmore(event) {
-      const self = this;
+    loadmore: function loadmore() {
+      var self = this;
       self.loadinging = true;
-      setTimeout(() => {
+      setTimeout(function () {
         stream.fetch({
           method: 'GET',
-          url: gank_io_url,
+          url: gankIoUrl,
           type: 'json'
         }, function (ret) {
           if (!ret.ok) {
             modal.toast({ message: 'request failed', duration: 1 });
           } else {
-            const length = ret.data.results.length;
-            for (let i = 0; i < length; i++) {
-              self.lists.push(ret.data.results[i]);
-            }
+            ret.data.results.forEach(function (value) {
+              return self.lists.push(value);
+            });
           }
           self.loadinging = false;
         });
-      }, 600);
+      }, 200);
     }
   },
-  created: function () {
-    const self = this;
+  created: function created() {
+    var self = this;
     stream.fetch({
       method: 'GET',
-      url: gank_io_url,
+      url: gankIoUrl,
       type: 'json'
     }, function (ret) {
       if (!ret.ok) {
         modal.toast({ message: 'request failed', duration: 1 });
       } else {
-        self.lists = ret.data.results;
+        ret.data.results.forEach(function (value) {
+          return self.lists.push(value);
+        });
       }
     });
   }
@@ -286,7 +288,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "loadmore": _vm.loadmore
     }
-  }, [_vm._l((_vm.lists), function(item, index) {
+  }, [_vm._l((_vm.lists), function(item) {
     return _c('cell', {
       staticClass: ["cell"],
       appendAsTree: true,
@@ -295,7 +297,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       },
       on: {
         "click": function($event) {
-          _vm.itemclick(item, index)
+          _vm.itemclick(item)
         }
       }
     }, [_c('div', {
@@ -312,12 +314,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "lines": "1"
       }
-    }, [_vm._v(_vm._s("作者：" + _vm.isWhoEmpty(item.who)))]), _c('text', {
+    }, [_vm._v(_vm._s('作者：' + _vm.isWhoEmpty(item.who)))]), _c('text', {
       staticClass: ["text3"],
       attrs: {
         "lines": "1"
       }
-    }, [_vm._v(_vm._s("发布时间：" + _vm.getLocalTime(item.publishedAt)))])]), _c('image', {
+    }, [_vm._v(_vm._s('发布时间：' + _vm.getLocalTime(item.publishedAt)))])]), _c('image', {
       staticClass: ["icon"],
       attrs: {
         "src": "mipmap://ic_go.png"

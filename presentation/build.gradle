@@ -16,7 +16,7 @@ android {
          * 必须加，否则64位手机无法加载so文件
          */
         ndk {
-            abiFilters "x86", "armeabi", "mips", "armeabi-v7a"
+            abiFilters "x86", "armeabi"
         }
         javaCompileOptions {
             annotationProcessorOptions {
@@ -91,4 +91,5 @@ dependencies {
     }
     annotationProcessor libs.permissionCompiler
     implementation 'com.github.chrisbanes:PhotoView:2.1.3'
+    implementation 'com.zzhoujay.richtext:richtext:3.0.7'
 }

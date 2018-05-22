@@ -27,6 +27,7 @@ import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.di.component.AppComponent;
 import com.crazysunj.crazydaily.di.component.DaggerAppComponent;
 import com.crazysunj.crazydaily.di.module.AppModule;
+import com.crazysunj.crazydaily.weex.RichTextView;
 import com.crazysunj.crazydaily.weex.RouterModule;
 import com.crazysunj.crazydaily.weex.WXHttpAdapter;
 import com.crazysunj.crazydaily.weex.WXImageAdapter;
@@ -81,6 +82,7 @@ public class App extends Application {
         WXSDKEngine.initialize(this, config);
         try {
             WXSDKEngine.registerComponent("tabPager", WXTabPagerComponent.class);
+            WXSDKEngine.registerComponent("richText", RichTextView.class);
             WXSDKEngine.registerModule("RouterModule", RouterModule.class);
         } catch (WXException e) {
             LoggerUtil.d(e.getMessage());

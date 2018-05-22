@@ -120,13 +120,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+
+var a = '<h3>Test1</h3><img src="http://image.zhangxinxu.com/image/study/s/s128/mm3.jpg"/>';
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    data() {
-        return {
-            datas: ["Android", "iOS", "前端"]
-        };
-    }
+  data: function data() {
+    return {
+      datas: ['Android', 'iOS', '前端'],
+      rich: a
+    };
+  }
 });
 
 /***/ }),
@@ -134,7 +138,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_c('tabPager', {
+  return _c('div', [_c('richText', {
+    style: {
+      width: '750px',
+      height: '200px'
+    },
+    attrs: {
+      "richtext": _vm.rich
+    }
+  }), _c('tabPager', {
     staticStyle: {
       flex: "1"
     },
