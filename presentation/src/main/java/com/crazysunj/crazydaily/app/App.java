@@ -19,7 +19,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
-import android.util.Log;
 
 import com.bumptech.glide.request.target.ViewTarget;
 import com.crazysunj.crazydaily.BuildConfig;
@@ -27,11 +26,12 @@ import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.di.component.AppComponent;
 import com.crazysunj.crazydaily.di.component.DaggerAppComponent;
 import com.crazysunj.crazydaily.di.module.AppModule;
-import com.crazysunj.crazydaily.weex.RichTextView;
 import com.crazysunj.crazydaily.weex.RouterModule;
 import com.crazysunj.crazydaily.weex.WXHttpAdapter;
 import com.crazysunj.crazydaily.weex.WXImageAdapter;
+import com.crazysunj.crazydaily.weex.WXRichTextView;
 import com.crazysunj.crazydaily.weex.WXTabPagerComponent;
+import com.crazysunj.crazydaily.weex.WXCustomTextDomObject;
 import com.crazysunj.data.util.LoggerUtil;
 import com.squareup.leakcanary.LeakCanary;
 import com.taobao.weex.InitConfig;
@@ -82,7 +82,8 @@ public class App extends Application {
         WXSDKEngine.initialize(this, config);
         try {
             WXSDKEngine.registerComponent("tabPager", WXTabPagerComponent.class);
-            WXSDKEngine.registerComponent("richText", RichTextView.class);
+            WXSDKEngine.registerComponent("richText", WXRichTextView.class);
+            WXSDKEngine.registerDomObject("richText", WXCustomTextDomObject.class);
             WXSDKEngine.registerModule("RouterModule", RouterModule.class);
         } catch (WXException e) {
             LoggerUtil.d(e.getMessage());
@@ -117,7 +118,7 @@ public class App extends Application {
 
     public void addActivity(Activity activity) {
         if (mActivities == null) {
-            mActivities = new HashSet<Activity>();
+            mActivities = new HashSet<>();
         }
         mActivities.add(activity);
     }
