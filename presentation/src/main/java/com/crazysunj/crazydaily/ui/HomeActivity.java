@@ -47,6 +47,7 @@ import com.crazysunj.crazydaily.presenter.contract.HomeContract;
 import com.crazysunj.crazydaily.ui.adapter.HomeAdapter;
 import com.crazysunj.crazydaily.ui.adapter.helper.HomeAdapterHelper;
 import com.crazysunj.crazydaily.ui.contact.ContactActivity;
+import com.crazysunj.crazydaily.ui.photo.PhotoActivity;
 import com.crazysunj.crazydaily.util.SnackbarUtil;
 import com.crazysunj.crazydaily.view.banner.BannerCardHandler;
 import com.crazysunj.crazydaily.view.banner.WrapBannerView;
@@ -119,6 +120,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     private ArgbEvaluator mArgbEvaluator = new ArgbEvaluator();
     private int gaoxiaoIndex = 1;
     private boolean isTop = true;
+    private List<String> mMeinvList;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, HomeActivity.class);
@@ -246,6 +248,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         ImageLoader.loadWithVignette(this, meinvList.get(4), R.drawable.img_default, mCubeSecond.getForegroundView());
         ImageLoader.loadWithVignette(this, meinvList.get(5), R.drawable.img_default, mCubeSecond.getBackgroundView());
         mShadow.setVisibility(View.VISIBLE);
+        mMeinvList = meinvList;
     }
 
     @Override
@@ -308,11 +311,35 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     }
 
     private void clickCubeSecond() {
-        SnackbarUtil.show(this, "我是第三个");
+        if (mMeinvList == null) {
+            return;
+        }
+        String url;
+        View view;
+        if (isTop) {
+            url = mMeinvList.get(4);
+            view = mCubeSecond.getForegroundView();
+        } else {
+            url = mMeinvList.get(5);
+            view = mCubeSecond.getBackgroundView();
+        }
+        PhotoActivity.start(this, url, view);
     }
 
     private void clickCubeFirst() {
-        SnackbarUtil.show(this, "我是第二个");
+        if (mMeinvList == null) {
+            return;
+        }
+        String url;
+        View view;
+        if (isTop) {
+            url = mMeinvList.get(2);
+            view = mCubeFirst.getForegroundView();
+        } else {
+            url = mMeinvList.get(3);
+            view = mCubeFirst.getBackgroundView();
+        }
+        PhotoActivity.start(this, url, view);
     }
 
     private boolean handleNavigationItemClick(MenuItem item) {

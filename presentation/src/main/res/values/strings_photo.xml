@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="crop_ratio">裁剪比例</string>
+    <string name="crop_ratio_freestyle">自由操作裁剪框</string>
+    <string name="crop_ratio_origin">原始比例</string>
+    <string name="crop_ratio_square">正方形</string>
+    <string name="crop_ratio_x">x</string>
+    <string name="crop_ratio_y">y</string>
+    <string name="crop_resolution">分辨率</string>
+    <string name="crop_resolution_width">宽</string>
+    <string name="crop_resolution_height">高</string>
+    <string name="crop_resolution_setting">分辨率设置</string>
+    <string name="crop_compress">压缩</string>
+    <string name="crop_ui">UI</string>
+    <string name="crop_ui_setting">隐藏底部操作栏</string>
+</resources>

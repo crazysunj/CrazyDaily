@@ -24,7 +24,7 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/HomeTheme"></activity>
+            android:theme="@style/HomeTheme" />
         <activity
             android:name=".ui.ZhihuNewsDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -63,7 +63,9 @@
             android:name="android.max_aspect"
             android:value="2.1" />
 
-        <activity android:name=".ui.photo.PhotoActivity"></activity>
+        <activity
+            android:name=".ui.photo.PhotoActivity"
+            android:theme="@style/PhotoTheme" />
     </application>
 
 </manifest>

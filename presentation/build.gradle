@@ -92,4 +92,5 @@ dependencies {
     annotationProcessor libs.permissionCompiler
     implementation 'com.github.chrisbanes:PhotoView:2.1.3'
     implementation 'com.zzhoujay.richtext:richtext:3.0.7'
+    implementation 'com.github.yalantis:ucrop:2.2.2-native'
 }

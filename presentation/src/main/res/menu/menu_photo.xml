@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:title="设置"
+        app:showAsAction="ifRoom">
+        <menu>
+            <group>
+                <item
+                    android:id="@+id/menu_photo_edit"
+                    android:title="编辑图片" />
+                <item
+                    android:id="@+id/menu_photo_save"
+                    android:title="保存图片" />
+            </group>
+        </menu>
+    </item>
+</menu>

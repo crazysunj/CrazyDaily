@@ -75,6 +75,7 @@ public class CrazyDailyWebView extends WebView {
         setttings.setUseWideViewPort(true);//调整屏幕自适应
         setttings.setDefaultTextEncodingName("utf-8");//设置编码格式为utf-8
         setttings.setLoadsImagesAutomatically(true);//支持自动加载图片
+        setttings.setSavePassword(false);//禁止密码保存在本地
         String ua = setttings.getUserAgentString();
         setttings.setUserAgentString(String.format("%s CrazyDaily %s", ua, DeviceUtils.getVersionName()));//重置ua
         setWebViewClient(new CrazyDailyWebViewClient());
