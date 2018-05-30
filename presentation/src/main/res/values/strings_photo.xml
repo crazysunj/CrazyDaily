@@ -13,4 +13,7 @@
     <string name="crop_compress">压缩</string>
     <string name="crop_ui">UI</string>
     <string name="crop_ui_setting">隐藏底部操作栏</string>
+    <string name="setting">设置</string>
+    <string name="photo_edit">编辑图片</string>
+    <string name="photo_save">保存图片</string>
 </resources>

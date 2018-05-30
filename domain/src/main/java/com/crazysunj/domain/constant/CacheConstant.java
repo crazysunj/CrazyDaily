@@ -23,4 +23,5 @@ package com.crazysunj.domain.constant;
 public class CacheConstant {
     public static final String CACHE_DIR_API = "api";//网络接口缓存目录
     public static final String CACHE_DIR_WEB = "web";//webview缓存目录
+    public static final String CACHE_DIR_IMG = "img";//图片下载目录
 }

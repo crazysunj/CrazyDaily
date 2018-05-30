@@ -15,14 +15,21 @@
  */
 package com.crazysunj.crazydaily.util;
 
+import android.content.Context;
+import android.os.Environment;
 import android.text.TextUtils;
+
+import com.crazysunj.crazydaily.R;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * author: sunjian
  * created on: 2017/9/20 下午2:37
  * description: https://github.com/crazysunj/CrazyDaily
  */
-
 public class StringUtil {
 
     private StringUtil() {
@@ -33,5 +40,24 @@ public class StringUtil {
             return defaultText;
         }
         return text;
+    }
+
+    public static String getFileName(Context context) {
+        final String appName = context.getResources().getString(R.string.app_name);
+        SimpleDateFormat formatter = new SimpleDateFormat("_yyyyMMdd_HHmmss");
+        Date curDate = new Date(System.currentTimeMillis());
+        return appName + formatter.format(curDate);
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public static File getDownloadFile(Context context) {
+        if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+            return null;
+        }
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), context.getResources().getString(R.string.app_name));
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return file;
     }
 }

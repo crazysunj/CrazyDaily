@@ -15,6 +15,9 @@
  */
 package com.crazysunj.crazydaily.util;
 
+import android.content.Context;
+import android.content.res.Resources;
+
 import com.crazysunj.crazydaily.BuildConfig;
 
 /**
@@ -28,5 +31,11 @@ public class DeviceUtils {
 
     public static String getVersionName() {
         return BuildConfig.VERSION_NAME;
+    }
+
+    public static int getStatusBarHeight(Context context) {
+        // 获得状态栏高度
+        final Resources resources = context.getResources();
+        return resources.getDimensionPixelSize(resources.getIdentifier("status_bar_height", "dimen", "android"));
     }
 }

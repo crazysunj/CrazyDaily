@@ -31,7 +31,7 @@ import java.lang.reflect.Field;
  */
 public class PhotoDrawerLayout extends DrawerLayout {
 
-    private static final int MIN_DRAWER_MARGIN = 50;
+    private static final int MIN_DRAWER_MARGIN = 58;
 
     public PhotoDrawerLayout(@NonNull Context context) {
         this(context, null);

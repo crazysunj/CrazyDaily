@@ -37,4 +37,7 @@
     <string name="permission_storage_denied">读取存储权限被拒绝</string>
     <string name="permission_storage_neverask">请到设置页面去允许存储权限</string>
     <string name="bottom_line">我是有底线的</string>
+    <string name="open">打开</string>
+    <string name="close">关闭</string>
+    <string name="file_provider_authorities">com.crazysunj.crazydaily.provider</string>
 </resources>

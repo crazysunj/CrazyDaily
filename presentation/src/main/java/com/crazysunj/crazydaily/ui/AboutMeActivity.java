@@ -26,10 +26,8 @@ import android.widget.TextView;
 
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
+import com.crazysunj.crazydaily.util.CacheUtil;
 import com.crazysunj.crazydaily.util.SnackbarUtil;
-import com.crazysunj.domain.constant.CacheConstant;
-
-import java.io.File;
 
 import butterknife.BindView;
 import permissions.dispatcher.NeedsPermission;
@@ -89,13 +87,20 @@ public class AboutMeActivity extends BaseActivity {
 
     @NeedsPermission({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
     void clearCache() {
-        File cacheDir = new File(getExternalCacheDir(), CacheConstant.CACHE_DIR_API);
-        boolean isSuccess = false;
-        if (cacheDir.exists() && cacheDir.isDirectory()) {
-            for (File file : cacheDir.listFiles()) {
-                isSuccess = file.delete();
-            }
-        }
+//        File apiDir = new File(getExternalCacheDir(), CacheConstant.CACHE_DIR_API);
+//        File imgDir = new File(getExternalCacheDir(), CacheConstant.CACHE_DIR_IMG);
+//        boolean isSuccess = false;
+//        if (apiDir.exists() && apiDir.isDirectory()) {
+//            for (File file : apiDir.listFiles()) {
+//                isSuccess = file.delete();
+//            }
+//        }
+//        if (imgDir.exists() && imgDir.isDirectory()) {
+//            for (File file : imgDir.listFiles()) {
+//                isSuccess = file.delete();
+//            }
+//        }
+        boolean isSuccess = CacheUtil.cleanExternalCache(this);
         SnackbarUtil.show(this, "清除缓存" + (isSuccess ? "成功" : "失败"));
     }
 

@@ -18,12 +18,17 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <com.crazysunj.crazydaily.view.statusbar.StatusBarView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary" />
+
             <android.support.v7.widget.Toolbar
                 android:id="@+id/photo_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
                 android:background="@color/colorPrimary"
-                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:popupTheme="@style/PhotoTheme.MenuTheme"
                 app:titleTextColor="@color/color_white" />
 
             <com.github.chrisbanes.photoview.PhotoView

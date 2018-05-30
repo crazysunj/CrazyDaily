@@ -2,16 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:title="设置"
+        android:icon="@mipmap/ic_menu_more"
+        android:title="@string/setting"
         app:showAsAction="ifRoom">
         <menu>
             <group>
                 <item
                     android:id="@+id/menu_photo_edit"
-                    android:title="编辑图片" />
+                    android:icon="@mipmap/ic_edit"
+                    android:title="@string/photo_edit" />
                 <item
                     android:id="@+id/menu_photo_save"
-                    android:title="保存图片" />
+                    android:icon="@mipmap/ic_save"
+                    android:title="@string/photo_save" />
             </group>
         </menu>
     </item>

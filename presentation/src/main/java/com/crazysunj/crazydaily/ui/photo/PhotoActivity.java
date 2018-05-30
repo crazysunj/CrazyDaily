@@ -18,18 +18,22 @@ package com.crazysunj.crazydaily.ui.photo;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,14 +48,26 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
 import com.crazysunj.crazydaily.constant.ActivityConstant;
 import com.crazysunj.crazydaily.moudle.ImageLoader;
+import com.crazysunj.crazydaily.util.DeviceUtils;
+import com.crazysunj.crazydaily.util.SnackbarUtil;
+import com.crazysunj.crazydaily.util.StringUtil;
 import com.crazysunj.crazydaily.view.photo.PhotoDrawerLayout;
+import com.crazysunj.domain.constant.CacheConstant;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.yalantis.ucrop.UCrop;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -104,8 +120,8 @@ public class PhotoActivity extends BaseActivity {
     @BindView(R.id.photo_crop_ui_setting)
     CheckBox mCropUISetting;
 
-
     private ActionBarDrawerToggle mDrawerToggle;
+    private String url;
 
     public static void start(Activity activity, String url, View view) {
         Intent intent = new Intent(activity, PhotoActivity.class);
@@ -120,7 +136,7 @@ public class PhotoActivity extends BaseActivity {
         setSupportActionBar(mToolbar);
         handleStatusbarTransparent();
         mPhotoDrawer.setScrimColor(Color.TRANSPARENT);
-        mDrawerToggle = new ActionBarDrawerToggle(this, mPhotoDrawer, mToolbar, R.string.about_me_blog, R.string.about_me_blog_text);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mPhotoDrawer, mToolbar, R.string.open, R.string.close);
 
 
         mCropRadioRadioGroup.check(R.id.photo_crop_ratio_origin);
@@ -132,6 +148,121 @@ public class PhotoActivity extends BaseActivity {
         mCropQuality.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
         mCropResolutionWidth.addTextChangedListener(mCropResolutionTextWatcher);
         mCropResolutionHeight.addTextChangedListener(mCropResolutionTextWatcher);
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private void startCrop(@NonNull Uri uri) {
+        String destinationFileName = StringUtil.getFileName(this);
+        switch (mCropCompressRadioGroup.getCheckedRadioButtonId()) {
+            case R.id.photo_crop_compress_png:
+                destinationFileName += ".png";
+                break;
+            case R.id.photo_crop_compress_jpg:
+            default:
+                destinationFileName += ".jpg";
+                break;
+        }
+        File parent = new File(getExternalCacheDir(), CacheConstant.CACHE_DIR_IMG);
+        if (!parent.exists()) {
+            parent.mkdirs();
+        }
+        Uri destUri = Uri.fromFile(new File(parent, destinationFileName));
+        UCrop uCrop = UCrop.of(uri, destUri);
+        uCrop = basisConfig(uCrop);
+        uCrop = advancedConfig(uCrop);
+        uCrop.start(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == UCrop.REQUEST_CROP) {
+                handleCropResult(data);
+            }
+        } else if (resultCode == UCrop.RESULT_ERROR) {
+            handleCropError(data);
+        }
+    }
+
+    private void handleCropResult(@NonNull Intent result) {
+        final Uri resultUri = UCrop.getOutput(result);
+        if (resultUri != null) {
+            url = resultUri.toString();
+            ImageLoader.load(this, url, mPhoto);
+        } else {
+            SnackbarUtil.show(this, "不好意思，裁剪开小差了！");
+        }
+    }
+
+    private void handleCropError(@NonNull Intent result) {
+        final Throwable cropError = UCrop.getError(result);
+        if (cropError != null) {
+            SnackbarUtil.show(this, cropError.getMessage());
+        } else {
+            SnackbarUtil.show(this, "不好意思，裁剪开小差了！");
+        }
+    }
+
+    /**
+     * 基础配置
+     */
+    private UCrop basisConfig(@NonNull UCrop uCrop) {
+        switch (mCropRadioRadioGroup.getCheckedRadioButtonId()) {
+            case R.id.photo_crop_ratio_origin:
+                break;
+            case R.id.photo_crop_ratio_square:
+                uCrop = uCrop.withAspectRatio(1, 1);
+                break;
+            default:
+                try {
+                    float ratioX = Float.valueOf(mCropRatioX.getText().toString().trim());
+                    float ratioY = Float.valueOf(mCropRatioY.getText().toString().trim());
+                    if (ratioX > 0 && ratioY > 0) {
+                        uCrop = uCrop.withAspectRatio(ratioX, ratioY);
+                    }
+                } catch (NumberFormatException e) {
+                    SnackbarUtil.show(this, "要输入数字哦！");
+                }
+                break;
+        }
+        if (mCropResolution.isChecked()) {
+            try {
+                int maxWidth = Integer.valueOf(mCropResolutionWidth.getText().toString().trim());
+                int maxHeight = Integer.valueOf(mCropResolutionHeight.getText().toString().trim());
+                if (maxWidth > UCrop.MIN_SIZE && maxHeight > UCrop.MIN_SIZE) {
+                    uCrop = uCrop.withMaxResultSize(maxWidth, maxHeight);
+                }
+            } catch (NumberFormatException e) {
+                SnackbarUtil.show(this, "要输入数字哦！");
+            }
+        }
+        return uCrop;
+    }
+
+    /**
+     * 其它配置
+     */
+    private UCrop advancedConfig(@NonNull UCrop uCrop) {
+        UCrop.Options options = new UCrop.Options();
+        switch (mCropCompressRadioGroup.getCheckedRadioButtonId()) {
+            case R.id.photo_crop_compress_png:
+                options.setCompressionFormat(Bitmap.CompressFormat.PNG);
+                break;
+            case R.id.photo_crop_compress_jpg:
+            default:
+                options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
+                break;
+        }
+        options.setCompressionQuality(mCropQuality.getProgress());
+        options.setHideBottomControls(mCropUISetting.isChecked());
+        options.setFreeStyleCropEnabled(mCropRatioFreestyle.isChecked());
+
+        options.setToolbarColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        options.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+        options.setActiveWidgetColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        options.setToolbarWidgetColor(ContextCompat.getColor(this, R.color.color_white));
+        return uCrop.withOptions(options);
     }
 
     private SeekBar.OnSeekBarChangeListener mOnSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
@@ -191,13 +322,75 @@ public class PhotoActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        String url = getIntent().getStringExtra(ActivityConstant.URL);
+        url = getIntent().getStringExtra(ActivityConstant.URL);
         ImageLoader.load(this, url, mPhoto);
     }
 
     @Override
     protected void initListener() {
         mPhotoDrawer.addDrawerListener(new PhotoDrawerListener());
+        mToolbar.setOnMenuItemClickListener(this::handleMenuItemClick);
+    }
+
+    private boolean handleMenuItemClick(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.menu_photo_edit:
+                if (TextUtils.isEmpty(url)) {
+                    return true;
+                }
+                startCrop(Uri.parse(url));
+                break;
+            case R.id.menu_photo_save:
+                if (TextUtils.isEmpty(url)) {
+                    SnackbarUtil.show(this, "好可怜，保存失败！");
+                    break;
+                }
+                File downloadFile = StringUtil.getDownloadFile(this);
+                if (downloadFile == null) {
+                    SnackbarUtil.show(this, "好可怜，保存失败！");
+                    break;
+                }
+                final String fileName = StringUtil.getFileName(this) + url.substring(url.lastIndexOf("."));
+                final File saveFile = new File(downloadFile, fileName);
+                Glide.with(this).asFile().load(url).into(new SimpleTarget<File>() {
+                    @Override
+                    public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
+                        FileInputStream inStream = null;
+                        FileOutputStream outStream = null;
+                        try {
+                            inStream = new FileInputStream(resource);
+                            outStream = new FileOutputStream(saveFile);
+                            FileChannel inChannel = inStream.getChannel();
+                            FileChannel outChannel = outStream.getChannel();
+                            inChannel.transferTo(0, inChannel.size(), outChannel);
+                            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(saveFile)));
+                            SnackbarUtil.show(PhotoActivity.this, "保存成功！路径：" + saveFile.getAbsolutePath());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            SnackbarUtil.show(PhotoActivity.this, "好可怜，保存失败！");
+                        } finally {
+                            if (inStream != null) {
+                                try {
+                                    inStream.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            if (outStream != null) {
+                                try {
+                                    outStream.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+                });
+                break;
+            default:
+                break;
+        }
+        return true;
     }
 
     @Override
@@ -209,6 +402,12 @@ public class PhotoActivity extends BaseActivity {
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         mDrawerToggle.syncState();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_photo, menu);
+        return true;
     }
 
     @Override
@@ -246,8 +445,7 @@ public class PhotoActivity extends BaseActivity {
         }
 
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mPhotoDrawer.getLayoutParams();
-        final Resources resources = getResources();
-        params.topMargin = -resources.getDimensionPixelSize(resources.getIdentifier("status_bar_height", "dimen", "android"));
+        params.topMargin = -DeviceUtils.getStatusBarHeight(this);
         mPhotoDrawer.setLayoutParams(params);
     }
 
