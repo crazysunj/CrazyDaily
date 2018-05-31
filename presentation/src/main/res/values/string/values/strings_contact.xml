@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="page_name_conatct">超牛批联系人</string>
+    <string name="search_contact">搜索联系人</string>
+    <string name="transition_photo">photo</string>
+    <string name="transition_head">head</string>
+    <string name="transition_name">name</string>
+    <string name="transition_location_icon">location_icon</string>
+    <string name="transition_location">location</string>
+</resources>

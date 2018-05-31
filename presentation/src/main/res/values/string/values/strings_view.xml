@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appbar_behavior">com.crazysunj.crazydaily.view.behavior.AppBarLayoutOverScrollViewBehavior</string>
+    <string name="bottom_behavior">com.crazysunj.crazydaily.view.behavior.ShowHideBottomBehavior</string>
+</resources>

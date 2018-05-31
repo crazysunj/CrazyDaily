@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CrazyDaily</string>
+    <string name="file_provider_authorities">com.crazysunj.crazydaily.provider</string>
+    <string name="splash_bottom_text">什么都略懂一点，生活更多彩一些</string>
+    <string name="open">打开</string>
+    <string name="close">关闭</string>
+</resources>

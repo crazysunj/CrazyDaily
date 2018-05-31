@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ic_edit">&#xe6af;</string>
+    <string name="ic_video">&#xe64f;</string>
+    <string name="ic_add">&#xe620;</string>
+    <string name="ic_go">&#xe604;</string>
+    <string name="ic_location">&#xe64e;</string>
+    <string name="ic_delete">&#xe600;</string>
+    <string name="ic_call">&#xe605;</string>
+    <string name="ic_msg">&#xe643;</string>
+    <string name="ic_arrow">&#xe615;</string>
+</resources>
