@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="about_me_des">一款程序员日常放松的App，基于Material Design + MVP-Clean + RxJava2 + Retrofit + Dagger2 + Glide + Okhttp + MTRVA + BRVAH + 炫酷控件 + 炫酷动画\n包含：\n\t知乎日报\n\t干货集中营\n\t天气\n\t搞笑视频\n\t好友列表</string>
+    <string name="about_me_des">一款程序员日常放松的App，基于Material Design + MVP-Clean + RxJava2 + Retrofit + Dagger2 + Glide + Okhttp + MTRVA + BRVAH + 炫酷控件 + 炫酷动画\n包含：\n\t知乎日报\n\t干货集中营\n\t天气\n\t搞笑视频\n\t好友列表\n\t妹子</string>
     <string name="about_me_github">作者Github：</string>
     <string name="about_me_blog">作者博客：</string>
-    <string name="about_me_feel">本项目涵盖了开发中应该用到的开源框架、自定义控件、自定义动画、项目架构搭建。有意见或者建议的同学可以联系我哦，持续更新，祝你生活愉快！喜欢的朋友点个star关注一下我吧！（上面链接长按复制）</string>
+    <string name="about_me_feel">尽量保持各种开源库最新状态，我踩坑，我骄傲！\n有意见或者建议的同学可以联系我哦，持续更新，祝你生活愉快！\n喜欢的朋友点个star关注一下我吧！（上面链接长按复制）</string>
     <string name="about_me_github_text">https://github.com/crazysunj/</string>
     <string name="about_me_blog_text">http://crazysunj.com/</string>
     <string name="clear_cache">清除缓存</string>

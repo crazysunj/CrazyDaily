@@ -21,7 +21,8 @@
 * 干货集中营
 * 天气
 * 搞笑视频
-* 联系人
+* 好友列表
+* 妹子
 
 ## 技术点
 * 架构采用MVP-Clean，项目简洁、易维护、易测试、高内聚、低耦合
@@ -29,12 +30,14 @@
 * 跨端采用Weex，涉及weex页面、自定义Module、自定义Component、自定义Adapter等
 * RxJava的操作符巧妙运用
 * Dagger2与Butterknife实现依赖注解，解耦，方便测试等
-* Retrofit和Okhttp实现网络架构，实现多种扩展，例如常见的日志规范打印，不用抓包，直接在日志中游览
+* Retrofit和Okhttp实现网络架构，实现多种扩展，例如常见的日志规范打印，不用抓包以及缓存配置等等
 * Glide实现图片加载，配合GlideTransformations实现多种变换，如圆角、遮罩等
 * MTRVA轻松处理RecyclerViewAdapter的数据，实现多列表效果更佳
-* 大量自定义控件，如Camera、Matrix、贝塞尔曲线、高斯模糊、Behavior、事件拦截等等运用
+* 大量自定义控件，如Camera、Matrix、贝塞尔曲线、高斯模糊、Behavior、事件拦截、沉浸式、QQ侧滑菜单等等运用
 * 大量动画，如lottie、补间动画、3D动画、属性动画（ObjectAnimator、ValueAnimator、View.animate和PropertyValuesHolder）和转场动画（自定义Transition）运用
 * 视频列表
+* 支持图片预览、编辑(如裁剪、压缩)和保存本地
+* webview支持x5及常见用法，例如缓存、内存优化
 
 尽量保持各种开源库最新状态，我踩坑，我骄傲！
 
@@ -45,14 +48,14 @@
 [下载地址](https://www.pgyer.com/EbHS "https://www.pgyer.com/EbHS")
 
 想干的事（暂时先罗列这么多，版本迭代陆续实现，不分先后）：
-* 网络加上缓存机制
 * 加上引导页
-* 添加图片查看，修改等
-* 首页改为多fragment
+* Navigation支持多fragment
 * 添加微信精选，稀土掘金模块
-* 游览器内核改为x5
 * 视频列表支持小窗口播放
 * WebView预加载
+* 重构我的页面
+* 添加app更新机制
+* 添加音乐模块
 
     ...
 
