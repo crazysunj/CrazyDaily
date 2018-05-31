@@ -91,7 +91,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_margin="5dp"
-        android:background="@color/colorPrimaryDark" />
+        android:background="@color/color_white" />
 
     <TextView
         style="@style/text_14_white"
@@ -149,7 +149,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_margin="5dp"
-        android:background="@color/colorPrimaryDark" />
+        android:background="@color/color_white" />
 
     <RadioGroup
         android:id="@+id/photo_crop_compress_radio_group"
@@ -183,20 +183,30 @@
             android:textAppearance="?android:textAppearanceMedium"
             tools:ignore="HardcodedText" />
 
-        <TextView
-            android:id="@+id/photo_crop_quality_text"
-            style="@style/text_16_white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textAppearance="?android:textAppearanceSmall"
-            tools:text="百分比: 90" />
-
-        <SeekBar
-            android:id="@+id/photo_crop_quality"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:progress="90" />
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/text_16_white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="百分比："
+                android:textAppearance="?android:textAppearanceSmall"
+                tools:ignore="HardcodedText" />
+
+            <EditText
+                android:id="@+id/photo_crop_quality"
+                style="@style/text_16_white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:hint="@string/photo_crop_quality"
+                android:inputType="number"
+                android:textColorHint="@color/color_white" />
+        </LinearLayout>
 
     </RadioGroup>
 
@@ -204,7 +214,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_margin="5dp"
-        android:background="@color/colorPrimaryDark" />
+        android:background="@color/color_white" />
 
     <TextView
         style="@style/text_14_white"

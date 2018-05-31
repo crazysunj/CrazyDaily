@@ -31,7 +31,7 @@ import java.lang.reflect.Field;
  */
 public class PhotoDrawerLayout extends DrawerLayout {
 
-    private static final int MIN_DRAWER_MARGIN = 58;
+    private static final int MIN_DRAWER_MARGIN = 52;
 
     public PhotoDrawerLayout(@NonNull Context context) {
         this(context, null);
@@ -43,9 +43,10 @@ public class PhotoDrawerLayout extends DrawerLayout {
 
     public PhotoDrawerLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        final int width = getResources().getDisplayMetrics().widthPixels;
+        final int minDrawerMargin = (int) (MIN_DRAWER_MARGIN * getResources().getDisplayMetrics().density + 0.5f);
+        final int width = getResources().getDisplayMetrics().widthPixels - minDrawerMargin;
         setEdgeSize(width);
-        setMinDrawerMargin(MIN_DRAWER_MARGIN);
+        setMinDrawerMargin(minDrawerMargin);
     }
 
     /**
@@ -53,13 +54,12 @@ public class PhotoDrawerLayout extends DrawerLayout {
      *
      * @param dp 单位dp
      */
-    private void setMinDrawerMargin(int dp) {
+    private void setMinDrawerMargin(int px) {
         try {
-            int size = (int) (dp * getResources().getDisplayMetrics().density + 0.5f);
             Field minDrawerMargin = getClass().getSuperclass().getDeclaredField(
                     "mMinDrawerMargin");
             minDrawerMargin.setAccessible(true);
-            minDrawerMargin.setInt(this, size);
+            minDrawerMargin.setInt(this, px);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }

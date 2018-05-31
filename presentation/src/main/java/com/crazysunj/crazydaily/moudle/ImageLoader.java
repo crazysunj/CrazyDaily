@@ -16,15 +16,33 @@
 package com.crazysunj.crazydaily.moudle;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.crazysunj.crazydaily.app.GlideApp;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.channels.FileChannel;
 
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
@@ -53,12 +71,61 @@ public class ImageLoader {
                 .into(imageView);
     }
 
+    public static void loadNoCrop(Context context, String url, ImageView imageView) {
+        GlideApp.with(context)
+                .load(url)
+                .into(imageView);
+    }
+
     public static void load(Context context, String url, @DrawableRes int placeholderId, ImageView imageView) {
         GlideApp.with(context)
                 .load(url)
                 .centerCrop()
                 .placeholder(placeholderId)
                 .into(imageView);
+    }
+
+    public static void downloadFile(Context context, String url, File saveFile, OnFileCallback callback) {
+        Glide.with(context).asFile().load(url)
+                .listener(new FileRequestListener())
+                .into(new SimpleTarget<File>() {
+                    @Override
+                    public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
+                        FileInputStream fis = null;
+                        FileOutputStream fos = null;
+                        try {
+                            fis = new FileInputStream(resource);
+                            fos = new FileOutputStream(saveFile);
+                            FileChannel inChannel = fis.getChannel();
+                            FileChannel outChannel = fos.getChannel();
+                            inChannel.transferTo(0, inChannel.size(), outChannel);
+                            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(saveFile)));
+                            if (callback != null) {
+                                callback.onFile(true);
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            if (callback != null) {
+                                callback.onFile(false);
+                            }
+                        } finally {
+                            if (fis != null) {
+                                try {
+                                    fis.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            if (fos != null) {
+                                try {
+                                    fos.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+                });
     }
 
     @SuppressWarnings("all")
@@ -117,6 +184,25 @@ public class ImageLoader {
                         }
                     }
                 });
+    }
+
+    public interface OnFileCallback {
+        void onFile(boolean isSuccess);
+    }
+
+
+    private static class FileRequestListener implements RequestListener<File> {
+
+        @Override
+        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<File> target, boolean isFirstResource) {
+            target.onResourceReady(new File(URI.create(model.toString())), null);
+            return false;
+        }
+
+        @Override
+        public boolean onResourceReady(File resource, Object model, Target<File> target, DataSource dataSource, boolean isFirstResource) {
+            return false;
+        }
     }
 
 }

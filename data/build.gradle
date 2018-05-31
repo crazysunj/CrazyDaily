@@ -26,7 +26,6 @@ android {
 dependencies {
 
     def dataDependencies = rootProject.ext.dataDependencies //依赖库配置
-    def dataTestDependencies = rootProject.ext.dataTestDependencies //依赖库配置
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     api project(':domain')
@@ -42,6 +41,4 @@ dependencies {
     api dataDependencies.dagger
     api dataDependencies.daggerCompiler
     api dataDependencies.logger
-
-    testImplementation dataTestDependencies.robolectric
 }

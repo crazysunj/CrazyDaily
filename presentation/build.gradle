@@ -56,21 +56,24 @@ dependencies {
     implementation libs.recyclerviewv7
     implementation libs.cardviewv7
     implementation libs.design
-    implementation libs.gpuimage
+    implementation libs.gpuimage //图像处理
     implementation libs.multidex
     implementation libs.butterknife
-    implementation libs.MTRVA
+    implementation libs.MTRVA //recyclerview数据处理
     implementation libs.BRVAH
-    implementation libs.statusbarutil
-    implementation libs.pickerdialog
-    implementation libs.circleimageview
-    implementation libs.niceVieoPlayer
-    implementation libs.cardslideview
+    implementation libs.statusbarutil //状态栏
+    implementation libs.pickerdialog //选择对话框
+    implementation libs.circleimageview //圆形imageview
+    implementation libs.niceVieoPlayer //视频播放
+    implementation libs.cardslideview //卡片轮播
     implementation libs.fastjson
     implementation libs.weex
-    implementation libs.wavesidebar
+    implementation libs.wavesidebar //字符波浪滑动
     implementation libs.shimmer
     implementation libs.lottie
+    implementation libs.photoview
+    implementation libs.richtext //富文本
+    implementation libs.ucrop //裁剪
     debugImplementation libs.debugLeakcanary
     releaseImplementation libs.releaseLeakcanary
     annotationProcessor libs.butterknifeCompiler
@@ -86,11 +89,8 @@ dependencies {
         exclude group: 'com.github.bumptech.glide', module: 'glide'
     }
     annotationProcessor libs.glideCompiler
-    implementation(libs.permission) {
+    implementation(libs.permission) { //权限
         exclude module: "support-v13"
     }
     annotationProcessor libs.permissionCompiler
-    implementation 'com.github.chrisbanes:PhotoView:2.1.3'
-    implementation 'com.zzhoujay.richtext:richtext:3.0.7'
-    implementation 'com.github.yalantis:ucrop:2.2.2-native'
 }

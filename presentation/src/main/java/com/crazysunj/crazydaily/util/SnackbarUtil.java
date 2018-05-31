@@ -43,6 +43,10 @@ public class SnackbarUtil {
         Snackbar.make(activity.findViewById(android.R.id.content), msg, Snackbar.LENGTH_SHORT).show();
     }
 
+    public static void showLong(Activity activity, String msg) {
+        Snackbar.make(activity.findViewById(android.R.id.content), msg, Snackbar.LENGTH_LONG).show();
+    }
+
     public static void show(Activity activity, @StringRes int msg) {
         Snackbar.make(activity.findViewById(android.R.id.content), msg, Snackbar.LENGTH_SHORT).show();
     }

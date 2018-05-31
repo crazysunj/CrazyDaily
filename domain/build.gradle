@@ -20,7 +20,6 @@ android {
 dependencies {
 
     def domainDependencies = rootProject.ext.domainDependencies
-    def domainTestDependencies = rootProject.ext.domainTestDependencies
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -35,8 +34,5 @@ dependencies {
 
     implementation domainDependencies.arrow
     implementation domainDependencies.tinypinyin
-    testImplementation domainTestDependencies.junit
-    testImplementation domainTestDependencies.mockito
-    testImplementation domainTestDependencies.assertj
 }
 

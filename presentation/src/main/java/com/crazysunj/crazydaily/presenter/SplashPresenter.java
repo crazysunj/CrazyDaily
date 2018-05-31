@@ -49,7 +49,7 @@ public class SplashPresenter extends BasePresenter<SplashContract.View> implemen
 
     @Override
     public void enterHome() {
-        mSplashUseCase.execute(SplashUseCase.Params.get(3, TimeUnit.SECONDS), new BaseSubscriber<Long>() {
+        mSplashUseCase.execute(SplashUseCase.Params.get(1, TimeUnit.SECONDS), new BaseSubscriber<Long>() {
             @Override
             public void onNext(Long aLong) {
                 mView.enterHome();

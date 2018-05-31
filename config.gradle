@@ -5,8 +5,8 @@ ext {
             buildToolsVersion: '27.0.3',
             minSdkVersion    : 21,
             targetSdkVersion : 27,
-            versionCode      : 5,
-            versionName      : "1.4.0"
+            versionCode      : 6,
+            versionName      : "1.5.0"
     ]
 
     dependVersion = [
@@ -21,10 +21,6 @@ ext {
             glideTransformations  : "3.3.0",
             MTRVA                 : "2.0.3",
             BRVAH                 : "2.9.28",
-            robolectricVersion    : "3.1.1",
-            jUnitVersion          : "4.12",
-            assertJVersion        : "1.7.1",
-            mockitoVersion        : "1.9.5",
             arrowVersion          : "1.0.0",
             javaxAnnotationVersion: "1.0",
             javaxInjectVersion    : "1",
@@ -46,6 +42,9 @@ ext {
             gpuimage              : "1.4.1",
             lottie                : "2.5.4",
             permission            : "3.2.0",
+            photoview             : "2.1.3",
+            richtext              : "3.0.7",
+            ucrop                 : "2.2.2-native",
     ]
 
     dataDependencies = [
@@ -91,13 +90,9 @@ ext {
             lottie              : "com.airbnb.android:lottie:${dependVersion.lottie}",
             permission          : "com.github.hotchemi:permissionsdispatcher:${dependVersion.permission}",
             permissionCompiler  : "com.github.hotchemi:permissionsdispatcher-processor:${dependVersion.permission}",
-    ]
-
-    dataTestDependencies = [
-            junit      : "junit:junit:${dependVersion.jUnitVersion}",
-            assertj    : "org.assertj:assertj-core:${dependVersion.assertJVersion}",
-            mockito    : "org.mockito:mockito-core:${dependVersion.mockitoVersion}",
-            robolectric: "org.robolectric:robolectric:${dependVersion.robolectricVersion}",
+            photoview           : "com.github.chrisbanes:PhotoView:${dependVersion.photoview}",
+            richtext            : "com.zzhoujay.richtext:richtext:${dependVersion.richtext}",
+            ucrop               : "com.github.yalantis:ucrop:${dependVersion.ucrop}",
     ]
 
     domainDependencies = [
@@ -111,11 +106,5 @@ ext {
             niceVieoPlayer : "com.github.xiaoyanger0825:NiceVieoPlayer:${dependVersion.niceVieoPlayer}",
             gson           : "com.google.code.gson:gson:${dependVersion.gson}",
             tinypinyin     : "com.github.promeg:tinypinyin:${dependVersion.tinypinyin}",
-    ]
-
-    domainTestDependencies = [
-            junit  : "junit:junit:${dependVersion.jUnitVersion}",
-            assertj: "org.assertj:assertj-core:${dependVersion.assertJVersion}",
-            mockito: "org.mockito:mockito-core:${dependVersion.mockitoVersion}",
     ]
 }

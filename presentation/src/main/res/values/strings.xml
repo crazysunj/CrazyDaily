@@ -31,6 +31,7 @@
     <string name="transition_location">location</string>
     <string name="splash_bottom_text">什么都略懂一点，生活更多彩一些</string>
     <string name="clear_cache">清除缓存</string>
+    <string name="handle_img">处理本地图片</string>
     <string name="permission_storage_rationale">该操作需要读写存储卡权限</string>
     <string name="button_allow">允许</string>
     <string name="button_deny">拒绝</string>

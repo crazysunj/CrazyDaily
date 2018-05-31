@@ -15,6 +15,8 @@
  */
 package com.crazysunj.crazydaily.ui.photo;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -29,6 +31,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -44,13 +47,8 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
 import com.crazysunj.crazydaily.constant.ActivityConstant;
@@ -64,22 +62,25 @@ import com.github.chrisbanes.photoview.PhotoView;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.util.Locale;
 
 import butterknife.BindView;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 
 /**
  * author: sunjian
  * created on: 2018/4/28 下午1:41
  * description:https://github.com/crazysunj/CrazyDaily
  */
+@RuntimePermissions
 public class PhotoActivity extends BaseActivity {
 
-    private static final int DEFAULT_COMPRESS_QUALITY = 90;
+    private static final String DEFAULT_COMPRESS_QUALITY = "90";
 
     @BindView(R.id.photo)
     PhotoView mPhoto;
@@ -113,15 +114,13 @@ public class PhotoActivity extends BaseActivity {
     RadioButton mCropCompressJPG;
     @BindView(R.id.photo_crop_compress_png)
     RadioButton mCropCompressPNG;
-    @BindView(R.id.photo_crop_quality_text)
-    TextView mCropQualityText;
     @BindView(R.id.photo_crop_quality)
-    SeekBar mCropQuality;
+    EditText mCropQuality;
     @BindView(R.id.photo_crop_ui_setting)
     CheckBox mCropUISetting;
 
     private ActionBarDrawerToggle mDrawerToggle;
-    private String url;
+    private String mUrl;
 
     public static void start(Activity activity, String url, View view) {
         Intent intent = new Intent(activity, PhotoActivity.class);
@@ -131,6 +130,12 @@ public class PhotoActivity extends BaseActivity {
         activity.startActivity(intent, options.toBundle());
     }
 
+    public static void start(Activity activity, String url) {
+        Intent intent = new Intent(activity, PhotoActivity.class);
+        intent.putExtra(ActivityConstant.URL, url);
+        activity.startActivity(intent);
+    }
+
     @Override
     protected void initView() {
         setSupportActionBar(mToolbar);
@@ -138,16 +143,94 @@ public class PhotoActivity extends BaseActivity {
         mPhotoDrawer.setScrimColor(Color.TRANSPARENT);
         mDrawerToggle = new ActionBarDrawerToggle(this, mPhotoDrawer, mToolbar, R.string.open, R.string.close);
 
-
         mCropRadioRadioGroup.check(R.id.photo_crop_ratio_origin);
         mCropRatioX.addTextChangedListener(mCropRatioTextWatcher);
         mCropRatioY.addTextChangedListener(mCropRatioTextWatcher);
         mCropCompressRadioGroup.check(R.id.photo_crop_compress_jpg);
-        mCropQuality.setProgress(DEFAULT_COMPRESS_QUALITY);
-        mCropQualityText.setText(String.format(Locale.getDefault(), "百分比: %d", mCropQuality.getProgress()));
-        mCropQuality.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
+        mCropQuality.setText(DEFAULT_COMPRESS_QUALITY);
+        mCropQuality.addTextChangedListener(mCropQualityTextWatcher);
         mCropResolutionWidth.addTextChangedListener(mCropResolutionTextWatcher);
         mCropResolutionHeight.addTextChangedListener(mCropResolutionTextWatcher);
+    }
+
+    @Override
+    protected void initData() {
+        mUrl = getIntent().getStringExtra(ActivityConstant.URL);
+        ImageLoader.loadNoCrop(this, mUrl, mPhoto);
+    }
+
+    @Override
+    protected void initListener() {
+        mPhotoDrawer.addDrawerListener(new PhotoDrawerListener());
+        mToolbar.setOnMenuItemClickListener(this::handleMenuItemClick);
+    }
+
+    @Override
+    protected int getContentResId() {
+        return R.layout.activity_photo;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == UCrop.REQUEST_CROP) {
+                handleCropResult(data);
+            }
+        } else if (resultCode == UCrop.RESULT_ERROR) {
+            handleCropError(data);
+        }
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_photo, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    /**
+     * 处理状态栏透明
+     */
+    private void handleStatusbarTransparent() {
+        final Window window = getWindow();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            window.setStatusBarColor(Color.TRANSPARENT);
+        } else {
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+
+        ViewGroup content = findViewById(android.R.id.content);
+        for (int i = 0, count = content.getChildCount(); i < count; i++) {
+            View child = content.getChildAt(i);
+            if (child instanceof ViewGroup) {
+                child.setFitsSystemWindows(true);
+                ((ViewGroup) child).setClipToPadding(false);
+            }
+        }
+
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mPhotoDrawer.getLayoutParams();
+        params.topMargin = -DeviceUtils.getStatusBarHeight(this);
+        mPhotoDrawer.setLayoutParams(params);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -173,23 +256,11 @@ public class PhotoActivity extends BaseActivity {
         uCrop.start(this);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == UCrop.REQUEST_CROP) {
-                handleCropResult(data);
-            }
-        } else if (resultCode == UCrop.RESULT_ERROR) {
-            handleCropError(data);
-        }
-    }
-
     private void handleCropResult(@NonNull Intent result) {
         final Uri resultUri = UCrop.getOutput(result);
         if (resultUri != null) {
-            url = resultUri.toString();
-            ImageLoader.load(this, url, mPhoto);
+            mUrl = resultUri.toString();
+            ImageLoader.loadNoCrop(this, mUrl, mPhoto);
         } else {
             SnackbarUtil.show(this, "不好意思，裁剪开小差了！");
         }
@@ -254,7 +325,7 @@ public class PhotoActivity extends BaseActivity {
                 options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
                 break;
         }
-        options.setCompressionQuality(mCropQuality.getProgress());
+        options.setCompressionQuality(getCompressionQuality());
         options.setHideBottomControls(mCropUISetting.isChecked());
         options.setFreeStyleCropEnabled(mCropRatioFreestyle.isChecked());
 
@@ -265,23 +336,81 @@ public class PhotoActivity extends BaseActivity {
         return uCrop.withOptions(options);
     }
 
-    private SeekBar.OnSeekBarChangeListener mOnSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
-
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            mCropQualityText.setText(String.format(Locale.getDefault(), "百分比: %d", progress));
+    private int getCompressionQuality() {
+        String qualityStr = mCropQuality.getText().toString().trim();
+        if (TextUtils.isEmpty(qualityStr)) {
+            return 10;
         }
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-
+        int quality = Integer.parseInt(qualityStr);
+        if (quality < 10) {
+            return 10;
         }
+        return quality;
+    }
 
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-
+    private boolean handleMenuItemClick(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.menu_photo_edit:
+                if (TextUtils.isEmpty(mUrl)) {
+                    return true;
+                }
+                startCrop(Uri.parse(mUrl));
+                break;
+            case R.id.menu_photo_save:
+                PhotoActivityPermissionsDispatcher.saveImgageWithPermissionCheck(this);
+                break;
+            default:
+                break;
         }
-    };
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        PhotoActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
+    @NeedsPermission({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void saveImgage() {
+        if (TextUtils.isEmpty(mUrl)) {
+            SnackbarUtil.show(this, "好可怜，保存失败！");
+            return;
+        }
+        File downloadFile = StringUtil.getDownloadFile(this);
+        if (downloadFile == null) {
+            SnackbarUtil.show(this, "好可怜，保存失败！");
+            return;
+        }
+        final String fileName = StringUtil.getFileName(this) + mUrl.substring(mUrl.lastIndexOf("."));
+        final File saveFile = new File(downloadFile, fileName);
+        ImageLoader.downloadFile(this, mUrl, saveFile, isSuccess -> {
+            if (isSuccess) {
+                SnackbarUtil.showLong(this, "保存成功！路径：" + saveFile.getAbsolutePath());
+            } else {
+                SnackbarUtil.show(this, "好可怜，保存失败！");
+            }
+        });
+    }
+
+    @OnShowRationale({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void showRationaleForSave(final PermissionRequest request) {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.permission_storage_rationale)
+                .setPositiveButton(R.string.button_allow, (dialog, button) -> request.proceed())
+                .setNegativeButton(R.string.button_deny, (dialog, button) -> request.cancel())
+                .show();
+    }
+
+    @OnPermissionDenied({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void showDeniedForSave() {
+        SnackbarUtil.show(this, R.string.permission_storage_denied);
+    }
+
+    @OnNeverAskAgain({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void showNeverAskForSave() {
+        SnackbarUtil.show(this, R.string.permission_storage_neverask);
+    }
 
     private TextWatcher mCropRatioTextWatcher = new TextWatcher() {
         @Override
@@ -297,6 +426,40 @@ public class PhotoActivity extends BaseActivity {
         @Override
         public void afterTextChanged(Editable s) {
 
+        }
+    };
+
+    private TextWatcher mCropQualityTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @SuppressLint("SetTextI18n")
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (s == null) {
+                return;
+            }
+            String qualityStr = s.toString().trim();
+            if (TextUtils.isEmpty(qualityStr)) {
+                return;
+            }
+            int quality = Integer.parseInt(qualityStr);
+            if (quality > 100) {
+                String text = "100";
+                mCropQuality.setText(text);
+                mCropQuality.setSelection(text.length());
+            }
+
+            if (quality < 10) {
+                Toast.makeText(PhotoActivity.this, "百分比不能小于10哦！", Toast.LENGTH_SHORT).show();
+            }
         }
     };
 
@@ -319,135 +482,6 @@ public class PhotoActivity extends BaseActivity {
             }
         }
     };
-
-    @Override
-    protected void initData() {
-        url = getIntent().getStringExtra(ActivityConstant.URL);
-        ImageLoader.load(this, url, mPhoto);
-    }
-
-    @Override
-    protected void initListener() {
-        mPhotoDrawer.addDrawerListener(new PhotoDrawerListener());
-        mToolbar.setOnMenuItemClickListener(this::handleMenuItemClick);
-    }
-
-    private boolean handleMenuItemClick(MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case R.id.menu_photo_edit:
-                if (TextUtils.isEmpty(url)) {
-                    return true;
-                }
-                startCrop(Uri.parse(url));
-                break;
-            case R.id.menu_photo_save:
-                if (TextUtils.isEmpty(url)) {
-                    SnackbarUtil.show(this, "好可怜，保存失败！");
-                    break;
-                }
-                File downloadFile = StringUtil.getDownloadFile(this);
-                if (downloadFile == null) {
-                    SnackbarUtil.show(this, "好可怜，保存失败！");
-                    break;
-                }
-                final String fileName = StringUtil.getFileName(this) + url.substring(url.lastIndexOf("."));
-                final File saveFile = new File(downloadFile, fileName);
-                Glide.with(this).asFile().load(url).into(new SimpleTarget<File>() {
-                    @Override
-                    public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
-                        FileInputStream inStream = null;
-                        FileOutputStream outStream = null;
-                        try {
-                            inStream = new FileInputStream(resource);
-                            outStream = new FileOutputStream(saveFile);
-                            FileChannel inChannel = inStream.getChannel();
-                            FileChannel outChannel = outStream.getChannel();
-                            inChannel.transferTo(0, inChannel.size(), outChannel);
-                            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(saveFile)));
-                            SnackbarUtil.show(PhotoActivity.this, "保存成功！路径：" + saveFile.getAbsolutePath());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            SnackbarUtil.show(PhotoActivity.this, "好可怜，保存失败！");
-                        } finally {
-                            if (inStream != null) {
-                                try {
-                                    inStream.close();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            if (outStream != null) {
-                                try {
-                                    outStream.close();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    }
-                });
-                break;
-            default:
-                break;
-        }
-        return true;
-    }
-
-    @Override
-    protected int getContentResId() {
-        return R.layout.activity_photo;
-    }
-
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_photo, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    /**
-     * 处理状态栏透明
-     */
-    private void handleStatusbarTransparent() {
-        final Window window = getWindow();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-            window.setStatusBarColor(Color.TRANSPARENT);
-        } else {
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
-
-        ViewGroup content = findViewById(android.R.id.content);
-        for (int i = 0, count = content.getChildCount(); i < count; i++) {
-            View child = content.getChildAt(i);
-            if (child instanceof ViewGroup) {
-                child.setFitsSystemWindows(true);
-                ((ViewGroup) child).setClipToPadding(false);
-            }
-        }
-
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mPhotoDrawer.getLayoutParams();
-        params.topMargin = -DeviceUtils.getStatusBarHeight(this);
-        mPhotoDrawer.setLayoutParams(params);
-    }
 
     private class PhotoDrawerListener implements DrawerLayout.DrawerListener {
 

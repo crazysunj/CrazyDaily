@@ -9,6 +9,7 @@
     <string name="crop_resolution">分辨率</string>
     <string name="crop_resolution_width">宽</string>
     <string name="crop_resolution_height">高</string>
+    <string name="photo_crop_quality">输入压缩百分比(10~100)</string>
     <string name="crop_resolution_setting">分辨率设置</string>
     <string name="crop_compress">压缩</string>
     <string name="crop_ui">UI</string>
