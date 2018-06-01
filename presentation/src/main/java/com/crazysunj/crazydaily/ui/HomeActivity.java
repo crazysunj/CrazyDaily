@@ -41,7 +41,7 @@ import com.crazysunj.crazydaily.app.App;
 import com.crazysunj.crazydaily.base.BaseActivity;
 import com.crazysunj.crazydaily.di.module.EntityModule;
 import com.crazysunj.crazydaily.entity.CityEntity;
-import com.crazysunj.crazydaily.moudle.ImageLoader;
+import com.crazysunj.crazydaily.moudle.image.ImageLoader;
 import com.crazysunj.crazydaily.presenter.HomePresenter;
 import com.crazysunj.crazydaily.presenter.contract.HomeContract;
 import com.crazysunj.crazydaily.ui.adapter.HomeAdapter;

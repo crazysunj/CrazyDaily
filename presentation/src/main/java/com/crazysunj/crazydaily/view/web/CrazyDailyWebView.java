@@ -16,6 +16,7 @@
 package com.crazysunj.crazydaily.view.web;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 
@@ -23,6 +24,8 @@ import com.crazysunj.crazydaily.util.DeviceUtils;
 import com.crazysunj.domain.constant.CacheConstant;
 import com.tencent.smtt.export.external.interfaces.SslError;
 import com.tencent.smtt.export.external.interfaces.SslErrorHandler;
+import com.tencent.smtt.export.external.interfaces.WebResourceRequest;
+import com.tencent.smtt.export.external.interfaces.WebResourceResponse;
 import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
@@ -38,6 +41,7 @@ import java.io.File;
 public class CrazyDailyWebView extends WebView {
 
     private WebViewCallback mWebViewCallback;
+    private WebViewSonicCallback mWebViewSonicCallback;
 
     public CrazyDailyWebView(Context context) {
         this(context, null);
@@ -56,7 +60,7 @@ public class CrazyDailyWebView extends WebView {
     private void init(Context context) {
         WebSettings setttings = getSettings();
         setttings.setJavaScriptEnabled(true);//打开js
-        setttings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);//设置布局
+        setttings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);//设置布局
         setttings.setDomStorageEnabled(true);//打开Dom Storage
         setttings.setDatabaseEnabled(true);//打开Database
         setttings.setAppCacheEnabled(true);//打开App Cache
@@ -71,6 +75,7 @@ public class CrazyDailyWebView extends WebView {
         setttings.setAllowFileAccess(true);//启用WebView访问文件数据
         setttings.setSupportZoom(true);//支持缩放
         setttings.setDisplayZoomControls(false);//隐藏webview缩放按钮
+        setttings.setBuiltInZoomControls(true);//支持手势缩放
         setttings.setLoadWithOverviewMode(true);//缩放至屏幕大小
         setttings.setUseWideViewPort(true);//调整屏幕自适应
         setttings.setDefaultTextEncodingName("utf-8");//设置编码格式为utf-8
@@ -94,7 +99,62 @@ public class CrazyDailyWebView extends WebView {
         destroy();
     }
 
-    private static class CrazyDailyWebViewClient extends WebViewClient {
+    private class CrazyDailyWebViewClient extends WebViewClient {
+
+        @Override
+        public WebResourceResponse shouldInterceptRequest(WebView webView, String s) {
+            if (mWebViewSonicCallback != null) {
+                WebResourceResponse webResourceResponse;
+                try {
+                    webResourceResponse = (WebResourceResponse) mWebViewSonicCallback.requestResource(s);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    webResourceResponse = super.shouldInterceptRequest(webView, s);
+                }
+                return webResourceResponse;
+            }
+            return super.shouldInterceptRequest(webView, s);
+        }
+
+        @Override
+        public WebResourceResponse shouldInterceptRequest(WebView webView, WebResourceRequest webResourceRequest) {
+            if (mWebViewSonicCallback != null) {
+                String s = webResourceRequest.getUrl().toString();
+                WebResourceResponse webResourceResponse;
+                try {
+                    webResourceResponse = (WebResourceResponse) mWebViewSonicCallback.requestResource(s);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    webResourceResponse = super.shouldInterceptRequest(webView, webResourceRequest);
+                }
+                return webResourceResponse;
+            }
+            return super.shouldInterceptRequest(webView, webResourceRequest);
+        }
+
+        @Override
+        public WebResourceResponse shouldInterceptRequest(WebView webView, WebResourceRequest webResourceRequest, Bundle bundle) {
+            if (mWebViewSonicCallback != null) {
+                String s = webResourceRequest.getUrl().toString();
+                WebResourceResponse webResourceResponse;
+                try {
+                    webResourceResponse = (WebResourceResponse) mWebViewSonicCallback.requestResource(s);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    webResourceResponse = super.shouldInterceptRequest(webView, webResourceRequest, bundle);
+                }
+                return webResourceResponse;
+            }
+            return super.shouldInterceptRequest(webView, webResourceRequest, bundle);
+        }
+
+        @Override
+        public void onPageFinished(WebView webView, String s) {
+            super.onPageFinished(webView, s);
+            if (mWebViewSonicCallback != null) {
+                mWebViewSonicCallback.pageFinish(s);
+            }
+        }
 
         @Override
         public void onReceivedSslError(WebView webView, SslErrorHandler handler, SslError sslError) {
@@ -109,6 +169,16 @@ public class CrazyDailyWebView extends WebView {
                 mWebViewCallback.onReceivedTitle(title);
             }
         }
+    }
+
+    public void setWebViewSonicCallback(WebViewSonicCallback callback) {
+        mWebViewSonicCallback = callback;
+    }
+
+    public interface WebViewSonicCallback {
+        void pageFinish(String url);
+
+        Object requestResource(String url);
     }
 
     public void setWebViewCallback(WebViewCallback callback) {

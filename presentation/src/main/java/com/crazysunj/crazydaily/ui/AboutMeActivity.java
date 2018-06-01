@@ -83,6 +83,9 @@ public class AboutMeActivity extends BaseActivity {
             return false;
         });
 
+        mBlog.setOnClickListener(v -> BrowserActivity.start(this, mBlog.getText().toString().trim()));
+        mGithub.setOnClickListener(v -> BrowserActivity.start(this, mGithub.getText().toString().trim()));
+
         mClearCache.setOnClickListener(v -> AboutMeActivityPermissionsDispatcher.clearCacheWithPermissionCheck(this));
         mHandleImg.setOnClickListener(v -> AboutMeActivityPermissionsDispatcher.handleImgWithPermissionCheck(this));
     }

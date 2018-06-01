@@ -25,12 +25,12 @@ import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseAdapter;
 import com.crazysunj.crazydaily.di.module.EntityModule;
 import com.crazysunj.crazydaily.entity.ExpandCollapseFooterEntity;
-import com.crazysunj.crazydaily.moudle.ImageLoader;
+import com.crazysunj.crazydaily.moudle.image.ImageLoader;
 import com.crazysunj.crazydaily.ui.BrowserActivity;
 import com.crazysunj.crazydaily.ui.ZhihuNewsDetailActivity;
 import com.crazysunj.crazydaily.ui.adapter.helper.HomeAdapterHelper;
 import com.crazysunj.crazydaily.util.DateUtil;
-import com.crazysunj.crazydaily.util.StringUtil;
+import com.crazysunj.crazydaily.util.FileUtil;
 import com.crazysunj.crazydaily.util.WeatherUtil;
 import com.crazysunj.crazydaily.view.video.NeihanVideoPlayerController;
 import com.crazysunj.domain.entity.base.MultiTypeIdEntity;
@@ -199,7 +199,7 @@ public class HomeAdapter extends BaseAdapter<MultiTypeIdEntity, BaseViewHolder, 
 
     private void renderGankio(BaseViewHolder helper, GankioEntity.ResultsEntity item) {
         helper.setText(R.id.item_gank_io_title, item.getDesc());
-        helper.setText(R.id.item_gank_io_author, String.format("作者：%s", StringUtil.getText(item.getWho(), "神秘大佬")));
+        helper.setText(R.id.item_gank_io_author, String.format("作者：%s", FileUtil.getText(item.getWho(), "神秘大佬")));
         helper.setText(R.id.item_gank_io_date, String.format("发布时间：%s", DateUtil.getLocalTime(item.getPublishedAt())));
         helper.itemView.setOnClickListener(v -> BrowserActivity.start(mContext, item.getUrl()));
     }

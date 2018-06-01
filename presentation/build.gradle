@@ -86,7 +86,7 @@ dependencies {
     implementation libs.statusbarutil //状态栏
     implementation libs.pickerdialog //选择对话框
     implementation libs.circleimageview //圆形imageview
-    implementation libs.niceVieoPlayer //视频播放
+    implementation libs.niceVieoPlayer//视频播放
     implementation libs.cardslideview //卡片轮播
     implementation libs.fastjson
     implementation libs.weex
@@ -115,4 +115,7 @@ dependencies {
         exclude module: "support-v13"
     }
     annotationProcessor libs.permissionCompiler
+    implementation(libs.sonic) {
+        exclude group: "com.android.support"
+    }
 }

@@ -20,6 +20,7 @@ import android.os.Environment;
 import android.text.TextUtils;
 
 import com.crazysunj.crazydaily.R;
+import com.crazysunj.domain.constant.CacheConstant;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -30,9 +31,9 @@ import java.util.Date;
  * created on: 2017/9/20 下午2:37
  * description: https://github.com/crazysunj/CrazyDaily
  */
-public class StringUtil {
+public class FileUtil {
 
-    private StringUtil() {
+    private FileUtil() {
     }
 
     public static String getText(String text, String defaultText) {
@@ -55,6 +56,30 @@ public class StringUtil {
             return null;
         }
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), context.getResources().getString(R.string.app_name));
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return file;
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public static File getWebCacheFile(Context context) {
+        if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+            return null;
+        }
+        File file = new File(context.getExternalCacheDir(), CacheConstant.CACHE_DIR_WEB);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return file;
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public static File getWebResCacheFile(Context context) {
+        if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+            return null;
+        }
+        File file = new File(context.getExternalCacheDir(), CacheConstant.CACHE_DIR_WEB_RES);
         if (!file.exists()) {
             file.mkdirs();
         }

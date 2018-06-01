@@ -47,6 +47,7 @@
             android:name=".ui.BrowserActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
+            android:theme="@style/BrowserTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".ui.AboutMeActivity"

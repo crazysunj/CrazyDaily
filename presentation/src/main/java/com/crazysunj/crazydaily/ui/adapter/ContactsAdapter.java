@@ -29,7 +29,7 @@ import com.crazysunj.crazydaily.base.BaseAdapter;
 import com.crazysunj.crazydaily.entity.ContactLoadingEntity;
 import com.crazysunj.crazydaily.extension.Extension;
 import com.crazysunj.crazydaily.extension.ItemTouchHelperExtension;
-import com.crazysunj.crazydaily.moudle.ImageLoader;
+import com.crazysunj.crazydaily.moudle.image.ImageLoader;
 import com.crazysunj.crazydaily.ui.adapter.helper.ContactAdapterHelper;
 import com.crazysunj.crazydaily.ui.contact.ContactDetailActivity;
 import com.crazysunj.crazydaily.ui.shimmer.ShimmerViewHolder;

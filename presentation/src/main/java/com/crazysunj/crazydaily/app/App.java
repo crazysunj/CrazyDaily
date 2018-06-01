@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
+import android.util.Log;
 
 import com.bumptech.glide.request.target.ViewTarget;
 import com.crazysunj.crazydaily.BuildConfig;
@@ -26,18 +27,22 @@ import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.di.component.AppComponent;
 import com.crazysunj.crazydaily.di.component.DaggerAppComponent;
 import com.crazysunj.crazydaily.di.module.AppModule;
+import com.crazysunj.crazydaily.moudle.web.CrazyDailySonicRuntime;
 import com.crazysunj.crazydaily.weex.RouterModule;
+import com.crazysunj.crazydaily.weex.WXCustomTextDomObject;
 import com.crazysunj.crazydaily.weex.WXHttpAdapter;
 import com.crazysunj.crazydaily.weex.WXImageAdapter;
 import com.crazysunj.crazydaily.weex.WXRichTextView;
 import com.crazysunj.crazydaily.weex.WXTabPagerComponent;
-import com.crazysunj.crazydaily.weex.WXCustomTextDomObject;
 import com.crazysunj.data.util.LoggerUtil;
 import com.squareup.leakcanary.LeakCanary;
 import com.taobao.weex.InitConfig;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.common.WXException;
 import com.tencent.smtt.sdk.QbSdk;
+import com.tencent.smtt.sdk.TbsListener;
+import com.tencent.sonic.sdk.SonicConfig;
+import com.tencent.sonic.sdk.SonicEngine;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -65,10 +70,21 @@ public class App extends Application {
         LoggerUtil.init(BuildConfig.DEBUG);
         initWeex();
         initX5WebView();
+        initSonic();
+        initLeakCanary();
+    }
+
+    private void initLeakCanary() {
         if (LeakCanary.isInAnalyzerProcess(this)) {
             return;
         }
         LeakCanary.install(this);
+    }
+
+    private void initSonic() {
+        if (!SonicEngine.isGetInstanceAllowed()) {
+            SonicEngine.createInstance(new CrazyDailySonicRuntime(this), new SonicConfig.Builder().build());
+        }
     }
 
     /**
@@ -103,6 +119,7 @@ public class App extends Application {
 
             @Override
             public void onCoreInitFinished() {
+                LoggerUtil.i(LoggerUtil.MSG_WEB, "X5内核加载完成");
             }
         };
         //x5内核初始化接口

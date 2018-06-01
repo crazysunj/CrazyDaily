@@ -35,7 +35,7 @@ import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.animation.BezierTransition;
 import com.crazysunj.crazydaily.animation.CircularRevealTransition;
 import com.crazysunj.crazydaily.base.BaseActivity;
-import com.crazysunj.crazydaily.moudle.ImageLoader;
+import com.crazysunj.crazydaily.moudle.image.ImageLoader;
 import com.crazysunj.crazydaily.util.SnackbarUtil;
 import com.crazysunj.crazydaily.view.contact.CoolBGView;
 import com.crazysunj.crazydaily.view.contact.ImgResEntity;

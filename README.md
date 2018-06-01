@@ -37,7 +37,7 @@
 * 大量动画，如lottie、补间动画、3D动画、属性动画（ObjectAnimator、ValueAnimator、View.animate和PropertyValuesHolder）和转场动画（自定义Transition）运用
 * 视频列表
 * 支持图片预览、编辑(如裁剪、压缩)和保存本地
-* webview支持x5及常见用法，例如缓存、内存优化
+* webview支持x5及常见用法，例如缓存、预加载、内存优化、增量更新及并行加载等
 
 尽量保持各种开源库最新状态，我踩坑，我骄傲！
 
@@ -51,11 +51,13 @@
 * 加上引导页
 * Navigation支持多fragment
 * 添加微信精选，稀土掘金模块
-* 视频列表支持小窗口播放
-* WebView预加载
+* 视频列表支持小窗口播放，本地保存
 * 重构我的页面
 * 添加app更新机制
 * 添加音乐模块
+* 添加分享
+* 添加ConstraintLayout进阶用法
+* 使用AAC+kotlin重构项目(繁重，同时维护两套代码)
 
     ...
 

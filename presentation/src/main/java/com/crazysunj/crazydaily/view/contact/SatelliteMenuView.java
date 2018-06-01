@@ -40,7 +40,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.crazysunj.crazydaily.R;
-import com.crazysunj.crazydaily.moudle.ImageLoader;
+import com.crazysunj.crazydaily.moudle.image.ImageLoader;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

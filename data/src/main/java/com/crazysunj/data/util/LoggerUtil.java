@@ -70,6 +70,10 @@ public class LoggerUtil {
         Logger.i(String.format("[%s]%s", tag, message));
     }
 
+    public static void e(String tag, String message) {
+        Logger.e(String.format("[%s]%s", tag, message));
+    }
+
     public static void e(String tag, Throwable e) {
         Logger.e(String.format("[%s]%s", tag, e.getMessage()));
     }

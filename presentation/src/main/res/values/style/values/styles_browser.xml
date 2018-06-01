@@ -1,0 +1,10 @@
+<resources>
+
+    <style name="BrowserTheme" parent="AppTheme">
+        <item name="colorControlNormal">@color/color_white</item>
+        <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="overlapAnchor">false</item>
+        <item name="android:itemBackground">@color/colorPrimaryDark</item>
+        <item name="android:textColor">@color/color_white</item>
+    </style>
+</resources>

@@ -17,14 +17,24 @@ package com.crazysunj.crazydaily.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.provider.Browser;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
 import com.crazysunj.crazydaily.constant.ActivityConstant;
+import com.crazysunj.crazydaily.moudle.web.CrazyDailySonicSessionClient;
 import com.crazysunj.crazydaily.view.web.CrazyDailyWebView;
+import com.crazysunj.data.util.LoggerUtil;
+import com.tencent.sonic.sdk.SonicEngine;
+import com.tencent.sonic.sdk.SonicSession;
+import com.tencent.sonic.sdk.SonicSessionConfig;
 
 import butterknife.BindView;
 
@@ -38,8 +48,13 @@ public class BrowserActivity extends BaseActivity implements CrazyDailyWebView.W
     @BindView(R.id.browser_web_container)
     FrameLayout mWebContainer;
     private CrazyDailyWebView mWebView;
+    private CrazyDailySonicSessionClient mSessionClient;
+    private SonicSession mSonicSession;
+    private String mUrl;
 
     public static void start(Context context, String url) {
+        boolean preloadSuccess = SonicEngine.getInstance().preCreateSession(url, new SonicSessionConfig.Builder().setSupportLocalServer(true).build());
+        LoggerUtil.d(LoggerUtil.MSG_WEB, preloadSuccess ? "预加载成功！" : "预加载失败！");
         Intent intent = new Intent(context, BrowserActivity.class);
         intent.putExtra(ActivityConstant.URL, url);
         context.startActivity(intent);
@@ -61,7 +76,10 @@ public class BrowserActivity extends BaseActivity implements CrazyDailyWebView.W
 
     @Override
     protected void onDestroy() {
-        mWebView.onDestroy();
+        if (mSonicSession != null) {
+            mSessionClient.onDestroy();
+            mSonicSession.destroy();
+        }
         super.onDestroy();
     }
 
@@ -80,8 +98,43 @@ public class BrowserActivity extends BaseActivity implements CrazyDailyWebView.W
 
     @Override
     protected void initData() {
-        String url = getIntent().getStringExtra(ActivityConstant.URL);
-        mWebView.loadUrl(url);
+        mUrl = getIntent().getStringExtra(ActivityConstant.URL);
+        mSonicSession = SonicEngine.getInstance().createSession(mUrl, new SonicSessionConfig.Builder().setSupportLocalServer(true).build());
+        if (mSonicSession == null) {
+            mWebView.loadUrl(mUrl);
+            Toast.makeText(this, "Sonic加载失败", Toast.LENGTH_SHORT).show();
+        } else {
+            mSonicSession.bindClient(mSessionClient = new CrazyDailySonicSessionClient(mWebView));
+            mWebView.setWebViewSonicCallback(new CrazyDailyWebView.WebViewSonicCallback() {
+                @Override
+                public void pageFinish(String url) {
+                    mSessionClient.pageFinish(url);
+                }
+
+                @Override
+                public Object requestResource(String url) {
+                    return mSessionClient.requestResource(url);
+                }
+            });
+            mSessionClient.clientReady();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_browser, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_browser_open) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUrl));
+            intent.putExtra(Browser.EXTRA_APPLICATION_ID, getPackageName());
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

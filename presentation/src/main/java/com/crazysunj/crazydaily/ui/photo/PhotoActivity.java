@@ -52,10 +52,10 @@ import android.widget.Toast;
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
 import com.crazysunj.crazydaily.constant.ActivityConstant;
-import com.crazysunj.crazydaily.moudle.ImageLoader;
+import com.crazysunj.crazydaily.moudle.image.ImageLoader;
 import com.crazysunj.crazydaily.util.DeviceUtils;
 import com.crazysunj.crazydaily.util.SnackbarUtil;
-import com.crazysunj.crazydaily.util.StringUtil;
+import com.crazysunj.crazydaily.util.FileUtil;
 import com.crazysunj.crazydaily.view.photo.PhotoDrawerLayout;
 import com.crazysunj.domain.constant.CacheConstant;
 import com.github.chrisbanes.photoview.PhotoView;
@@ -235,7 +235,7 @@ public class PhotoActivity extends BaseActivity {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private void startCrop(@NonNull Uri uri) {
-        String destinationFileName = StringUtil.getFileName(this);
+        String destinationFileName = FileUtil.getFileName(this);
         switch (mCropCompressRadioGroup.getCheckedRadioButtonId()) {
             case R.id.photo_crop_compress_png:
                 destinationFileName += ".png";
@@ -377,12 +377,12 @@ public class PhotoActivity extends BaseActivity {
             SnackbarUtil.show(this, "好可怜，保存失败！");
             return;
         }
-        File downloadFile = StringUtil.getDownloadFile(this);
+        File downloadFile = FileUtil.getDownloadFile(this);
         if (downloadFile == null) {
             SnackbarUtil.show(this, "好可怜，保存失败！");
             return;
         }
-        final String fileName = StringUtil.getFileName(this) + mUrl.substring(mUrl.lastIndexOf("."));
+        final String fileName = FileUtil.getFileName(this) + mUrl.substring(mUrl.lastIndexOf("."));
         final File saveFile = new File(downloadFile, fileName);
         ImageLoader.downloadFile(this, mUrl, saveFile, isSuccess -> {
             if (isSuccess) {
