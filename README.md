@@ -12,9 +12,13 @@
 
 ![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/demo_weex.gif)
 
-### 联系人
+### 好友列表
 
 ![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/crazydaily_anim.gif)
+
+### 妹子
+
+![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/crazydaily_photo.gif)
 
 ## 简介
 * 知乎日报
