@@ -20,8 +20,9 @@ package com.crazysunj.crazydaily.constant;
  * created on: 2017/9/10 下午6:08
  * description: https://github.com/crazysunj/CrazyDaily
  */
-
 public class ActivityConstant {
     public static String ID = "id";
     public static String URL = "url";
+    public static String PAGE = "page";
+    public static String PATH = "path";
 }

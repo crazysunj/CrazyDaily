@@ -39,6 +39,7 @@ import com.crazysunj.cardslideview.CardViewPager;
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.app.App;
 import com.crazysunj.crazydaily.base.BaseActivity;
+import com.crazysunj.crazydaily.constant.WeexConstant;
 import com.crazysunj.crazydaily.di.module.EntityModule;
 import com.crazysunj.crazydaily.entity.CityEntity;
 import com.crazysunj.crazydaily.moudle.image.ImageLoader;
@@ -352,7 +353,8 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
                 SnackbarUtil.show(this, "直播模块敬请期待!");
                 break;
             case R.id.navigation_music:
-                SnackbarUtil.show(this, "音乐模块敬请期待!");
+                WeexActivity.start(HomeActivity.this, WeexConstant.PAGE_NAME_ABOUT_ME, WeexConstant.PATH_ABOUT_ME);
+//                SnackbarUtil.show(this, "音乐模块敬请期待!");
                 break;
             case R.id.navigation_about_me:
                 AboutMeActivity.start(this);
@@ -394,7 +396,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
                             return;
                         }
                         if (GankioEntity.ResultsEntity.PARAMS_ALL.equals(selectOption)) {
-                            WeexActivity.start(HomeActivity.this);
+                            WeexActivity.start(HomeActivity.this, WeexConstant.PAGE_NAME_GANK_IO, WeexConstant.PATH_GANK_IO);
                             return;
                         }
                         mPresenter.getGankioList(selectOption);

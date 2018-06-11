@@ -19,7 +19,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
-import android.util.Log;
 
 import com.bumptech.glide.request.target.ViewTarget;
 import com.crazysunj.crazydaily.BuildConfig;
@@ -32,15 +31,18 @@ import com.crazysunj.crazydaily.weex.RouterModule;
 import com.crazysunj.crazydaily.weex.WXCustomTextDomObject;
 import com.crazysunj.crazydaily.weex.WXHttpAdapter;
 import com.crazysunj.crazydaily.weex.WXImageAdapter;
-import com.crazysunj.crazydaily.weex.WXRichTextView;
+import com.crazysunj.crazydaily.weex.WXRichTextComponent;
 import com.crazysunj.crazydaily.weex.WXTabPagerComponent;
+import com.crazysunj.crazydaily.weex.WXWebComponent;
 import com.crazysunj.data.util.LoggerUtil;
 import com.squareup.leakcanary.LeakCanary;
 import com.taobao.weex.InitConfig;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.common.WXException;
+import com.taobao.weex.ui.component.WXBasicComponentType;
+import com.taobao.weex.ui.component.WXWeb;
+import com.taobao.weex.ui.module.WXWebViewModule;
 import com.tencent.smtt.sdk.QbSdk;
-import com.tencent.smtt.sdk.TbsListener;
 import com.tencent.sonic.sdk.SonicConfig;
 import com.tencent.sonic.sdk.SonicEngine;
 
@@ -98,9 +100,11 @@ public class App extends Application {
         WXSDKEngine.initialize(this, config);
         try {
             WXSDKEngine.registerComponent("tabPager", WXTabPagerComponent.class);
-            WXSDKEngine.registerComponent("richText", WXRichTextView.class);
+            WXSDKEngine.registerComponent("richText", WXRichTextComponent.class);
+            WXSDKEngine.registerComponent(WXBasicComponentType.WEB, WXWebComponent.class);
             WXSDKEngine.registerDomObject("richText", WXCustomTextDomObject.class);
             WXSDKEngine.registerModule("RouterModule", RouterModule.class);
+            WXSDKEngine.registerModule("webview", WXWebViewModule.class, true);
         } catch (WXException e) {
             LoggerUtil.d(e.getMessage());
         }

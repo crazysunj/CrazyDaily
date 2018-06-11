@@ -99,7 +99,7 @@ public class CrazyDailyWebView extends WebView {
         destroy();
     }
 
-    private class CrazyDailyWebViewClient extends WebViewClient {
+    public class CrazyDailyWebViewClient extends WebViewClient {
 
         @Override
         public WebResourceResponse shouldInterceptRequest(WebView webView, String s) {
@@ -162,7 +162,7 @@ public class CrazyDailyWebView extends WebView {
         }
     }
 
-    private class CrazyDailyWebChromeClient extends WebChromeClient {
+    public class CrazyDailyWebChromeClient extends WebChromeClient {
         @Override
         public void onReceivedTitle(WebView view, String title) {
             if (mWebViewCallback != null) {

@@ -13,21 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crazysunj.crazydaily.weex;
-
-import com.crazysunj.crazydaily.ui.BrowserActivity;
-import com.taobao.weex.annotation.JSMethod;
-import com.taobao.weex.common.WXModule;
+package com.crazysunj.crazydaily.constant;
 
 /**
  * author: sunjian
- * created on: 2018/3/15 上午11:37
- * description: https://github.com/crazysunj/CrazyDaily
+ * created on: 2018/6/11 下午5:13
+ * description:https://github.com/crazysunj/CrazyDaily
  */
-public class RouterModule extends WXModule {
-
-    @JSMethod(uiThread = true)
-    public void router(String url) {
-        BrowserActivity.start(mWXSDKInstance.getContext(), url);
-    }
+public class WeexConstant {
+    public static String PAGE_NAME_GANK_IO = "Gankio";
+    public static String PATH_GANK_IO = "weex/gankio/tabPager.js";
+    public static String PAGE_NAME_ABOUT_ME = "AboutMe";
+    public static String PATH_ABOUT_ME = "weex/aboutme/aboutme.js";
 }
