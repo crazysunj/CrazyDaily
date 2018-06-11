@@ -179,7 +179,7 @@ public class HttpHelper {
             final Request request = chain.request();
             final Response response = chain.proceed(request);
             final String requestHeader = request.header(CACHE_CONTROL);
-            //判断条件最好加上TextUtils.isEmpty(response.header(CACHE_CONTROL))来判断服务端是否返回缓存策略，如果返回，就按服务端的来，我这里全部客户端控制了
+            //判断条件最好加上TextUtils.isEmpty(response.header(CACHE_CONTROL))来判断服务器是否返回缓存策略，如果返回，就按服务器的来，我这里全部客户端控制了
             if (!TextUtils.isEmpty(requestHeader)) {
                 LoggerUtil.i(LoggerUtil.MSG_HTTP, "CrazyDailyCacheNetworkInterceptor---cache---host:" + request.url().host());
                 return response.newBuilder().header(CACHE_CONTROL, requestHeader).removeHeader("Pragma").build();
