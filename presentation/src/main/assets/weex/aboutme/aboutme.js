@@ -118,8 +118,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 var webview = weex.requireModule('webview');
+var crazyDaily = weex.requireModule('crazyDaily');
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -137,6 +139,9 @@ var webview = weex.requireModule('webview');
     onPageFinish: function onPageFinish(data) {
       var self = this;
       self.canGoBack = data.canGoBack;
+    },
+    onReceivedtitle: function onReceivedtitle(data) {
+      crazyDaily.setTitle(data.title);
     }
   }
 });
@@ -162,7 +167,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "src": _vm.url
     },
     on: {
-      "pagefinish": _vm.onPageFinish
+      "pagefinish": _vm.onPageFinish,
+      "receivedtitle": _vm.onReceivedtitle
     }
   })])
 },staticRenderFns: []}

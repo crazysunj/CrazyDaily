@@ -15,6 +15,9 @@
  */
 package com.crazysunj.crazydaily.weex;
 
+import android.app.Activity;
+import android.content.Context;
+
 import com.crazysunj.crazydaily.ui.BrowserActivity;
 import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.common.WXModule;
@@ -24,10 +27,18 @@ import com.taobao.weex.common.WXModule;
  * created on: 2018/3/15 上午11:37
  * description: https://github.com/crazysunj/CrazyDaily
  */
-public class RouterModule extends WXModule {
+public class CrazyDailyModule extends WXModule {
 
     @JSMethod(uiThread = true)
     public void router(String url) {
         BrowserActivity.start(mWXSDKInstance.getContext(), url);
+    }
+
+    @JSMethod(uiThread = true)
+    public void setTitle(String titile) {
+        final Context context = mWXSDKInstance.getContext();
+        if (context instanceof Activity) {
+            ((Activity) context).setTitle(titile);
+        }
     }
 }

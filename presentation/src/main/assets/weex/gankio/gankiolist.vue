@@ -43,7 +43,7 @@
         return '神秘大佬';
       },
       itemclick: (item) => {
-        weex.requireModule('RouterModule').router(item.url);
+        weex.requireModule('crazyDaily').router(item.url);
       },
       loadmore() {
         const self = this;

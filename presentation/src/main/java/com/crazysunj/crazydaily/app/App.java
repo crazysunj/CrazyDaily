@@ -27,8 +27,8 @@ import com.crazysunj.crazydaily.di.component.AppComponent;
 import com.crazysunj.crazydaily.di.component.DaggerAppComponent;
 import com.crazysunj.crazydaily.di.module.AppModule;
 import com.crazysunj.crazydaily.moudle.web.CrazyDailySonicRuntime;
+import com.crazysunj.crazydaily.weex.CrazyDailyModule;
 import com.crazysunj.crazydaily.weex.LogModule;
-import com.crazysunj.crazydaily.weex.RouterModule;
 import com.crazysunj.crazydaily.weex.WXCustomTextDomObject;
 import com.crazysunj.crazydaily.weex.WXHttpAdapter;
 import com.crazysunj.crazydaily.weex.WXImageAdapter;
@@ -103,7 +103,7 @@ public class App extends Application {
             WXSDKEngine.registerComponent("richText", WXRichTextComponent.class);
             WXSDKEngine.registerComponent(WXBasicComponentType.WEB, WXWebComponent.class);
             WXSDKEngine.registerDomObject("richText", WXCustomTextDomObject.class);
-            WXSDKEngine.registerModule("RouterModule", RouterModule.class);
+            WXSDKEngine.registerModule("crazyDaily", CrazyDailyModule.class);
             WXSDKEngine.registerModule("webview", WXWebViewModule.class, true);
             WXSDKEngine.registerModule("log", LogModule.class);
         } catch (WXException e) {

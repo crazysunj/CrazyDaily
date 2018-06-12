@@ -1,11 +1,13 @@
 <template>
     <div :interceptBack="canGoBack" @onBack="onBack">
-        <web :src="url" style="flex:1;" ref="webview" @pagefinish="onPageFinish"/>
+        <web :src="url" style="flex:1;" ref="webview" @pagefinish="onPageFinish"
+        @receivedtitle="onReceivedtitle"/>
     </div>
 </template>
 
 <script>
 const webview = weex.requireModule('webview');
+const crazyDaily = weex.requireModule('crazyDaily');
 
 export default{
   data() {
@@ -22,6 +24,9 @@ export default{
     onPageFinish(data) {
       const self = this;
       self.canGoBack = data.canGoBack;
+    },
+    onReceivedtitle(data) {
+      crazyDaily.setTitle(data.title);
     },
   },
 };

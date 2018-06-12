@@ -92,10 +92,10 @@ __vue_options__ = __vue_exports__ = __vue_exports__.default
 if (typeof __vue_options__ === "function") {
   __vue_options__ = __vue_options__.options
 }
-__vue_options__.__file = "/Users/sunjian/Desktop/github/CrazyDaily/presentation/src/main/assets/gankiolist.vue"
+__vue_options__.__file = "/Users/sunjian/Desktop/github/CrazyDaily/presentation/src/main/assets/weex/gankio/gankiolist.vue"
 __vue_options__.render = __vue_template__.render
 __vue_options__.staticRenderFns = __vue_template__.staticRenderFns
-__vue_options__._scopeId = "data-v-7cfac2b8"
+__vue_options__._scopeId = "data-v-fedffb30"
 __vue_options__.style = __vue_options__.style || {}
 __vue_styles__.forEach(function (module) {
   for (var name in module) {
@@ -234,7 +234,7 @@ var gankIoUrl = '' + GANK_IO_BASE_URL + weex.config.type + '/10';
       return '神秘大佬';
     },
     itemclick: function itemclick(item) {
-      weex.requireModule('RouterModule').router(item.url);
+      weex.requireModule('crazyDaily').router(item.url);
     },
     loadmore: function loadmore() {
       var self = this;

@@ -171,7 +171,7 @@ public class WXWebView implements IWebView {
     }
 
     @Nullable
-    WebView getWebView() {
+    private WebView getWebView() {
         return mWebView;
     }
 
@@ -242,7 +242,7 @@ public class WXWebView implements IWebView {
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
                 if (mOnPageListener != null) {
-                    mOnPageListener.onReceivedTitle(view.getTitle());
+                    mOnPageListener.onReceivedTitle(title);
                 }
             }
 
