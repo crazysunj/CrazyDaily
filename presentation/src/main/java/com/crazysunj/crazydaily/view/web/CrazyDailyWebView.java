@@ -18,14 +18,17 @@ package com.crazysunj.crazydaily.view.web;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import com.crazysunj.crazydaily.util.DeviceUtils;
 import com.crazysunj.domain.constant.CacheConstant;
 import com.tencent.smtt.export.external.interfaces.SslError;
 import com.tencent.smtt.export.external.interfaces.SslErrorHandler;
+import com.tencent.smtt.export.external.interfaces.WebResourceError;
 import com.tencent.smtt.export.external.interfaces.WebResourceRequest;
 import com.tencent.smtt.export.external.interfaces.WebResourceResponse;
+import com.tencent.smtt.sdk.DownloadListener;
 import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
@@ -60,6 +63,7 @@ public class CrazyDailyWebView extends WebView {
     private void init(Context context) {
         WebSettings setttings = getSettings();
         setttings.setJavaScriptEnabled(true);//打开js
+        setttings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         setttings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);//设置布局
         setttings.setDomStorageEnabled(true);//打开Dom Storage
         setttings.setDatabaseEnabled(true);//打开Database
@@ -85,6 +89,16 @@ public class CrazyDailyWebView extends WebView {
         setttings.setUserAgentString(String.format("%s CrazyDaily %s", ua, DeviceUtils.getVersionName()));//重置ua
         setWebViewClient(new CrazyDailyWebViewClient());
         setWebChromeClient(new CrazyDailyWebChromeClient());
+        setDownloadListener(new DownloadListener() {
+            @Override
+            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimeType, long contentLength) {
+                Log.e("WXWebView", "url:" + url);
+                Log.e("WXWebView", "userAgent:" + userAgent);
+                Log.e("WXWebView", "contentDisposition:" + contentDisposition);
+                Log.e("WXWebView", "mimeType:" + mimeType);
+                Log.e("WXWebView", "contentLength:" + contentLength);
+            }
+        });
     }
 
     /**
@@ -159,6 +173,24 @@ public class CrazyDailyWebView extends WebView {
         @Override
         public void onReceivedSslError(WebView webView, SslErrorHandler handler, SslError sslError) {
             handler.proceed();//处理证书
+        }
+
+        @Override
+        public void onReceivedError(WebView webView, WebResourceRequest request, WebResourceError error) {
+            if (error.getErrorCode() == WebViewClient.ERROR_UNSUPPORTED_SCHEME) {
+                //兼容自定义协议
+//                try {
+//                    Intent intent = new Intent(Intent.ACTION_VIEW, request.getUrl());
+//                    webView.getContext().startActivity(intent);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                if (webView.canGoBack()) {
+//                    webView.goBack();
+//                    return;
+//                }
+            }
+            super.onReceivedError(webView, request, error);
         }
     }
 

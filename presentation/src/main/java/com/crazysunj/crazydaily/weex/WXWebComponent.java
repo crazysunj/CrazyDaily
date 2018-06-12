@@ -46,7 +46,7 @@ public class WXWebComponent extends WXComponent {
     public static final String GO_BACK = "goBack";
     public static final String GO_FORWARD = "goForward";
     public static final String RELOAD = "reload";
-    protected IWebView mWebView;
+    protected WXWebView mWebView;
 
     public WXWebComponent(WXSDKInstance instance, WXDomObject dom, WXVContainer parent) {
         super(instance, dom, parent);
@@ -95,8 +95,8 @@ public class WXWebComponent extends WXComponent {
 
     @Override
     public void destroy() {
-        super.destroy();
         getWebView().destroy();
+        super.destroy();
     }
 
     @Override

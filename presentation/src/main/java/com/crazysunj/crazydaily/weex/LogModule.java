@@ -13,15 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crazysunj.crazydaily.constant;
+package com.crazysunj.crazydaily.weex;
+
+import android.util.Log;
+
+import com.taobao.weex.annotation.JSMethod;
+import com.taobao.weex.common.WXModule;
 
 /**
  * author: sunjian
- * created on: 2017/9/19 下午5:11
+ * created on: 2018/3/15 上午11:37
  * description: https://github.com/crazysunj/CrazyDaily
  */
+public class LogModule extends WXModule {
 
-public class Constant {
-    public static final String EMPTY = "";
-    public static final String POST = "POST";
+    @JSMethod(uiThread = true)
+    public void log(String tag, String msg) {
+        Log.d(tag, msg);
+    }
 }

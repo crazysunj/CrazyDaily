@@ -21,8 +21,11 @@ package com.crazysunj.crazydaily.constant;
  * description:https://github.com/crazysunj/CrazyDaily
  */
 public class WeexConstant {
-    public static String PAGE_NAME_GANK_IO = "Gankio";
-    public static String PATH_GANK_IO = "weex/gankio/tabPager.js";
-    public static String PAGE_NAME_ABOUT_ME = "AboutMe";
-    public static String PATH_ABOUT_ME = "weex/aboutme/aboutme.js";
+    public static final String ATTR_INTERCEPT_BACK = "interceptBack";
+    public static final String EVENT_BACK = "onBack";
+
+    public static final String PAGE_NAME_GANK_IO = "Gankio";
+    public static final String PATH_GANK_IO = "weex/gankio/tabPager.js";
+    public static final String PAGE_NAME_ABOUT_ME = "AboutMe";
+    public static final String PATH_ABOUT_ME = "weex/aboutme/aboutme.js";
 }

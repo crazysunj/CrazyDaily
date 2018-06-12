@@ -27,6 +27,7 @@ import com.crazysunj.crazydaily.di.component.AppComponent;
 import com.crazysunj.crazydaily.di.component.DaggerAppComponent;
 import com.crazysunj.crazydaily.di.module.AppModule;
 import com.crazysunj.crazydaily.moudle.web.CrazyDailySonicRuntime;
+import com.crazysunj.crazydaily.weex.LogModule;
 import com.crazysunj.crazydaily.weex.RouterModule;
 import com.crazysunj.crazydaily.weex.WXCustomTextDomObject;
 import com.crazysunj.crazydaily.weex.WXHttpAdapter;
@@ -34,14 +35,13 @@ import com.crazysunj.crazydaily.weex.WXImageAdapter;
 import com.crazysunj.crazydaily.weex.WXRichTextComponent;
 import com.crazysunj.crazydaily.weex.WXTabPagerComponent;
 import com.crazysunj.crazydaily.weex.WXWebComponent;
+import com.crazysunj.crazydaily.weex.WXWebViewModule;
 import com.crazysunj.data.util.LoggerUtil;
 import com.squareup.leakcanary.LeakCanary;
 import com.taobao.weex.InitConfig;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.common.WXException;
 import com.taobao.weex.ui.component.WXBasicComponentType;
-import com.taobao.weex.ui.component.WXWeb;
-import com.taobao.weex.ui.module.WXWebViewModule;
 import com.tencent.smtt.sdk.QbSdk;
 import com.tencent.sonic.sdk.SonicConfig;
 import com.tencent.sonic.sdk.SonicEngine;
@@ -105,6 +105,7 @@ public class App extends Application {
             WXSDKEngine.registerDomObject("richText", WXCustomTextDomObject.class);
             WXSDKEngine.registerModule("RouterModule", RouterModule.class);
             WXSDKEngine.registerModule("webview", WXWebViewModule.class, true);
+            WXSDKEngine.registerModule("log", LogModule.class);
         } catch (WXException e) {
             LoggerUtil.d(e.getMessage());
         }

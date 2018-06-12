@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
+import com.crazysunj.crazydaily.moudle.web.CrazyDailySonicSessionClient;
 import com.crazysunj.crazydaily.view.web.CrazyDailyWebView;
 import com.taobao.weex.ui.view.IWebView;
 import com.taobao.weex.utils.WXLogUtils;
@@ -33,7 +34,11 @@ import com.tencent.smtt.export.external.interfaces.SslErrorHandler;
 import com.tencent.smtt.export.external.interfaces.WebResourceError;
 import com.tencent.smtt.export.external.interfaces.WebResourceRequest;
 import com.tencent.smtt.export.external.interfaces.WebResourceResponse;
+import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
+import com.tencent.sonic.sdk.SonicEngine;
+import com.tencent.sonic.sdk.SonicSession;
+import com.tencent.sonic.sdk.SonicSessionConfig;
 
 /**
  * author: sunjian
@@ -45,11 +50,12 @@ public class WXWebView implements IWebView {
     private Context mContext;
     private CrazyDailyWebView mWebView;
     private ProgressBar mProgressBar;
-    private boolean mShowLoading = true;
+    private boolean mShowLoading = false;
 
     private OnErrorListener mOnErrorListener;
     private OnPageListener mOnPageListener;
-
+    private SonicSession mSonicSession;
+    private CrazyDailySonicSessionClient mSessionClient;
 
     public WXWebView(Context context) {
         mContext = context;
@@ -71,7 +77,6 @@ public class WXWebView implements IWebView {
 
         mProgressBar = new ProgressBar(mContext);
         mProgressBar.setVisibility(View.GONE);
-        showProgressBar(false);
         FrameLayout.LayoutParams pLayoutParams =
                 new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
                         FrameLayout.LayoutParams.WRAP_CONTENT);
@@ -83,10 +88,9 @@ public class WXWebView implements IWebView {
 
     @Override
     public void destroy() {
-        if (getWebView() != null) {
-            getWebView().removeAllViews();
-            getWebView().destroy();
-            mWebView = null;
+        if (mSonicSession != null) {
+            mSessionClient.onDestroy();
+            mSonicSession.destroy();
         }
     }
 
@@ -95,8 +99,24 @@ public class WXWebView implements IWebView {
         if (getWebView() == null) {
             return;
         }
-        Log.d("WXWebView", "url:" + url);
-        getWebView().loadUrl(url);
+        mSonicSession = SonicEngine.getInstance().createSession(url, new SonicSessionConfig.Builder().setSupportLocalServer(true).build());
+        if (mSonicSession == null) {
+            getWebView().loadUrl(url);
+        } else {
+            mSonicSession.bindClient(mSessionClient = new CrazyDailySonicSessionClient(mWebView));
+            mWebView.setWebViewSonicCallback(new CrazyDailyWebView.WebViewSonicCallback() {
+                @Override
+                public void pageFinish(String url) {
+                    mSessionClient.pageFinish(url);
+                }
+
+                @Override
+                public Object requestResource(String url) {
+                    return mSessionClient.requestResource(url);
+                }
+            });
+            mSessionClient.clientReady();
+        }
     }
 
     @Override
@@ -112,6 +132,8 @@ public class WXWebView implements IWebView {
         if (getWebView() == null) {
             return;
         }
+        Log.e("WXWebView", "设置缓存");
+        getWebView().getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         getWebView().goBack();
     }
 
@@ -140,15 +162,15 @@ public class WXWebView implements IWebView {
 
     private void showProgressBar(boolean shown) {
         if (mShowLoading) {
-//            mProgressBar.setVisibility(shown ? View.VISIBLE : View.GONE);
+            mProgressBar.setVisibility(shown ? View.VISIBLE : View.GONE);
         }
     }
 
     private void showWebView(boolean shown) {
-//        mWebView.setVisibility(shown ? View.VISIBLE : View.INVISIBLE);
+        mWebView.setVisibility(shown ? View.VISIBLE : View.INVISIBLE);
     }
 
-    private @Nullable
+    @Nullable
     WebView getWebView() {
         return mWebView;
     }
@@ -157,11 +179,10 @@ public class WXWebView implements IWebView {
         wv.setWebViewClient(mWebView.new CrazyDailyWebViewClient() {
 
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Log.d("WXWebView", "url:" + url);
-                view.loadUrl(url);
-                WXLogUtils.v("tag", "onPageOverride " + url);
-                return true;
+            public boolean shouldOverrideUrlLoading(WebView webView, String url) {
+                Log.e("WXWebView", "shouldOverrideUrlLoading-----url:" + url);
+                webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+                return super.shouldOverrideUrlLoading(webView, url);
             }
 
             @Override
@@ -184,8 +205,8 @@ public class WXWebView implements IWebView {
 
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                Log.e("WXWebView", "onReceivedError---errorCode:" + error.getErrorCode() + " url:" + request.getUrl().toString());
                 super.onReceivedError(view, request, error);
-                Log.d("WXWebView", "onReceivedError---errorCode:" + error.getErrorCode() + " url:" + request.getUrl().toString());
                 if (mOnErrorListener != null) {
                     mOnErrorListener.onError("error", "page error");
                 }
@@ -194,7 +215,6 @@ public class WXWebView implements IWebView {
             @Override
             public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
                 super.onReceivedHttpError(view, request, errorResponse);
-                Log.d("WXWebView", "onReceivedHttpError---errorCode:" + errorResponse.getStatusCode() + " url:" + request.getUrl().toString());
                 if (mOnErrorListener != null) {
                     mOnErrorListener.onError("error", "http error");
                 }
@@ -203,7 +223,6 @@ public class WXWebView implements IWebView {
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
                 super.onReceivedSslError(view, handler, error);
-                Log.d("WXWebView", "onReceivedSslError---errorCode:" + error.getPrimaryError());
                 if (mOnErrorListener != null) {
                     mOnErrorListener.onError("error", "ssl error");
                 }
@@ -214,8 +233,8 @@ public class WXWebView implements IWebView {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
-                showWebView(newProgress == 100);
-                showProgressBar(newProgress != 100);
+//                showWebView(newProgress == 100);
+//                showProgressBar(newProgress != 100);
                 WXLogUtils.v("tag", "onPageProgressChanged " + newProgress);
             }
 

@@ -21,8 +21,8 @@ package com.crazysunj.crazydaily.constant;
  * description: https://github.com/crazysunj/CrazyDaily
  */
 public class ActivityConstant {
-    public static String ID = "id";
-    public static String URL = "url";
-    public static String PAGE = "page";
-    public static String PATH = "path";
+    public static final String ID = "id";
+    public static final String URL = "url";
+    public static final String PAGE = "page";
+    public static final String PATH = "path";
 }

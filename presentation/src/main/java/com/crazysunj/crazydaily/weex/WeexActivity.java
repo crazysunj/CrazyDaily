@@ -19,13 +19,18 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.crazysunj.crazydaily.constant.ActivityConstant;
+import com.crazysunj.crazydaily.constant.WeexConstant;
 import com.crazysunj.data.util.LoggerUtil;
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXRenderStrategy;
+import com.taobao.weex.dom.ImmutableDomObject;
+import com.taobao.weex.dom.WXAttr;
+import com.taobao.weex.dom.WXEvent;
 import com.taobao.weex.utils.WXFileUtils;
 
 /**
@@ -76,6 +81,33 @@ public class WeexActivity extends AppCompatActivity implements IWXRenderListener
         if (mWXSDKInstance != null) {
             mWXSDKInstance.onActivityDestroy();
         }
+    }
+
+    /**
+     * 处理weex返回键
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        final ImmutableDomObject domObject = mWXSDKInstance.getRootComponent().getDomObject();
+        final WXAttr attrs = domObject.getAttrs();
+        boolean isHasInterceptBack = attrs.containsKey(WeexConstant.ATTR_INTERCEPT_BACK);
+        if ((keyCode == KeyEvent.KEYCODE_BACK) && isHasInterceptBack) {
+            Object interceptBackObj = attrs.get(WeexConstant.ATTR_INTERCEPT_BACK);
+            try {
+                boolean interceptBack = Boolean.parseBoolean(interceptBackObj.toString());
+                if (interceptBack) {
+                    WXEvent events = domObject.getEvents();
+                    boolean hasBack = events.contains(WeexConstant.EVENT_BACK);
+                    if (hasBack) {
+                        mWXSDKInstance.fireEvent(domObject.getRef(), WeexConstant.EVENT_BACK);
+                    }
+                    return true;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     public static void start(Activity activity, String page, String path) {

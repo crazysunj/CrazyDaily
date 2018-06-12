@@ -119,11 +119,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
+var webview = weex.requireModule('webview');
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      url: 'http://www.baidu.com/'
+      url: 'https://www.baidu.com/',
+      canGoBack: true
     };
+  },
+
+  methods: {
+    onBack: function onBack() {
+      var self = this;
+      webview.goBack(self.$refs.webview);
+    },
+    onPageFinish: function onPageFinish(data) {
+      var self = this;
+      self.canGoBack = data.canGoBack;
+    }
   }
 });
 
@@ -132,12 +146,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_c('web', {
+  return _c('div', {
+    attrs: {
+      "interceptBack": _vm.canGoBack
+    },
+    on: {
+      "onBack": _vm.onBack
+    }
+  }, [_c('web', {
+    ref: "webview",
     staticStyle: {
       flex: "1"
     },
     attrs: {
       "src": _vm.url
+    },
+    on: {
+      "pagefinish": _vm.onPageFinish
     }
   })])
 },staticRenderFns: []}

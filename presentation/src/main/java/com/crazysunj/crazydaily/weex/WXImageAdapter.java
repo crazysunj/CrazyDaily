@@ -44,7 +44,6 @@ public class WXImageAdapter implements IWXImgLoaderAdapter {
             if (TextUtils.isEmpty(resIdStr)) {
                 return;
             }
-            Log.d("WXImageAdapter", resIdStr);
             int imgId = context.getResources().getIdentifier(resIdStr, "mipmap", context.getPackageName());
             view.setImageResource(imgId);
             return;
