@@ -15,8 +15,10 @@
  */
 package com.crazysunj.crazydaily.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.crazysunj.crazydaily.R;
@@ -43,11 +45,16 @@ public class FileUtil {
         return text;
     }
 
+    @SuppressLint("SimpleDateFormat")
     public static String getFileName(Context context) {
         final String appName = context.getResources().getString(R.string.app_name);
         SimpleDateFormat formatter = new SimpleDateFormat("_yyyyMMdd_HHmmss");
         Date curDate = new Date(System.currentTimeMillis());
         return appName + formatter.format(curDate);
+    }
+
+    public static String getFileNameWithUrl(Context context, @NonNull String url) {
+        return getFileName(context) + url.substring(url.lastIndexOf("."));
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")

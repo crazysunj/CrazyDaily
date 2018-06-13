@@ -44,12 +44,6 @@ public abstract class UseCase<T, Params> {
         addDisposable(flowable.subscribeWith(subscriber));
     }
 
-//    public void execute(Params params, Consumer<T> onNext) {
-//        Preconditions.checkNotNull(onNext);
-//        final Flowable<T> flowable = this.buildUseCaseObservable(params);
-//        addDisposable(flowable.subscribe(onNext));
-//    }
-
     public void execute(DisposableSubscriber<T> subscriber) {
         execute(null, subscriber);
     }

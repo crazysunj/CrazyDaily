@@ -25,7 +25,7 @@ import com.crazysunj.domain.entity.contact.MultiTypeIndexEntity;
 import com.crazysunj.domain.entity.gaoxiao.GaoxiaoEntity;
 import com.crazysunj.domain.exception.ApiException;
 import com.crazysunj.domain.interactor.UseCase;
-import com.crazysunj.domain.repository.gaoxiao.GaoxiaoRepository;
+import com.crazysunj.domain.repository.contact.ContactRepository;
 
 import org.reactivestreams.Publisher;
 
@@ -46,11 +46,11 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ContactUseCase extends UseCase<List<MultiTypeIndexEntity>, ContactUseCase.Params> {
 
-    private final GaoxiaoRepository mGaoxiaoRepository;
+    private final ContactRepository mContactRepository;
 
     @Inject
-    public ContactUseCase(GaoxiaoRepository gaoxiaoRepository) {
-        mGaoxiaoRepository = gaoxiaoRepository;
+    public ContactUseCase(ContactRepository contactRepository) {
+        mContactRepository = contactRepository;
     }
 
     /**
@@ -70,9 +70,9 @@ public class ContactUseCase extends UseCase<List<MultiTypeIndexEntity>, ContactU
      */
     @Override
     protected Flowable<List<MultiTypeIndexEntity>> buildUseCaseObservable(Params params) {
-        return Flowable.merge(mGaoxiaoRepository.getGaoxiaoList(Params.TYPE, params.page),
-                mGaoxiaoRepository.getGaoxiaoList(Params.TYPE, params.page),
-                mGaoxiaoRepository.getGaoxiaoList(Params.TYPE, params.page))
+        return Flowable.merge(mContactRepository.getGaoxiaoList(Params.TYPE, params.page),
+                mContactRepository.getGaoxiaoList(Params.TYPE, params.page),
+                mContactRepository.getGaoxiaoList(Params.TYPE, params.page))
                 .observeOn(Schedulers.io())
                 .flatMap(this::handleException)
                 .filter(dataEntity -> !TextUtils.isEmpty(dataEntity.getName()) && !TextUtils.isEmpty(dataEntity.getProfile_image()))

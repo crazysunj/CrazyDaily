@@ -31,7 +31,7 @@
 ## 技术点
 * 架构采用MVP-Clean，项目简洁、易维护、易测试、高内聚、低耦合
 * UI风格采用Material Design，清新、简洁和直观
-* 跨端采用Weex，涉及weex页面、自定义Module、自定义Component、自定义Adapter等
+* 跨端采用Weex，涉及weex页面、自定义Module、自定义Component、自定义Adapter、与原生webview同步(支持返回键拦截)
 * RxJava的操作符巧妙运用
 * Dagger2与Butterknife实现依赖注解，解耦，方便测试等
 * Retrofit和Okhttp实现网络架构，实现多种扩展，例如常见的日志规范打印，不用抓包以及缓存配置等等
@@ -41,9 +41,11 @@
 * 大量动画，如lottie、补间动画、3D动画、属性动画（ObjectAnimator、ValueAnimator、View.animate和PropertyValuesHolder）和转场动画（自定义Transition）运用
 * 视频列表
 * 支持图片预览、编辑(如裁剪、压缩)和保存本地
-* webview支持x5及常见用法，例如缓存、预加载、内存优化、增量更新及并行加载等
+* webview支持x5及常见用法，例如缓存、预加载、内存优化、增量更新、并行加载、下载以及访问自定义协议等
 
 尽量保持各种开源库最新状态，我踩坑，我骄傲！
+
+尽量不使用第三方库，自己写！
 
 有意见或者建议的同学可以联系我哦，持续更新，祝你生活愉快！
 
@@ -51,7 +53,7 @@
 
 [下载地址](https://www.pgyer.com/EbHS "https://www.pgyer.com/EbHS")
 
-想干的事（暂时先罗列这么多，版本迭代陆续实现，不分先后）：
+想干的事（暂时先罗列这么多，版本迭代陆续实现，不分先后，可在develop分支提前预览）：
 * 加上引导页
 * Navigation支持多fragment
 * 添加微信精选，稀土掘金模块
@@ -62,6 +64,7 @@
 * 添加分享
 * 添加ConstraintLayout进阶用法
 * 实现换肤
+* 添加扫码
 * 使用AAC+kotlin重构项目(繁重，同时维护两套代码)
 
     ...

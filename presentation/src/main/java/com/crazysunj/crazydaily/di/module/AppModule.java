@@ -20,12 +20,14 @@ import android.content.Context;
 import com.crazysunj.crazydaily.app.App;
 import com.crazysunj.data.api.HttpHelper;
 import com.crazysunj.data.repository.contact.ContactDataRepository;
+import com.crazysunj.data.repository.download.DownloadDataRepository;
 import com.crazysunj.data.repository.gankio.GankioDataRepository;
 import com.crazysunj.data.repository.gaoxiao.GaoxiaoDataRepository;
 import com.crazysunj.data.repository.neihan.NeihanDataRepository;
 import com.crazysunj.data.repository.weather.WeatherDataRepository;
 import com.crazysunj.data.repository.zhihu.ZhihuDataRepository;
 import com.crazysunj.domain.repository.contact.ContactRepository;
+import com.crazysunj.domain.repository.download.DownloadRepository;
 import com.crazysunj.domain.repository.gankio.GankioRepository;
 import com.crazysunj.domain.repository.gaoxiao.GaoxiaoRepository;
 import com.crazysunj.domain.repository.neihan.NeihanRepository;
@@ -104,5 +106,11 @@ public class AppModule {
     @Singleton
     ContactRepository provideContactRepository(ContactDataRepository contactRepository) {
         return contactRepository;
+    }
+
+    @Provides
+    @Singleton
+    DownloadRepository provideDownloadRepository(DownloadDataRepository downloadRepository) {
+        return downloadRepository;
     }
 }

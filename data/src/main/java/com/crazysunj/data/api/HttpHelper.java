@@ -17,8 +17,10 @@ package com.crazysunj.data.api;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.crazysunj.data.logger.HttpLogger;
+import com.crazysunj.data.service.DownloadService;
 import com.crazysunj.data.service.GankioService;
 import com.crazysunj.data.service.GaoxiaoService;
 import com.crazysunj.data.service.NeihanService;
@@ -26,7 +28,9 @@ import com.crazysunj.data.service.WeatherService;
 import com.crazysunj.data.service.ZhihuService;
 import com.crazysunj.data.util.LoggerUtil;
 import com.crazysunj.data.util.NetworkUtils;
+import com.crazysunj.domain.bus.event.DownloadEvent;
 import com.crazysunj.domain.constant.CacheConstant;
+import com.crazysunj.domain.bus.RxBus;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,10 +42,17 @@ import javax.inject.Singleton;
 import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.Interceptor;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
+import okio.Buffer;
+import okio.BufferedSource;
+import okio.ForwardingSource;
+import okio.Okio;
+import okio.Source;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -60,6 +71,7 @@ public class HttpHelper {
     private NeihanService mNeihanService;
     private GaoxiaoService mGaoxiaoService;
     private OkHttpClient mOkHttpClient;
+    private DownloadService mDownloadService;
 
     @Inject
     public HttpHelper(Context context) {
@@ -167,6 +179,28 @@ public class HttpHelper {
         return mGaoxiaoService;
     }
 
+    public DownloadService getDownloadService() {
+        if (mDownloadService == null) {
+            synchronized (this) {
+                if (mDownloadService == null) {
+                    mDownloadService = new Retrofit.Builder()
+                            .baseUrl("https://www.baidu.com/")
+                            .client(new OkHttpClient.Builder()
+                                    .addInterceptor(new HttpLoggingInterceptor(new HttpLogger()).setLevel(HttpLoggingInterceptor.Level.BODY))
+                                    .addInterceptor(new ProgressInterceptor())
+                                    .connectTimeout(10, TimeUnit.SECONDS)
+                                    .readTimeout(20, TimeUnit.SECONDS)
+                                    .writeTimeout(20, TimeUnit.SECONDS)
+                                    .retryOnConnectionFailure(true)
+                                    .build())
+                            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                            .build().create(DownloadService.class);
+                }
+            }
+        }
+        return mDownloadService;
+    }
+
     /**
      * 有网才会执行哦
      */
@@ -204,6 +238,60 @@ public class HttpHelper {
                 return chain.proceed(request);
             }
             return chain.proceed(request);
+        }
+    }
+
+    private static class ProgressInterceptor implements Interceptor {
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Log.d("DownloadService", chain.request().url().toString());
+            Response originalResponse = chain.proceed(chain.request());
+            return originalResponse.newBuilder()
+                    .body(new ProgressResponseBody(originalResponse.body()))
+                    .build();
+        }
+    }
+
+    private static class ProgressResponseBody extends ResponseBody {
+        private ResponseBody responseBody;
+
+        private BufferedSource bufferedSource;
+
+        public ProgressResponseBody(ResponseBody responseBody) {
+            this.responseBody = responseBody;
+        }
+
+        @Override
+        public MediaType contentType() {
+            return responseBody.contentType();
+        }
+
+        @Override
+        public long contentLength() {
+            return responseBody.contentLength();
+        }
+
+        @Override
+        public BufferedSource source() {
+            if (bufferedSource == null) {
+                bufferedSource = Okio.buffer(source(responseBody.source()));
+            }
+            return bufferedSource;
+        }
+
+        private Source source(Source source) {
+            return new ForwardingSource(source) {
+                long bytesReaded = 0;
+
+                @Override
+                public long read(Buffer sink, long byteCount) throws IOException {
+                    long bytesRead = super.read(sink, byteCount);
+                    bytesReaded += bytesRead == -1 ? 0 : bytesRead;
+                    Log.d("DownloadService", "bytesReaded:" + bytesReaded);
+                    RxBus.getDefault().post(new DownloadEvent(contentLength(), bytesReaded));
+                    return bytesRead;
+                }
+            };
         }
     }
 }

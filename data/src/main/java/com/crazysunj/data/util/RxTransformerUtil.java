@@ -29,7 +29,7 @@ public class RxTransformerUtil {
     public static <T> FlowableTransformer<T, T> normalTransformer() {
         return observable -> observable.subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
+//                .observeOn(Schedulers.io())
 //                .onErrorResumeNext(e -> {  可能会卡顿，舍弃了
 //                    Throwable throwable;
 //                    if (NetworkUtils.isNetworkAvailable()) {

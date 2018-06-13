@@ -16,11 +16,15 @@
 package com.crazysunj.crazydaily.view.web;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewGroup;
 
+import com.crazysunj.crazydaily.service.DownloadService;
 import com.crazysunj.crazydaily.util.DeviceUtils;
 import com.crazysunj.domain.constant.CacheConstant;
 import com.tencent.smtt.export.external.interfaces.SslError;
@@ -63,7 +67,6 @@ public class CrazyDailyWebView extends WebView {
     private void init(Context context) {
         WebSettings setttings = getSettings();
         setttings.setJavaScriptEnabled(true);//打开js
-        setttings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         setttings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);//设置布局
         setttings.setDomStorageEnabled(true);//打开Dom Storage
         setttings.setDatabaseEnabled(true);//打开Database
@@ -97,6 +100,7 @@ public class CrazyDailyWebView extends WebView {
                 Log.e("WXWebView", "contentDisposition:" + contentDisposition);
                 Log.e("WXWebView", "mimeType:" + mimeType);
                 Log.e("WXWebView", "contentLength:" + contentLength);
+                DownloadService.start(context, "http://ws4.sinaimg.cn/large/9150e4e5ly1fj7hgm4x4aj203n04gmxs.jpg");
             }
         });
     }
@@ -114,6 +118,8 @@ public class CrazyDailyWebView extends WebView {
     }
 
     public class CrazyDailyWebViewClient extends WebViewClient {
+
+        private AlertDialog mEnterDialog;
 
         @Override
         public WebResourceResponse shouldInterceptRequest(WebView webView, String s) {
@@ -179,18 +185,32 @@ public class CrazyDailyWebView extends WebView {
         public void onReceivedError(WebView webView, WebResourceRequest request, WebResourceError error) {
             if (error.getErrorCode() == WebViewClient.ERROR_UNSUPPORTED_SCHEME) {
                 //兼容自定义协议
-//                try {
-//                    Intent intent = new Intent(Intent.ACTION_VIEW, request.getUrl());
-//                    webView.getContext().startActivity(intent);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                if (webView.canGoBack()) {
-//                    webView.goBack();
-//                    return;
-//                }
+                try {
+                    //很多浏览器并没有做，可考虑去掉
+                    showEnterDialog(request.getUrl());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             super.onReceivedError(webView, request, error);
+        }
+
+        private void showEnterDialog(Uri uri) {
+            if (mEnterDialog == null) {
+                final Context context = getContext();
+                mEnterDialog = new AlertDialog.Builder(context)
+                        .setTitle("温馨提示")
+                        .setMessage("允许我访问相关app吗")
+                        .setNegativeButton("丑拒", null)
+                        .setPositiveButton("No problem", (dialogInterface, i) -> {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                            context.startActivity(intent);
+                        }).create();
+            }
+            if (mEnterDialog.isShowing()) {
+                return;
+            }
+            mEnterDialog.show();
         }
     }
 

@@ -19,7 +19,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -34,7 +33,6 @@ import com.tencent.smtt.export.external.interfaces.SslErrorHandler;
 import com.tencent.smtt.export.external.interfaces.WebResourceError;
 import com.tencent.smtt.export.external.interfaces.WebResourceRequest;
 import com.tencent.smtt.export.external.interfaces.WebResourceResponse;
-import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.sonic.sdk.SonicEngine;
 import com.tencent.sonic.sdk.SonicSession;
@@ -132,8 +130,6 @@ public class WXWebView implements IWebView {
         if (getWebView() == null) {
             return;
         }
-        Log.e("WXWebView", "设置缓存");
-        getWebView().getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         getWebView().goBack();
     }
 
@@ -179,13 +175,6 @@ public class WXWebView implements IWebView {
         wv.setWebViewClient(mWebView.new CrazyDailyWebViewClient() {
 
             @Override
-            public boolean shouldOverrideUrlLoading(WebView webView, String url) {
-                Log.e("WXWebView", "shouldOverrideUrlLoading-----url:" + url);
-                webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
-                return super.shouldOverrideUrlLoading(webView, url);
-            }
-
-            @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
                 WXLogUtils.v("tag", "onPageStarted " + url);
@@ -205,7 +194,6 @@ public class WXWebView implements IWebView {
 
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                Log.e("WXWebView", "onReceivedError---errorCode:" + error.getErrorCode() + " url:" + request.getUrl().toString());
                 super.onReceivedError(view, request, error);
                 if (mOnErrorListener != null) {
                     mOnErrorListener.onError("error", "page error");
