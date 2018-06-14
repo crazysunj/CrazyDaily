@@ -19,6 +19,7 @@ import android.animation.ArgbEvaluator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -32,6 +33,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -63,7 +66,6 @@ import com.crazysunj.domain.entity.weather.WeatherRemoteEntity;
 import com.crazysunj.domain.entity.zhihu.ZhihuNewsEntity;
 import com.crazysunj.domain.util.NeihanManager;
 import com.crazysunj.domain.util.ThreadManager;
-import com.jaeger.library.StatusBarUtil;
 import com.sunjian.android_pickview_lib.BaseOptionsPickerDialog;
 import com.sunjian.android_pickview_lib.PhoneOptionsPickerDialog;
 import com.xiao.nicevideoplayer.NiceVideoPlayer;
@@ -131,8 +133,9 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        StatusBarUtil.setTranslucent(this);
+        handleTranslucent();
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -294,6 +297,26 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     private void onRefresh() {
         mPresenter.endBanner();
         initData();
+    }
+
+    private void handleTranslucent() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            getWindow().setNavigationBarColor(Color.WHITE);
+        } else {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+
+        ViewGroup parent = (ViewGroup) findViewById(android.R.id.content);
+        for (int i = 0, count = parent.getChildCount(); i < count; i++) {
+            View childView = parent.getChildAt(i);
+            if (childView instanceof ViewGroup) {
+                childView.setFitsSystemWindows(true);
+                ((ViewGroup) childView).setClipToPadding(true);
+            }
+        }
     }
 
     private void handleWrapBanner(boolean isCanSlide) {
