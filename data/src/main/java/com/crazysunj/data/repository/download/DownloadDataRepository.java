@@ -15,8 +15,9 @@
  */
 package com.crazysunj.data.repository.download;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import android.text.TextUtils;
 
 import com.crazysunj.data.api.HttpHelper;
 import com.crazysunj.data.service.DownloadService;
@@ -26,6 +27,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 import javax.inject.Inject;
 
@@ -33,6 +36,7 @@ import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
+import retrofit2.Response;
 
 /**
  * author: sunjian
@@ -49,22 +53,26 @@ public class DownloadDataRepository implements DownloadRepository {
     }
 
     @Override
-    public Flowable<File> download(String url, File saveFile) {
+    public Flowable<File> download(String url, File saveFileDir) {
         return mDownloadService.download(url)
                 .observeOn(Schedulers.io())
-                .map(responseBody -> convertFile(saveFile, responseBody))
+                .map(response -> convertFile(saveFileDir, response))
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Nullable
-    private File convertFile(File saveFile, ResponseBody responseBody) {
-        Log.d("DownloadService", saveFile.getAbsolutePath());
+    private File convertFile(File saveFileDir, Response<ResponseBody> response) {
+        final ResponseBody responseBody = response.body();
+        if (responseBody == null) {
+            return null;
+        }
         InputStream is = null;
         byte[] buffer = new byte[1024];
         int len;
         FileOutputStream fos = null;
+        File saveFile = new File(saveFileDir, getFileName(response));
         try {
             is = responseBody.byteStream();
             fos = new FileOutputStream(saveFile);
@@ -88,5 +96,26 @@ public class DownloadDataRepository implements DownloadRepository {
             }
         }
         return null;
+    }
+
+    @NonNull
+    private String getFileName(Response<ResponseBody> response) {
+        final okhttp3.Response raw = response.raw();
+        String contentDisposition = raw.header("Content-Disposition");
+        if (TextUtils.isEmpty(contentDisposition)) {
+            String file = raw.request().url().url().getFile();
+            return file.substring(file.lastIndexOf("/") + 1, file.indexOf("?"));
+        } else {
+            String fileName;
+            try {
+                fileName = URLDecoder.decode(contentDisposition.substring(contentDisposition.indexOf("filename=") + 9), "UTF-8");
+                fileName = fileName.replaceAll("\"", "");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+                fileName = contentDisposition.substring(contentDisposition.indexOf("filename=") + 9);
+                fileName = fileName.replaceAll("\"", "");
+            }
+            return fileName;
+        }
     }
 }

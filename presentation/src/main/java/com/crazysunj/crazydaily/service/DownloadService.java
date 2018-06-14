@@ -15,13 +15,21 @@
  */
 package com.crazysunj.crazydaily.service;
 
-import android.app.IntentService;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
-import android.util.Log;
+import android.widget.Toast;
 
+import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.app.App;
 import com.crazysunj.crazydaily.constant.ActivityConstant;
 import com.crazysunj.crazydaily.di.component.DaggerServiceComponent;
@@ -29,21 +37,23 @@ import com.crazysunj.crazydaily.di.module.ServiceModule;
 import com.crazysunj.crazydaily.presenter.DownloadPresenter;
 import com.crazysunj.crazydaily.presenter.contract.DownloadContract;
 import com.crazysunj.crazydaily.util.FileUtil;
-import com.crazysunj.domain.bus.RxBus;
-import com.crazysunj.domain.bus.event.DownloadEvent;
 
 import java.io.File;
+import java.util.Locale;
+import java.util.UUID;
 
 import javax.inject.Inject;
-
-import io.reactivex.functions.Consumer;
 
 /**
  * author: sunjian
  * created on: 2018/6/13 下午2:51
  * description:https://github.com/crazysunj/CrazyDaily
  */
-public class DownloadService extends IntentService implements DownloadContract.View {
+public class DownloadService extends Service implements DownloadContract.View {
+
+    private static final int NOTIFICATION_ID = UUID.randomUUID().hashCode();
+    private NotificationManager mNotificationManager;
+    private NotificationCompat.Builder mNotificationBuilder;
 
     public static void start(Context context, String url) {
         Intent intent = new Intent(context, DownloadService.class);
@@ -55,28 +65,36 @@ public class DownloadService extends IntentService implements DownloadContract.V
     protected DownloadPresenter mPresenter;
 
     public DownloadService() {
-        super("DownloadService");
-        RxBus.getDefault().toFlowable(DownloadEvent.class)
-                .subscribe(new Consumer<DownloadEvent>() {
-                    @Override
-                    public void accept(DownloadEvent downloadEvent) throws Exception {
-                        Log.d("DownloadService", "total:" + downloadEvent.total + " loaded:" + downloadEvent.loaded);
-                    }
-                });
         onPrepare();
     }
 
     @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
-        Log.d("DownloadService", "onHandleIntent:" + Thread.currentThread().getName());
+    public void onCreate() {
+        super.onCreate();
+        initNotification();
+    }
+
+    private void initNotification() {
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationBuilder = new NotificationCompat.Builder(this)
+                .setContentText("正在下载")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setOngoing(true)
+                .setWhen(System.currentTimeMillis());
+        mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent == null) {
-            return;
+            return super.onStartCommand(null, flags, startId);
         }
         final String url = intent.getStringExtra(ActivityConstant.URL);
         if (TextUtils.isEmpty(url)) {
-            return;
+            return super.onStartCommand(intent, flags, startId);
         }
-        mPresenter.download(url, new File(FileUtil.getDownloadFile(this), FileUtil.getFileNameWithUrl(this, url)));
+        mPresenter.download(url, FileUtil.getDownloadFile(this));
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
@@ -84,22 +102,51 @@ public class DownloadService extends IntentService implements DownloadContract.V
         if (mPresenter != null) {
             mPresenter.detachView();
         }
-        super.onDestroy();
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 
     @Override
     public void onProgress(int progress) {
-
+        mNotificationBuilder.setContentText(String.format(Locale.getDefault(), "正在下载:%d%%", progress))
+                .setProgress(100, progress, false);
+        mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
     }
 
     @Override
     public void onSuccess(File saveFile) {
-        Log.d("DownloadService", "onSuccess:" + saveFile.getAbsolutePath());
+        Toast.makeText(this, "下载完成，保存路径：" + saveFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Uri uri;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            uri = FileProvider.getUriForFile(this, getString(R.string.file_provider_authorities), saveFile);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        } else {
+            uri = Uri.fromFile(saveFile);
+        }
+        intent.setData(uri);
+        PendingIntent pendingintent = PendingIntent.getActivity(this, 0, intent, PendingIntent
+                .FLAG_UPDATE_CURRENT);
+        mNotificationBuilder.setContentIntent(pendingintent);
     }
 
     @Override
     public void onFailed(Throwable e) {
-        Log.d("DownloadService", "onFailed:" + e.getMessage());
+        mNotificationBuilder.setContentText("下载失败");
+        mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
+    }
+
+    @Override
+    public void onComplete() {
+        mNotificationBuilder.setContentText("下载完成，请点击使用");
+        mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
+        stopSelf();
     }
 
     private void onPrepare() {
@@ -117,7 +164,7 @@ public class DownloadService extends IntentService implements DownloadContract.V
                 .inject(this);
     }
 
-    public ServiceModule getServiceModule() {
+    private ServiceModule getServiceModule() {
         return new ServiceModule(this);
     }
 }

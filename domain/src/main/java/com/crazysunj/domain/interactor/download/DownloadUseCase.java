@@ -41,22 +41,22 @@ public class DownloadUseCase extends UseCase<File, DownloadUseCase.Params> {
 
     @Override
     protected Flowable<File> buildUseCaseObservable(Params params) {
-        return mDownloadRepository.download(params.url, params.saveFile);
+        return mDownloadRepository.download(params.url, params.saveFileDir);
     }
 
 
     public static final class Params {
 
         private final String url;
-        private final File saveFile;
+        private final File saveFileDir;
 
-        private Params(String url, File saveFile) {
+        private Params(String url, File saveFileDir) {
             this.url = url;
-            this.saveFile = saveFile;
+            this.saveFileDir = saveFileDir;
         }
 
-        public static Params get(String url, File saveFile) {
-            return new Params(url, saveFile);
+        public static Params get(String url, File saveFileDir) {
+            return new Params(url, saveFileDir);
         }
     }
 }

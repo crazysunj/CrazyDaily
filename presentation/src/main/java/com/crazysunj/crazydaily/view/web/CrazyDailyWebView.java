@@ -21,7 +21,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.ViewGroup;
 
 import com.crazysunj.crazydaily.service.DownloadService;
@@ -95,12 +94,7 @@ public class CrazyDailyWebView extends WebView {
         setDownloadListener(new DownloadListener() {
             @Override
             public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimeType, long contentLength) {
-                Log.e("WXWebView", "url:" + url);
-                Log.e("WXWebView", "userAgent:" + userAgent);
-                Log.e("WXWebView", "contentDisposition:" + contentDisposition);
-                Log.e("WXWebView", "mimeType:" + mimeType);
-                Log.e("WXWebView", "contentLength:" + contentLength);
-                DownloadService.start(context, "http://ws4.sinaimg.cn/large/9150e4e5ly1fj7hgm4x4aj203n04gmxs.jpg");
+                DownloadService.start(context, url);
             }
         });
     }

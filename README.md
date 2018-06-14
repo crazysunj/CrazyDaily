@@ -41,6 +41,7 @@
 * 大量动画，如lottie、补间动画、3D动画、属性动画（ObjectAnimator、ValueAnimator、View.animate和PropertyValuesHolder）和转场动画（自定义Transition）运用
 * 视频列表
 * 支持图片预览、编辑(如裁剪、压缩)和保存本地
+* 支持下载机制，通知栏回显，下载完成可打开
 * webview支持x5及常见用法，例如缓存、预加载、内存优化、增量更新、并行加载、下载以及访问自定义协议等
 
 尽量保持各种开源库最新状态，我踩坑，我骄傲！

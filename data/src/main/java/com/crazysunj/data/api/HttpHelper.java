@@ -17,7 +17,6 @@ package com.crazysunj.data.api;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.crazysunj.data.logger.HttpLogger;
 import com.crazysunj.data.service.DownloadService;
@@ -28,9 +27,9 @@ import com.crazysunj.data.service.WeatherService;
 import com.crazysunj.data.service.ZhihuService;
 import com.crazysunj.data.util.LoggerUtil;
 import com.crazysunj.data.util.NetworkUtils;
+import com.crazysunj.domain.bus.RxBus;
 import com.crazysunj.domain.bus.event.DownloadEvent;
 import com.crazysunj.domain.constant.CacheConstant;
-import com.crazysunj.domain.bus.RxBus;
 
 import java.io.File;
 import java.io.IOException;
@@ -244,7 +243,6 @@ public class HttpHelper {
     private static class ProgressInterceptor implements Interceptor {
         @Override
         public Response intercept(Chain chain) throws IOException {
-            Log.d("DownloadService", chain.request().url().toString());
             Response originalResponse = chain.proceed(chain.request());
             return originalResponse.newBuilder()
                     .body(new ProgressResponseBody(originalResponse.body()))
@@ -287,7 +285,6 @@ public class HttpHelper {
                 public long read(Buffer sink, long byteCount) throws IOException {
                     long bytesRead = super.read(sink, byteCount);
                     bytesReaded += bytesRead == -1 ? 0 : bytesRead;
-                    Log.d("DownloadService", "bytesReaded:" + bytesReaded);
                     RxBus.getDefault().post(new DownloadEvent(contentLength(), bytesReaded));
                     return bytesRead;
                 }

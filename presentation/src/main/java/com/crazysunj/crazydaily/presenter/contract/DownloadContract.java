@@ -30,6 +30,8 @@ public interface DownloadContract {
         void onSuccess(File saveFile);
 
         void onFailed(Throwable e);
+
+        void onComplete();
     }
 
     interface Presenter {
