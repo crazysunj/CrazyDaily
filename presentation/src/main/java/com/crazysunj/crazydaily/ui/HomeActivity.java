@@ -19,11 +19,14 @@ import android.animation.ArgbEvaluator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -37,6 +40,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crazysunj.cardslideview.CardViewPager;
 import com.crazysunj.crazydaily.R;
@@ -52,6 +56,7 @@ import com.crazysunj.crazydaily.ui.adapter.HomeAdapter;
 import com.crazysunj.crazydaily.ui.adapter.helper.HomeAdapterHelper;
 import com.crazysunj.crazydaily.ui.contact.ContactActivity;
 import com.crazysunj.crazydaily.ui.photo.PhotoActivity;
+import com.crazysunj.crazydaily.ui.scan.ScannerActivity;
 import com.crazysunj.crazydaily.util.SnackbarUtil;
 import com.crazysunj.crazydaily.view.banner.BannerCardHandler;
 import com.crazysunj.crazydaily.view.banner.WrapBannerView;
@@ -66,6 +71,8 @@ import com.crazysunj.domain.entity.weather.WeatherRemoteEntity;
 import com.crazysunj.domain.entity.zhihu.ZhihuNewsEntity;
 import com.crazysunj.domain.util.NeihanManager;
 import com.crazysunj.domain.util.ThreadManager;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.sunjian.android_pickview_lib.BaseOptionsPickerDialog;
 import com.sunjian.android_pickview_lib.PhoneOptionsPickerDialog;
 import com.xiao.nicevideoplayer.NiceVideoPlayer;
@@ -124,6 +131,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     private int gaoxiaoIndex = 1;
     private boolean isTop = true;
     private List<String> mMeinvList;
+    private Drawable mNavigationIcon;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, HomeActivity.class);
@@ -169,6 +177,8 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
         }
+        mToolbar.setNavigationIcon(R.mipmap.ic_scan);
+        mNavigationIcon = mToolbar.getNavigationIcon();
         mHomeList.setLayoutManager(new LinearLayoutManager(this));
         mHomeList.setAdapter(mAdapter);
         mWrapBanner.setOnBannerSlideListener(this::handleWrapBanner);
@@ -180,6 +190,8 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         mAdapter.setOnHeaderClickListener(this::handleHeaderOptions);
         mHomeList.addOnChildAttachStateChangeListener(new HomeRecyclerViewStateChangeListener());
         mAppbar.addOnOffsetChangedListener(this::handleAppbarOffsetChangedListener);
+        mToolbar.setNavigationOnClickListener(v -> new IntentIntegrator(this)
+                .setCaptureActivity(ScannerActivity.class).initiateScan());
         mBottomNavigation.setOnNavigationItemSelectedListener(this::handleNavigationItemClick);
         mCubeAnchor.setOnClickListener(v -> clickCubeAnchor());
         mCubeFirst.setOnClickListener(v -> clickCubeFirst());
@@ -366,6 +378,14 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         PhotoActivity.start(this, url, view);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(resultCode, data);
+        if (result.getContents() != null) {
+            Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+        }
+    }
+
     private boolean handleNavigationItemClick(MenuItem item) {
         final int itemId = item.getItemId();
         switch (itemId) {
@@ -466,7 +486,11 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         final int totalScrollRange = appBarLayout.getTotalScrollRange();
         final float percent = Math.abs(verticalOffset * 1.0f / totalScrollRange);
         mRefresh.setEnabled(verticalOffset == 0);
-        mTitle.setTextColor((int) mArgbEvaluator.evaluate(percent, Color.WHITE, Color.BLACK));
+        final int color = ContextCompat.getColor(this, R.color.colorPrimary);
+        mTitle.setTextColor((int) mArgbEvaluator.evaluate(percent, color, Color.BLACK));
+        if (mNavigationIcon != null) {
+            mNavigationIcon.setColorFilter((int) mArgbEvaluator.evaluate(percent, color, Color.BLACK), PorterDuff.Mode.SRC_IN);
+        }
     }
 
     private void stopRefresh() {

@@ -80,13 +80,19 @@
             android:name=".ui.photo.PhotoActivity"
             android:theme="@style/PhotoTheme" />
         <activity
+            android:name=".ui.scan.ScannerActivity"
+            android:screenOrientation="portrait"
+            android:stateNotNeeded="true"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name=".service.DownloadService"
-            android:exported="false"></service>
+            android:exported="false"/>
     </application>
 
 </manifest>

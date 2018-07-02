@@ -96,6 +96,7 @@ dependencies {
     implementation libs.photoview
     implementation libs.richtext //富文本
     implementation libs.ucrop //裁剪
+    implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
     debugImplementation libs.debugLeakcanary
     releaseImplementation libs.releaseLeakcanary
     annotationProcessor libs.butterknifeCompiler
