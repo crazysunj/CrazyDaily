@@ -12,12 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:background="@color/colorPrimary"
+        app:title="@string/page_name_scan"
+        app:popupTheme="@style/PhotoTheme.MenuTheme"
         app:titleTextColor="@color/color_white" />
 
     <com.journeyapps.barcodescanner.DecoratedBarcodeView
         android:id="@+id/scanner_decorated_barcode"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:zxing_scanner_layout="@layout/layout_barcode_scanner"/>
+        app:zxing_scanner_layout="@layout/layout_barcode_scanner" />
 
 </LinearLayout>

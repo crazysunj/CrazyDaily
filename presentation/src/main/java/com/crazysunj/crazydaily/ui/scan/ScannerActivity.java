@@ -15,25 +15,49 @@
  */
 package com.crazysunj.crazydaily.ui.scan;
 
+import android.Manifest;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
+import com.crazysunj.crazydaily.ui.BrowserActivity;
+import com.crazysunj.crazydaily.util.SnackbarUtil;
+import com.google.zxing.MultiFormatReader;
+import com.google.zxing.RGBLuminanceSource;
+import com.google.zxing.Result;
 import com.journeyapps.barcodescanner.CaptureManager;
+import com.journeyapps.barcodescanner.Decoder;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 
 import butterknife.BindView;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 
 /**
  * author: sunjian
  * created on: 2018/7/2 下午5:01
  * description: https://github.com/crazysunj/CrazyDaily
  */
+@RuntimePermissions
 public class ScannerActivity extends BaseActivity {
+
+    private static final int REQUEST_SELECT_PICTURE = 0x01;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -52,8 +76,19 @@ public class ScannerActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        setSupportActionBar(mToolbar);
         showBack(mToolbar);
-        mToolbar.setTitle(R.string.page_name_scan);
+    }
+
+    @Override
+    protected void initListener() {
+        mToolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.menu_scan_open) {
+                ScannerActivityPermissionsDispatcher.handleImgWithPermissionCheck(this);
+                return true;
+            }
+            return false;
+        });
     }
 
     @Override
@@ -88,10 +123,91 @@ public class ScannerActivity extends BaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         mCaptureManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        ScannerActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         return mDecoratedBarcodeView.onKeyDown(keyCode, event) || super.onKeyDown(keyCode, event);
+    }
+
+    public Bitmap getSmallerBitmap(Bitmap bitmap) {
+        int size = bitmap.getWidth() * bitmap.getHeight() / 160000;
+        if (size <= 1) return bitmap; // 如果小于
+        else {
+            Matrix matrix = new Matrix();
+            matrix.postScale((float) (1 / Math.sqrt(size)), (float) (1 / Math.sqrt(size)));
+            Bitmap resizeBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            return resizeBitmap;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == REQUEST_SELECT_PICTURE) {
+            final Uri selectedUri = data.getData();
+            if (selectedUri != null) {
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedUri);
+                    if (bitmap != null) {
+                        int width = bitmap.getWidth();
+                        int height = bitmap.getHeight();
+                        int[] dataArr = new int[width * height];
+                        bitmap.getPixels(dataArr, 0, width, 0, 0, width, height);
+                        Decoder decoder = new Decoder(new MultiFormatReader());
+                        Result result = decoder.decode(new RGBLuminanceSource(width, height, dataArr));
+                        if (result != null) {
+                            String text = result.getText();
+                            Log.d("ScannerActivity", "text:" + text);
+                            BrowserActivity.start(this, text);
+                        } else {
+                            SnackbarUtil.show(this, "这个码真扫不了");
+                        }
+                        bitmap.recycle();
+                    } else {
+                        SnackbarUtil.show(this, "这个码真扫不了");
+                    }
+                } catch (Exception e) {
+                    SnackbarUtil.show(this, "这个码真扫不了");
+                }
+            } else {
+                SnackbarUtil.show(this, "这个码真扫不了");
+            }
+        }
+    }
+
+    @NeedsPermission({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void handleImg() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT)
+                .setType("image/*")
+                .addCategory(Intent.CATEGORY_OPENABLE);
+        String[] mimeTypes = {"image/jpeg", "image/png"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+        startActivityForResult(Intent.createChooser(intent, "选择图片"), REQUEST_SELECT_PICTURE);
+    }
+
+    @OnShowRationale({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void showRationaleForStorage(final PermissionRequest request) {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.permission_storage_rationale)
+                .setPositiveButton(R.string.button_allow, (dialog, button) -> request.proceed())
+                .setNegativeButton(R.string.button_deny, (dialog, button) -> request.cancel())
+                .show();
+    }
+
+    @OnPermissionDenied({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void showDeniedForStorage() {
+        SnackbarUtil.show(this, R.string.permission_storage_denied);
+    }
+
+    @OnNeverAskAgain({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void showNeverAskForStorage() {
+        SnackbarUtil.show(this, R.string.permission_storage_neverask);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_scan, menu);
+        return true;
     }
 }

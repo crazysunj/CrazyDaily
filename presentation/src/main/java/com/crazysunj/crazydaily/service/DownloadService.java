@@ -76,7 +76,11 @@ public class DownloadService extends Service implements DownloadContract.View {
 
     private void initNotification() {
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationBuilder = new NotificationCompat.Builder(this)
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            NotificationChannel channel = new NotificationChannel(String.valueOf(NOTIFICATION_ID), "下载通知", NotificationManager.IMPORTANCE_DEFAULT);
+//            mNotificationManager.createNotificationChannel(channel);
+//        }
+        mNotificationBuilder = new NotificationCompat.Builder(this, String.valueOf(NOTIFICATION_ID))
                 .setContentText("正在下载")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setOngoing(true)

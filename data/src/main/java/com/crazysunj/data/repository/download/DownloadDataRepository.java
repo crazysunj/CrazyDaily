@@ -104,7 +104,7 @@ public class DownloadDataRepository implements DownloadRepository {
         String contentDisposition = raw.header("Content-Disposition");
         if (TextUtils.isEmpty(contentDisposition)) {
             String file = raw.request().url().url().getFile();
-            return file.substring(file.lastIndexOf("/") + 1, file.indexOf("?"));
+            return file.substring(file.lastIndexOf("/") + 1, file.contains("?") ? file.indexOf("?") : file.length());
         } else {
             String fileName;
             try {

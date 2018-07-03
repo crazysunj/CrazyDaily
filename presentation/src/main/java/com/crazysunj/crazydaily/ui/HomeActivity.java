@@ -15,6 +15,7 @@
  */
 package com.crazysunj.crazydaily.ui;
 
+import android.Manifest;
 import android.animation.ArgbEvaluator;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +24,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomNavigationView;
@@ -84,12 +86,19 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 
 /**
  * author: sunjian
  * created on: 2017/9/10 下午5:01
  * description: https://github.com/crazysunj/CrazyDaily
  */
+@RuntimePermissions
 public class HomeActivity extends BaseActivity<HomePresenter> implements HomeContract.View {
 
     @BindView(R.id.refresh)
@@ -190,8 +199,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         mAdapter.setOnHeaderClickListener(this::handleHeaderOptions);
         mHomeList.addOnChildAttachStateChangeListener(new HomeRecyclerViewStateChangeListener());
         mAppbar.addOnOffsetChangedListener(this::handleAppbarOffsetChangedListener);
-        mToolbar.setNavigationOnClickListener(v -> new IntentIntegrator(this)
-                .setCaptureActivity(ScannerActivity.class).initiateScan());
+        mToolbar.setNavigationOnClickListener(v -> HomeActivityPermissionsDispatcher.openQRCodeWithPermissionCheck(this));
         mBottomNavigation.setOnNavigationItemSelectedListener(this::handleNavigationItemClick);
         mCubeAnchor.setOnClickListener(v -> clickCubeAnchor());
         mCubeFirst.setOnClickListener(v -> clickCubeFirst());
@@ -497,6 +505,36 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         if (mRefresh.isRefreshing()) {
             mRefresh.setRefreshing(false);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        HomeActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
+    @NeedsPermission({Manifest.permission.CAMERA})
+    void openQRCode() {
+        new IntentIntegrator(this)
+                .setCaptureActivity(ScannerActivity.class).initiateScan();
+    }
+
+    @OnShowRationale({Manifest.permission.CAMERA})
+    void showRationaleForCamera(final PermissionRequest request) {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.permission_camera_rationale)
+                .setPositiveButton(R.string.button_allow, (dialog, button) -> request.proceed())
+                .setNegativeButton(R.string.button_deny, (dialog, button) -> request.cancel())
+                .show();
+    }
+
+    @OnPermissionDenied({Manifest.permission.CAMERA})
+    void showDeniedForCamera() {
+        SnackbarUtil.show(this, R.string.permission_camera_denied);
+    }
+
+    @OnNeverAskAgain({Manifest.permission.CAMERA})
+    void showNeverAskForCamera() {
+        SnackbarUtil.show(this, R.string.permission_camera_neverask);
     }
 
     private class HomeRecyclerViewStateChangeListener implements RecyclerView.OnChildAttachStateChangeListener {

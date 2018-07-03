@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="permission_storage_rationale">该操作需要读写存储卡权限</string>
+    <string name="permission_camera_rationale">该操作需要照相机权限</string>
     <string name="button_allow">允许</string>
     <string name="button_deny">拒绝</string>
     <string name="permission_storage_denied">读取存储权限被拒绝</string>
+    <string name="permission_camera_denied">照相机权限被拒绝</string>
     <string name="permission_storage_neverask">请到设置页面去允许存储权限</string>
+    <string name="permission_camera_neverask">请到设置页面去允许照相机权限</string>
 </resources>
