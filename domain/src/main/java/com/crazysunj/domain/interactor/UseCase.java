@@ -44,8 +44,14 @@ public abstract class UseCase<T, Params> {
         addDisposable(flowable.subscribeWith(subscriber));
     }
 
+    public <P> void execute(Flowable<P> flowable, DisposableSubscriber<P> subscriber) {
+        Preconditions.checkNotNull(flowable);
+        Preconditions.checkNotNull(subscriber);
+        addDisposable(flowable.subscribeWith(subscriber));
+    }
+
     public void execute(DisposableSubscriber<T> subscriber) {
-        execute(null, subscriber);
+        execute((Params) null, subscriber);
     }
 
     public void dispose() {

@@ -25,8 +25,8 @@ import com.crazysunj.crazydaily.BuildConfig;
  * created on: 2018/5/11 上午10:26
  * description:https://github.com/crazysunj/CrazyDaily
  */
-public class DeviceUtils {
-    private DeviceUtils() {
+public class DeviceUtil {
+    private DeviceUtil() {
     }
 
     public static String getVersionName() {

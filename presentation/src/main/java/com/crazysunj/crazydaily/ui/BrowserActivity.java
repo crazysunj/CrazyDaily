@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.Browser;
+import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +31,8 @@ import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
 import com.crazysunj.crazydaily.constant.ActivityConstant;
 import com.crazysunj.crazydaily.moudle.web.CrazyDailySonicSessionClient;
+import com.crazysunj.crazydaily.service.DownloadService;
+import com.crazysunj.crazydaily.util.StorageUtil;
 import com.crazysunj.crazydaily.view.web.CrazyDailyWebView;
 import com.crazysunj.data.util.LoggerUtil;
 import com.tencent.sonic.sdk.SonicEngine;
@@ -94,6 +97,14 @@ public class BrowserActivity extends BaseActivity implements CrazyDailyWebView.W
     @Override
     protected void initListener() {
         mWebView.setWebViewCallback(this);
+        mWebView.setDownloadCallback((url, contentLength) ->
+                new AlertDialog.Builder(this, R.style.NormalDialog)
+                        .setTitle("提示")
+                        .setCancelable(false)
+                        .setMessage(String.format("下载链接：%s\n下载大小：%sMB", url, StorageUtil.byteToMB(contentLength)))
+                        .setNegativeButton("不下", null)
+                        .setPositiveButton("下载", (dialogInterface, i) -> DownloadService.start(this, url))
+                        .show());
     }
 
     @Override

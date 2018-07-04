@@ -15,8 +15,6 @@
  */
 package com.crazysunj.crazydaily.presenter;
 
-import android.util.Log;
-
 import com.crazysunj.crazydaily.base.BaseSubscriber;
 import com.crazysunj.crazydaily.di.scope.ServiceScope;
 import com.crazysunj.crazydaily.presenter.contract.DownloadContract;
@@ -28,7 +26,7 @@ import java.io.File;
 
 import javax.inject.Inject;
 
-import io.reactivex.functions.Consumer;
+import io.reactivex.subscribers.DisposableSubscriber;
 
 /**
  * author: sunjian
@@ -44,15 +42,23 @@ public class DownloadPresenter implements DownloadContract.Presenter {
     @Inject
     public DownloadPresenter(DownloadUseCase downloadUseCase) {
         mDownloadUseCase = downloadUseCase;
-        RxBus.getDefault().toFlowable(DownloadEvent.class)
-                .subscribe(new Consumer<DownloadEvent>() {
-                    @Override
-                    public void accept(DownloadEvent downloadEvent) throws Exception {
-                        Log.d("DownloadPresenter", "loaded:" + downloadEvent.loaded + "  total:" + downloadEvent.total);
-                        final int progress = (int) (downloadEvent.loaded * 100f / downloadEvent.total + 0.5f);
-                        mView.onProgress(progress);
-                    }
-                });
+        mDownloadUseCase.execute(RxBus.getDefault().toFlowable(DownloadEvent.class), new DisposableSubscriber<DownloadEvent>() {
+            @Override
+            public void onNext(DownloadEvent downloadEvent) {
+                final int progress = (int) (downloadEvent.loaded * 100f / downloadEvent.total + 0.5f);
+                mView.onProgress(progress);
+            }
+
+            @Override
+            public void onError(Throwable t) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
     }
 
     @Override

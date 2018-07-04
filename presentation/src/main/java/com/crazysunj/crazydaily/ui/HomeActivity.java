@@ -42,7 +42,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crazysunj.cardslideview.CardViewPager;
 import com.crazysunj.crazydaily.R;
@@ -389,8 +388,9 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(resultCode, data);
-        if (result.getContents() != null) {
-            Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+        String scanResult = result.getContents();
+        if (scanResult != null) {
+            BrowserActivity.start(this, scanResult);
         }
     }
 
@@ -404,8 +404,8 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
                 SnackbarUtil.show(this, "直播模块敬请期待!");
                 break;
             case R.id.navigation_music:
-                WeexActivity.start(HomeActivity.this, WeexConstant.PAGE_NAME_ABOUT_ME, WeexConstant.PATH_ABOUT_ME);
-//                SnackbarUtil.show(this, "音乐模块敬请期待!");
+//                WeexActivity.start(HomeActivity.this, WeexConstant.PAGE_NAME_ABOUT_ME, WeexConstant.PATH_ABOUT_ME);
+                SnackbarUtil.show(this, "音乐模块敬请期待!");
                 break;
             case R.id.navigation_about_me:
                 AboutMeActivity.start(this);

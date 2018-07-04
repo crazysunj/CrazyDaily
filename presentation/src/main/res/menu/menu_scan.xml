@@ -9,7 +9,7 @@
             <group>
                 <item
                     android:id="@+id/menu_scan_open"
-                    android:icon="@mipmap/ic_browser"
+                    android:icon="@mipmap/ic_picture"
                     android:title="@string/scan_open" />
             </group>
         </menu>

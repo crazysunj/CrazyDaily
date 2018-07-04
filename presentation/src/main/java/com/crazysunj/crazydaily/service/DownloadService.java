@@ -15,6 +15,7 @@
  */
 package com.crazysunj.crazydaily.service;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -23,6 +24,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.FileProvider;
@@ -52,6 +54,7 @@ import javax.inject.Inject;
 public class DownloadService extends Service implements DownloadContract.View {
 
     private static final int NOTIFICATION_ID = UUID.randomUUID().hashCode();
+    private static final String CHANNEL_ID_DOWNLOAD = "'download'";
     private NotificationManager mNotificationManager;
     private NotificationCompat.Builder mNotificationBuilder;
 
@@ -76,16 +79,31 @@ public class DownloadService extends Service implements DownloadContract.View {
 
     private void initNotification() {
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            NotificationChannel channel = new NotificationChannel(String.valueOf(NOTIFICATION_ID), "下载通知", NotificationManager.IMPORTANCE_DEFAULT);
-//            mNotificationManager.createNotificationChannel(channel);
-//        }
-        mNotificationBuilder = new NotificationCompat.Builder(this, String.valueOf(NOTIFICATION_ID))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // 适配通知栏8.0
+            assert mNotificationManager != null;
+            NotificationChannel channel = mNotificationManager.getNotificationChannel(CHANNEL_ID_DOWNLOAD);
+            if (channel == null) {
+                channel = new NotificationChannel(CHANNEL_ID_DOWNLOAD, "下载通知", NotificationManager.IMPORTANCE_MIN);
+                mNotificationManager.createNotificationChannel(channel);
+            }
+            if (channel.getImportance() == NotificationManager.IMPORTANCE_NONE) {
+                // 这里可以设计成与Activity通信，然后Activity去回调
+                Intent intent = new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
+                intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
+                intent.putExtra(Settings.EXTRA_CHANNEL_ID, channel.getId());
+                startActivity(intent);
+                Toast.makeText(this, "设置好通知栏权限，请重新下载", Toast.LENGTH_SHORT).show();
+                stopSelf();
+            }
+        }
+        mNotificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID_DOWNLOAD)
                 .setContentText("正在下载")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setOngoing(true)
                 .setWhen(System.currentTimeMillis());
         mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
+        Toast.makeText(this, "正在下载，可在通知栏查看进度哦", Toast.LENGTH_SHORT).show();
     }
 
     @Override

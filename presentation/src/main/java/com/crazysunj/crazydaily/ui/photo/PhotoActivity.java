@@ -53,7 +53,7 @@ import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
 import com.crazysunj.crazydaily.constant.ActivityConstant;
 import com.crazysunj.crazydaily.moudle.image.ImageLoader;
-import com.crazysunj.crazydaily.util.DeviceUtils;
+import com.crazysunj.crazydaily.util.DeviceUtil;
 import com.crazysunj.crazydaily.util.SnackbarUtil;
 import com.crazysunj.crazydaily.util.FileUtil;
 import com.crazysunj.crazydaily.view.photo.PhotoDrawerLayout;
@@ -229,7 +229,7 @@ public class PhotoActivity extends BaseActivity {
         }
 
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mPhotoDrawer.getLayoutParams();
-        params.topMargin = -DeviceUtils.getStatusBarHeight(this);
+        params.topMargin = -DeviceUtil.getStatusBarHeight(this);
         mPhotoDrawer.setLayoutParams(params);
     }
 

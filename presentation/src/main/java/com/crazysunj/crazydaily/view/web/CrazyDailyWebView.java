@@ -22,9 +22,10 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-import com.crazysunj.crazydaily.service.DownloadService;
-import com.crazysunj.crazydaily.util.DeviceUtils;
+import com.crazysunj.crazydaily.R;
+import com.crazysunj.crazydaily.util.DeviceUtil;
 import com.crazysunj.domain.constant.CacheConstant;
 import com.tencent.smtt.export.external.interfaces.SslError;
 import com.tencent.smtt.export.external.interfaces.SslErrorHandler;
@@ -47,6 +48,7 @@ import java.io.File;
 public class CrazyDailyWebView extends WebView {
 
     private WebViewCallback mWebViewCallback;
+    private DownloadCallback mDownloadCallback;
     private WebViewSonicCallback mWebViewSonicCallback;
 
     public CrazyDailyWebView(Context context) {
@@ -88,13 +90,15 @@ public class CrazyDailyWebView extends WebView {
         setttings.setLoadsImagesAutomatically(true);//支持自动加载图片
         setttings.setSavePassword(false);//禁止密码保存在本地
         String ua = setttings.getUserAgentString();
-        setttings.setUserAgentString(String.format("%s CrazyDaily %s", ua, DeviceUtils.getVersionName()));//重置ua
+        setttings.setUserAgentString(String.format("%s CrazyDaily %s", ua, DeviceUtil.getVersionName()));//重置ua
         setWebViewClient(new CrazyDailyWebViewClient());
         setWebChromeClient(new CrazyDailyWebChromeClient());
         setDownloadListener(new DownloadListener() {
             @Override
             public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimeType, long contentLength) {
-                DownloadService.start(context, url);
+                if (mDownloadCallback != null) {
+                    mDownloadCallback.onDownload(url, contentLength);
+                }
             }
         });
     }
@@ -179,11 +183,14 @@ public class CrazyDailyWebView extends WebView {
         public void onReceivedError(WebView webView, WebResourceRequest request, WebResourceError error) {
             if (error.getErrorCode() == WebViewClient.ERROR_UNSUPPORTED_SCHEME) {
                 //兼容自定义协议
-                try {
-                    //很多浏览器并没有做，可考虑去掉
-                    showEnterDialog(request.getUrl());
-                } catch (Exception e) {
-                    e.printStackTrace();
+                //很多浏览器并没有做，可考虑去掉
+                Uri uri = request.getUrl();
+                String scheme = uri.getScheme();
+                if (scheme != null) {
+                    if (scheme.contains("market")) {
+                        showEnterDialog(uri);
+                        return;
+                    }
                 }
             }
             super.onReceivedError(webView, request, error);
@@ -192,13 +199,18 @@ public class CrazyDailyWebView extends WebView {
         private void showEnterDialog(Uri uri) {
             if (mEnterDialog == null) {
                 final Context context = getContext();
-                mEnterDialog = new AlertDialog.Builder(context)
+                mEnterDialog = new AlertDialog.Builder(context, R.style.NormalDialog)
                         .setTitle("温馨提示")
-                        .setMessage("允许我访问相关app吗")
+                        .setMessage("允许跳转到商店吗")
                         .setNegativeButton("丑拒", null)
                         .setPositiveButton("No problem", (dialogInterface, i) -> {
-                            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                            context.startActivity(intent);
+                            try {
+                                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                                context.startActivity(intent);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Toast.makeText(context, "跳转商店出了点差错", Toast.LENGTH_SHORT).show();
+                            }
                         }).create();
             }
             if (mEnterDialog.isShowing()) {
@@ -236,5 +248,13 @@ public class CrazyDailyWebView extends WebView {
          * 回调title
          */
         void onReceivedTitle(String title);
+    }
+
+    public void setDownloadCallback(DownloadCallback callback) {
+        mDownloadCallback = callback;
+    }
+
+    public interface DownloadCallback {
+        void onDownload(String url, long contentLength);
     }
 }

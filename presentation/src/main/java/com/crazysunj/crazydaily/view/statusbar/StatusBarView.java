@@ -20,7 +20,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.crazysunj.crazydaily.util.DeviceUtils;
+import com.crazysunj.crazydaily.util.DeviceUtil;
 
 /**
  * author: sunjian
@@ -43,7 +43,7 @@ public class StatusBarView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        heightMeasureSpec = MeasureSpec.makeMeasureSpec(DeviceUtils.getStatusBarHeight(getContext()), MeasureSpec.EXACTLY);
+        heightMeasureSpec = MeasureSpec.makeMeasureSpec(DeviceUtil.getStatusBarHeight(getContext()), MeasureSpec.EXACTLY);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 }

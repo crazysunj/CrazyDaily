@@ -18,7 +18,6 @@ package com.crazysunj.crazydaily.ui.scan;
 import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -26,7 +25,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 
@@ -131,17 +129,6 @@ public class ScannerActivity extends BaseActivity {
         return mDecoratedBarcodeView.onKeyDown(keyCode, event) || super.onKeyDown(keyCode, event);
     }
 
-    public Bitmap getSmallerBitmap(Bitmap bitmap) {
-        int size = bitmap.getWidth() * bitmap.getHeight() / 160000;
-        if (size <= 1) return bitmap; // 如果小于
-        else {
-            Matrix matrix = new Matrix();
-            matrix.postScale((float) (1 / Math.sqrt(size)), (float) (1 / Math.sqrt(size)));
-            Bitmap resizeBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-            return resizeBitmap;
-        }
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_SELECT_PICTURE) {
@@ -157,9 +144,7 @@ public class ScannerActivity extends BaseActivity {
                         Decoder decoder = new Decoder(new MultiFormatReader());
                         Result result = decoder.decode(new RGBLuminanceSource(width, height, dataArr));
                         if (result != null) {
-                            String text = result.getText();
-                            Log.d("ScannerActivity", "text:" + text);
-                            BrowserActivity.start(this, text);
+                            BrowserActivity.start(this, result.getText());
                         } else {
                             SnackbarUtil.show(this, "这个码真扫不了");
                         }
