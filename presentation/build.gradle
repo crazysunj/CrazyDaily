@@ -97,6 +97,7 @@ dependencies {
     implementation libs.richtext //富文本
     implementation libs.ucrop //裁剪
     implementation libs.zxing //二维码
+    implementation libs.pgyer //蒲公英
     debugImplementation libs.debugLeakcanary
     releaseImplementation libs.releaseLeakcanary
     annotationProcessor libs.butterknifeCompiler

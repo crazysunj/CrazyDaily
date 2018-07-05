@@ -4,6 +4,8 @@
     <string name="handle_img">处理本地图片</string>
     <string name="about_me">关于我</string>
     <string name="about_app">关于项目</string>
+    <string name="feedback">反馈</string>
+    <string name="update">检查更新</string>
     <string name="url_about_app">https://github.com/crazysunj/CrazyDaily/</string>
     <string name="url_about_me">http://crazysunj.com/</string>
 </resources>

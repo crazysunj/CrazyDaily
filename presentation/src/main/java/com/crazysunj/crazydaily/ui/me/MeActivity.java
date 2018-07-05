@@ -19,7 +19,9 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 
 import com.crazysunj.crazydaily.R;
@@ -31,6 +33,11 @@ import com.crazysunj.crazydaily.ui.photo.PhotoActivity;
 import com.crazysunj.crazydaily.util.CacheUtil;
 import com.crazysunj.crazydaily.util.SnackbarUtil;
 import com.crazysunj.crazydaily.view.item.CommonItem;
+import com.pgyersdk.feedback.PgyerFeedbackManager;
+import com.pgyersdk.update.DownloadFileListener;
+import com.pgyersdk.update.PgyUpdateManager;
+import com.pgyersdk.update.UpdateManagerListener;
+import com.pgyersdk.update.javabean.AppBean;
 
 import butterknife.BindView;
 import permissions.dispatcher.NeedsPermission;
@@ -57,6 +64,11 @@ public class MeActivity extends BaseActivity implements PermissionStorage {
     @BindView(R.id.me_clear_cache)
     CommonItem mClearCache;
 
+    @BindView(R.id.me_feedback)
+    CommonItem mFeedback;
+    @BindView(R.id.me_update)
+    CommonItem mUpdate;
+
     @BindView(R.id.me_about_app)
     CommonItem mAboutApp;
     @BindView(R.id.me_about_me)
@@ -68,6 +80,17 @@ public class MeActivity extends BaseActivity implements PermissionStorage {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PgyUpdateManager.unRegister();
+    }
+
+    @Override
     protected void initView() {
         setSupportActionBar(mToolbar);
     }
@@ -76,6 +99,8 @@ public class MeActivity extends BaseActivity implements PermissionStorage {
     protected void initListener() {
         mAboutApp.setOnClickListener(v -> BrowserActivity.start(this, getString(R.string.url_about_app)));
         mAboutMe.setOnClickListener(v -> BrowserActivity.start(this, getString(R.string.url_about_me)));
+        mUpdate.setOnClickListener(v -> MeActivityPermissionsDispatcher.showUpdateWithPermissionCheck(this));
+        mFeedback.setOnClickListener(v -> MeActivityPermissionsDispatcher.showFeedbackWithPermissionCheck(this));
         mClearCache.setOnClickListener(v -> MeActivityPermissionsDispatcher.clearCacheWithPermissionCheck(this));
         mHandleImg.setOnClickListener(v -> MeActivityPermissionsDispatcher.handleImgWithPermissionCheck(this));
     }
@@ -96,6 +121,66 @@ public class MeActivity extends BaseActivity implements PermissionStorage {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         MeActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
+    @NeedsPermission({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void showUpdate() {
+        new PgyUpdateManager.Builder()
+                //失败后是否提示重新下载，非自定义下载 apk 回调此方法有用
+                .setUserCanRetry(false)
+                //设置是否强制更新,非自定义回调更新接口此方法有用
+                .setForced(false)
+                // 检查更新前是否删除本地历史
+                .setDeleteHistroyApk(true)
+                .setUpdateManagerListener(new UpdateManagerListener() {
+                    @Override
+                    public void onNoUpdateAvailable() {
+                        // 无更新
+                        SnackbarUtil.show(MeActivity.this, "已经是最新的哦");
+                    }
+
+                    @Override
+                    public void onUpdateAvailable(AppBean appBean) {
+                        PgyUpdateManager.downLoadApk(appBean.getDownloadURL());
+                    }
+
+                    @Override
+                    public void checkUpdateFailed(Exception e) {
+                        //更新检测失败回调
+                        SnackbarUtil.show(MeActivity.this, "更新失败哦");
+                    }
+                })
+                //注意 ：下载方法调用 PgyUpdateManager.downLoadApk(appBean.getDownloadURL()); 此回调才有效
+                // 使用蒲公英提供的下载方法，这个接口才有效。
+                .setDownloadFileListener(new DownloadFileListener() {
+                    @Override
+                    public void downloadFailed() {
+                        //下载失败
+                        SnackbarUtil.show(MeActivity.this, "更新失败哦");
+                    }
+
+                    @Override
+                    public void downloadSuccessful(Uri uri) {
+                        // 使用蒲公英提供的安装方法提示用户 安装apk
+                        PgyUpdateManager.installApk(uri);
+
+                    }
+
+                    @Override
+                    public void onProgressUpdate(Integer... integers) {
+                    }
+                })
+                .register();
+    }
+
+    @NeedsPermission({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void showFeedback() {
+        new PgyerFeedbackManager.PgyerFeedbackBuilder()
+                //设置是否摇一摇的方式激活反馈，默认为 true
+                .setShakeInvoke(false)
+                //设置以Dialog的方式打开
+                .setDisplayType(PgyerFeedbackManager.TYPE.DIALOG_TYPE)
+                .builder().invoke();
     }
 
     @NeedsPermission({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})

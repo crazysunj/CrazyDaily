@@ -47,6 +47,7 @@ ext {
             ucrop                 : "2.2.2-native",
             sonic                 : "3.0.0",
             zxing                 : "3.6.0",
+            pgyer                 : "3.0.0",
     ]
 
     dataDependencies = [
@@ -97,6 +98,7 @@ ext {
             ucrop               : "com.github.yalantis:ucrop:${dependVersion.ucrop}",
             sonic               : "com.tencent.sonic:sdk:${dependVersion.sonic}",
             zxing               : "com.journeyapps:zxing-android-embedded:${dependVersion.zxing}",
+            pgyer               : "com.pgyersdk:sdk:${dependVersion.pgyer}",
     ]
 
     domainDependencies = [

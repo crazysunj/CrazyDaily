@@ -70,6 +70,21 @@
                 app:common_item_text="@string/clear_cache" />
 
             <com.crazysunj.crazydaily.view.item.CommonItem
+                android:id="@+id/me_update"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/space_50"
+                android:layout_marginTop="@dimen/space_10"
+                app:common_item_icon="@mipmap/ic_update"
+                app:common_item_text="@string/update" />
+
+            <com.crazysunj.crazydaily.view.item.CommonItem
+                android:id="@+id/me_feedback"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/space_50"
+                app:common_item_icon="@mipmap/ic_feedback"
+                app:common_item_text="@string/feedback" />
+
+            <com.crazysunj.crazydaily.view.item.CommonItem
                 android:id="@+id/me_about_app"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/space_50"

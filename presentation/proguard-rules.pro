@@ -336,4 +336,9 @@
 -keep class com.yalantis.ucrop** { *; }
 -keep interface com.yalantis.ucrop** { *; }
 
+#蒲公英
+-libraryjars libs/pgyer_sdk_x.x.jar
+-dontwarn com.pgyersdk.**
+-keep class com.pgyersdk.** { *; }
+
 

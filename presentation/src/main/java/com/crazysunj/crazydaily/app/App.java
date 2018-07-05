@@ -37,6 +37,7 @@ import com.crazysunj.crazydaily.weex.WXTabPagerComponent;
 import com.crazysunj.crazydaily.weex.WXWebComponent;
 import com.crazysunj.crazydaily.weex.WXWebViewModule;
 import com.crazysunj.data.util.LoggerUtil;
+import com.pgyersdk.crash.PgyCrashManager;
 import com.squareup.leakcanary.LeakCanary;
 import com.taobao.weex.InitConfig;
 import com.taobao.weex.WXSDKEngine;
@@ -73,7 +74,12 @@ public class App extends Application {
         initWeex();
         initX5WebView();
         initSonic();
+        initPgyer();
         initLeakCanary();
+    }
+
+    private void initPgyer() {
+        PgyCrashManager.register();
     }
 
     private void initLeakCanary() {
