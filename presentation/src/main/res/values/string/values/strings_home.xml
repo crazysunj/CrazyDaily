@@ -4,6 +4,6 @@
     <string name="text_live">直播</string>
     <string name="text_music">音乐</string>
     <string name="text_more">更多</string>
-    <string name="text_about_me">关于我</string>
+    <string name="text_me">我的</string>
     <string name="bottom_line">我是有底线的</string>
 </resources>

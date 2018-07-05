@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="clear_cache">清除缓存</string>
+    <string name="handle_img">处理本地图片</string>
+    <string name="about_me">关于我</string>
+    <string name="about_app">关于项目</string>
+    <string name="url_about_app">https://github.com/crazysunj/CrazyDaily/</string>
+    <string name="url_about_me">http://crazysunj.com/</string>
+</resources>

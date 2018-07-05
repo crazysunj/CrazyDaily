@@ -46,6 +46,7 @@ ext {
             richtext              : "3.0.7",
             ucrop                 : "2.2.2-native",
             sonic                 : "3.0.0",
+            zxing                 : "3.6.0",
     ]
 
     dataDependencies = [
@@ -95,6 +96,7 @@ ext {
             richtext            : "com.zzhoujay.richtext:richtext:${dependVersion.richtext}",
             ucrop               : "com.github.yalantis:ucrop:${dependVersion.ucrop}",
             sonic               : "com.tencent.sonic:sdk:${dependVersion.sonic}",
+            zxing               : "com.journeyapps:zxing-android-embedded:${dependVersion.zxing}",
     ]
 
     domainDependencies = [

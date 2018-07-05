@@ -8,9 +8,17 @@
         <enum name="left_top" value="2" />
         <enum name="right_top" value="3" />
     </attr>
+    <attr name="common_item_icon" format="reference" />
+    <attr name="common_item_text" format="string" />
+    <attr name="common_item_bottom_line" format="boolean" />
     <declare-styleable name="SatelliteMenuView">
         <attr name="satellite_menu_radius" />
         <attr name="satellite_menu_size" />
         <attr name="satellite_menu_direction" />
+    </declare-styleable>
+    <declare-styleable name="CommonItem">
+        <attr name="common_item_icon" />
+        <attr name="common_item_text" />
+        <attr name="common_item_bottom_line" />
     </declare-styleable>
 </resources>

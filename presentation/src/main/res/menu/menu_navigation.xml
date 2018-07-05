@@ -16,9 +16,9 @@
         android:title="@string/text_music" />
 
     <item
-        android:id="@+id/navigation_about_me"
-        android:icon="@mipmap/ic_about_me"
-        android:title="@string/text_about_me" />
+        android:id="@+id/navigation_me"
+        android:icon="@mipmap/ic_me"
+        android:title="@string/text_me" />
 
     <item
         android:id="@+id/navigation_more"

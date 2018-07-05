@@ -52,9 +52,10 @@
             android:theme="@style/BrowserTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
-            android:name=".ui.aboutme.AboutMeActivity"
-            android:label="@string/text_about_me"
-            android:screenOrientation="portrait" />
+            android:name=".ui.me.MeActivity"
+            android:label="@string/text_me"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".weex.WeexActivity" />
         <activity
             android:name=".ui.contact.ContactActivity"
@@ -84,8 +85,8 @@
             android:name=".ui.scan.ScannerActivity"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:theme="@style/PhotoTheme" />
+            android:theme="@style/PhotoTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
@@ -93,7 +94,7 @@
 
         <service
             android:name=".service.DownloadService"
-            android:exported="false"/>
+            android:exported="false" />
     </application>
 
 </manifest>

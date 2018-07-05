@@ -55,7 +55,7 @@ import com.crazysunj.crazydaily.moudle.permission.PermissionCamera;
 import com.crazysunj.crazydaily.moudle.permission.PermissionHelper;
 import com.crazysunj.crazydaily.presenter.HomePresenter;
 import com.crazysunj.crazydaily.presenter.contract.HomeContract;
-import com.crazysunj.crazydaily.ui.aboutme.AboutMeActivity;
+import com.crazysunj.crazydaily.ui.me.MeActivity;
 import com.crazysunj.crazydaily.ui.adapter.HomeAdapter;
 import com.crazysunj.crazydaily.ui.adapter.helper.HomeAdapterHelper;
 import com.crazysunj.crazydaily.ui.browser.BrowserActivity;
@@ -411,14 +411,14 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
 //                WeexActivity.start(HomeActivity.this, WeexConstant.PAGE_NAME_ABOUT_ME, WeexConstant.PATH_ABOUT_ME);
                 SnackbarUtil.show(this, "音乐模块敬请期待!");
                 break;
-            case R.id.navigation_about_me:
-                AboutMeActivity.start(this);
+            case R.id.navigation_me:
+                MeActivity.start(this);
                 break;
             case R.id.navigation_more:
                 SnackbarUtil.show(this, "更多模块敬请期待!");
                 break;
             default:
-                AboutMeActivity.start(this);
+                MeActivity.start(this);
                 break;
         }
         return true;

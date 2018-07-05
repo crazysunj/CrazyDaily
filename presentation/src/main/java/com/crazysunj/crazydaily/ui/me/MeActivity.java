@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crazysunj.crazydaily.ui.aboutme;
+package com.crazysunj.crazydaily.ui.me;
 
 import android.Manifest;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
-import android.text.TextUtils;
-import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
 
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
@@ -33,6 +30,7 @@ import com.crazysunj.crazydaily.ui.browser.BrowserActivity;
 import com.crazysunj.crazydaily.ui.photo.PhotoActivity;
 import com.crazysunj.crazydaily.util.CacheUtil;
 import com.crazysunj.crazydaily.util.SnackbarUtil;
+import com.crazysunj.crazydaily.view.item.CommonItem;
 
 import butterknife.BindView;
 import permissions.dispatcher.NeedsPermission;
@@ -48,48 +46,38 @@ import permissions.dispatcher.RuntimePermissions;
  * description: https://github.com/crazysunj/CrazyDaily
  */
 @RuntimePermissions
-public class AboutMeActivity extends BaseActivity implements PermissionStorage {
+public class MeActivity extends BaseActivity implements PermissionStorage {
 
     private static final int REQUEST_SELECT_PICTURE = 0x01;
 
-    @BindView(R.id.about_me_github)
-    TextView mGithub;
-    @BindView(R.id.about_me_blog)
-    TextView mBlog;
-    @BindView(R.id.about_me_clear_cache)
-    CardView mClearCache;
-    @BindView(R.id.about_me_handle_img)
-    CardView mHandleImg;
+    @BindView(R.id.me_toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.me_handle_img)
+    CommonItem mHandleImg;
+    @BindView(R.id.me_clear_cache)
+    CommonItem mClearCache;
+
+    @BindView(R.id.me_about_app)
+    CommonItem mAboutApp;
+    @BindView(R.id.me_about_me)
+    CommonItem mAboutMe;
 
     public static void start(Context context) {
-        Intent intent = new Intent(context, AboutMeActivity.class);
+        Intent intent = new Intent(context, MeActivity.class);
         context.startActivity(intent);
     }
 
     @Override
     protected void initView() {
-        showBack();
+        setSupportActionBar(mToolbar);
     }
 
     @Override
     protected void initListener() {
-        mGithub.setOnLongClickListener(v -> {
-            String github = mGithub.getText().toString().trim();
-            copyContent(github);
-            return false;
-        });
-
-        mBlog.setOnLongClickListener(v -> {
-            String blog = mBlog.getText().toString().trim();
-            copyContent(blog);
-            return false;
-        });
-
-        mBlog.setOnClickListener(v -> BrowserActivity.start(this, mBlog.getText().toString().trim()));
-        mGithub.setOnClickListener(v -> BrowserActivity.start(this, mGithub.getText().toString().trim()));
-
-        mClearCache.setOnClickListener(v -> AboutMeActivityPermissionsDispatcher.clearCacheWithPermissionCheck(this));
-        mHandleImg.setOnClickListener(v -> AboutMeActivityPermissionsDispatcher.handleImgWithPermissionCheck(this));
+        mAboutApp.setOnClickListener(v -> BrowserActivity.start(this, getString(R.string.url_about_app)));
+        mAboutMe.setOnClickListener(v -> BrowserActivity.start(this, getString(R.string.url_about_me)));
+        mClearCache.setOnClickListener(v -> MeActivityPermissionsDispatcher.clearCacheWithPermissionCheck(this));
+        mHandleImg.setOnClickListener(v -> MeActivityPermissionsDispatcher.handleImgWithPermissionCheck(this));
     }
 
     @Override
@@ -107,7 +95,7 @@ public class AboutMeActivity extends BaseActivity implements PermissionStorage {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        AboutMeActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+        MeActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
     @NeedsPermission({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
@@ -146,14 +134,6 @@ public class AboutMeActivity extends BaseActivity implements PermissionStorage {
 
     @Override
     protected int getContentResId() {
-        return R.layout.activity_about_me;
-    }
-
-    private void copyContent(String content) {
-        if (!TextUtils.isEmpty(content)) {
-            ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-            cm.setText(content);
-            SnackbarUtil.show(this, "已经复制到剪切板！");
-        }
+        return R.layout.activity_me;
     }
 }

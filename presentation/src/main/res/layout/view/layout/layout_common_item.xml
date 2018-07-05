@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/common_item_icon"
+        android:layout_width="@dimen/space_20"
+        android:layout_height="@dimen/space_20"
+        android:layout_marginEnd="@dimen/space_30"
+        android:src="@mipmap/ic_huaji" />
+
+    <TextView
+        android:id="@+id/common_item_text"
+        style="@style/text_14_666666"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        tools:text="测试一下" />
+
+    <TextView
+        style="@style/text_12_666666"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/contact"
+        android:text="@string/ic_go" />
+
+</merge>

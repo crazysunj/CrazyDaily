@@ -17,6 +17,7 @@ package com.crazysunj.crazydaily.view.behavior;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
@@ -27,7 +28,6 @@ import android.view.View;
  * created on: 2017/8/3 下午2:21
  * description:https://github.com/crazysunj/CrazyDaily
  */
-
 public class AppBarLayoutOverScrollViewBehavior extends AppBarLayout.Behavior {
     private static final String TAG = "overScroll";
     private static final float TARGET_HEIGHT = 500;
@@ -49,7 +49,6 @@ public class AppBarLayoutOverScrollViewBehavior extends AppBarLayout.Behavior {
     @Override
     public boolean onLayoutChild(CoordinatorLayout parent, AppBarLayout abl, int layoutDirection) {
         boolean handled = super.onLayoutChild(parent, abl, layoutDirection);
-        // 需要在调用过super.onLayoutChild()方法之后获取
         if (mTargetView == null) {
             mTargetView = parent.findViewWithTag(TAG);
             if (mTargetView != null) {
@@ -60,32 +59,32 @@ public class AppBarLayoutOverScrollViewBehavior extends AppBarLayout.Behavior {
     }
 
     @Override
-    public boolean onStartNestedScroll(CoordinatorLayout parent, AppBarLayout child, View directTargetChild, View target, int nestedScrollAxes) {
+    public boolean onStartNestedScroll(CoordinatorLayout parent, AppBarLayout child, View directTargetChild, View target, int nestedScrollAxes, int type) {
         isAnimate = true;
-        return super.onStartNestedScroll(parent, child, directTargetChild, target, nestedScrollAxes);
+        return super.onStartNestedScroll(parent, child, directTargetChild, target, nestedScrollAxes, type);
     }
 
     @Override
-    public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, AppBarLayout child, View target, int dx, int dy, int[] consumed) {
+    public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, AppBarLayout child, View target, int dx, int dy, int[] consumed, int type) {
         if (mTargetView != null && ((dy < 0 && child.getBottom() >= mParentHeight) || (dy > 0 && child.getBottom() > mParentHeight))) {
             scale(child, target, dy);
         } else {
-            super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed);
+            super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type);
         }
     }
 
     @Override
-    public boolean onNestedPreFling(CoordinatorLayout coordinatorLayout, AppBarLayout child, View target, float velocityX, float velocityY) {
+    public boolean onNestedFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull AppBarLayout child, @NonNull View target, float velocityX, float velocityY, boolean consumed) {
         if (velocityY > 100) {
             isAnimate = false;
         }
-        return super.onNestedPreFling(coordinatorLayout, child, target, velocityX, velocityY);
+        return super.onNestedFling(coordinatorLayout, child, target, velocityX, velocityY, consumed);
     }
 
     @Override
-    public void onStopNestedScroll(CoordinatorLayout coordinatorLayout, AppBarLayout abl, View target) {
+    public void onStopNestedScroll(CoordinatorLayout coordinatorLayout, AppBarLayout abl, View target, int type) {
         recovery(abl);
-        super.onStopNestedScroll(coordinatorLayout, abl, target);
+        super.onStopNestedScroll(coordinatorLayout, abl, target, type);
     }
 
     private void initial(AppBarLayout abl) {
