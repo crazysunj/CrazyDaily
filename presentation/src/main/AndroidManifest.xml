@@ -33,26 +33,26 @@
         </provider>
 
         <activity
-            android:name=".ui.HomeActivity"
+            android:name=".ui.home.HomeActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/HomeTheme" />
         <activity
-            android:name=".ui.ZhihuNewsDetailActivity"
+            android:name=".ui.zhihu.ZhihuNewsDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Transitions"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
-            android:name=".ui.BrowserActivity"
+            android:name=".ui.browser.BrowserActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/BrowserTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
-            android:name=".ui.AboutMeActivity"
+            android:name=".ui.aboutme.AboutMeActivity"
             android:label="@string/text_about_me"
             android:screenOrientation="portrait" />
         <activity android:name=".weex.WeexActivity" />

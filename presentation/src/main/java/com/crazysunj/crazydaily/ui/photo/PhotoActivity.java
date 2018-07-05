@@ -31,7 +31,6 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -53,9 +52,11 @@ import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
 import com.crazysunj.crazydaily.constant.ActivityConstant;
 import com.crazysunj.crazydaily.moudle.image.ImageLoader;
+import com.crazysunj.crazydaily.moudle.permission.PermissionHelper;
+import com.crazysunj.crazydaily.moudle.permission.PermissionStorage;
 import com.crazysunj.crazydaily.util.DeviceUtil;
-import com.crazysunj.crazydaily.util.SnackbarUtil;
 import com.crazysunj.crazydaily.util.FileUtil;
+import com.crazysunj.crazydaily.util.SnackbarUtil;
 import com.crazysunj.crazydaily.view.photo.PhotoDrawerLayout;
 import com.crazysunj.domain.constant.CacheConstant;
 import com.github.chrisbanes.photoview.PhotoView;
@@ -78,7 +79,7 @@ import permissions.dispatcher.RuntimePermissions;
  * description:https://github.com/crazysunj/CrazyDaily
  */
 @RuntimePermissions
-public class PhotoActivity extends BaseActivity {
+public class PhotoActivity extends BaseActivity implements PermissionStorage {
 
     private static final String DEFAULT_COMPRESS_QUALITY = "90";
 
@@ -394,22 +395,21 @@ public class PhotoActivity extends BaseActivity {
     }
 
     @OnShowRationale({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
-    void showRationaleForSave(final PermissionRequest request) {
-        new AlertDialog.Builder(this)
-                .setMessage(R.string.permission_storage_rationale)
-                .setPositiveButton(R.string.button_allow, (dialog, button) -> request.proceed())
-                .setNegativeButton(R.string.button_deny, (dialog, button) -> request.cancel())
-                .show();
+    @Override
+    public void showRationaleForStorage(PermissionRequest request) {
+        PermissionHelper.storageShowRationale(this, request);
     }
 
     @OnPermissionDenied({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
-    void showDeniedForSave() {
-        SnackbarUtil.show(this, R.string.permission_storage_denied);
+    @Override
+    public void showDeniedForStorage() {
+        PermissionHelper.storagePermissionDenied(this);
     }
 
     @OnNeverAskAgain({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
-    void showNeverAskForSave() {
-        SnackbarUtil.show(this, R.string.permission_storage_neverask);
+    @Override
+    public void showNeverAskForStorage() {
+        PermissionHelper.storageNeverAskAgain(this);
     }
 
     private TextWatcher mCropRatioTextWatcher = new TextWatcher() {

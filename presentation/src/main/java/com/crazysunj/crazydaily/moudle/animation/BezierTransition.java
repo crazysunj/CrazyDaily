@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crazysunj.crazydaily.animation;
+package com.crazysunj.crazydaily.moudle.animation;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;

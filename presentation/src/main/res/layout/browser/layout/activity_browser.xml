@@ -4,5 +4,5 @@
     android:id="@+id/browser_web_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.crazysunj.crazydaily.ui.BrowserActivity" />
+    tools:context="com.crazysunj.crazydaily.ui.browser.BrowserActivity" />
 

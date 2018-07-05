@@ -22,7 +22,7 @@ import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
 import com.crazysunj.crazydaily.presenter.SplashPresenter;
 import com.crazysunj.crazydaily.presenter.contract.SplashContract;
-import com.crazysunj.crazydaily.ui.HomeActivity;
+import com.crazysunj.crazydaily.ui.home.HomeActivity;
 
 import butterknife.BindView;
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crazysunj.crazydaily.ui;
+package com.crazysunj.crazydaily.ui.home;
 
 import android.Manifest;
 import android.animation.ArgbEvaluator;
@@ -51,10 +51,14 @@ import com.crazysunj.crazydaily.constant.WeexConstant;
 import com.crazysunj.crazydaily.di.module.EntityModule;
 import com.crazysunj.crazydaily.entity.CityEntity;
 import com.crazysunj.crazydaily.moudle.image.ImageLoader;
+import com.crazysunj.crazydaily.moudle.permission.PermissionCamera;
+import com.crazysunj.crazydaily.moudle.permission.PermissionHelper;
 import com.crazysunj.crazydaily.presenter.HomePresenter;
 import com.crazysunj.crazydaily.presenter.contract.HomeContract;
+import com.crazysunj.crazydaily.ui.aboutme.AboutMeActivity;
 import com.crazysunj.crazydaily.ui.adapter.HomeAdapter;
 import com.crazysunj.crazydaily.ui.adapter.helper.HomeAdapterHelper;
+import com.crazysunj.crazydaily.ui.browser.BrowserActivity;
 import com.crazysunj.crazydaily.ui.contact.ContactActivity;
 import com.crazysunj.crazydaily.ui.photo.PhotoActivity;
 import com.crazysunj.crazydaily.ui.scan.ScannerActivity;
@@ -98,7 +102,7 @@ import permissions.dispatcher.RuntimePermissions;
  * description: https://github.com/crazysunj/CrazyDaily
  */
 @RuntimePermissions
-public class HomeActivity extends BaseActivity<HomePresenter> implements HomeContract.View {
+public class HomeActivity extends BaseActivity<HomePresenter> implements HomeContract.View, PermissionCamera {
 
     @BindView(R.id.refresh)
     SwipeRefreshLayout mRefresh;
@@ -519,22 +523,21 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     }
 
     @OnShowRationale({Manifest.permission.CAMERA})
-    void showRationaleForCamera(final PermissionRequest request) {
-        new AlertDialog.Builder(this)
-                .setMessage(R.string.permission_camera_rationale)
-                .setPositiveButton(R.string.button_allow, (dialog, button) -> request.proceed())
-                .setNegativeButton(R.string.button_deny, (dialog, button) -> request.cancel())
-                .show();
+    @Override
+    public void showRationaleForCamera(PermissionRequest request) {
+        PermissionHelper.cameraShowRationale(this, request);
     }
 
     @OnPermissionDenied({Manifest.permission.CAMERA})
-    void showDeniedForCamera() {
-        SnackbarUtil.show(this, R.string.permission_camera_denied);
+    @Override
+    public void showDeniedForCamera() {
+        PermissionHelper.cameraPermissionDenied(this);
     }
 
     @OnNeverAskAgain({Manifest.permission.CAMERA})
-    void showNeverAskForCamera() {
-        SnackbarUtil.show(this, R.string.permission_camera_neverask);
+    @Override
+    public void showNeverAskForCamera() {
+        PermissionHelper.cameraNeverAskAgain(this);
     }
 
     private class HomeRecyclerViewStateChangeListener implements RecyclerView.OnChildAttachStateChangeListener {

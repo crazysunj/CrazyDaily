@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crazysunj.crazydaily.ui;
+package com.crazysunj.crazydaily.ui.aboutme;
 
 import android.Manifest;
 import android.content.ClipboardManager;
@@ -21,13 +21,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
+import com.crazysunj.crazydaily.moudle.permission.PermissionHelper;
+import com.crazysunj.crazydaily.moudle.permission.PermissionStorage;
+import com.crazysunj.crazydaily.ui.browser.BrowserActivity;
 import com.crazysunj.crazydaily.ui.photo.PhotoActivity;
 import com.crazysunj.crazydaily.util.CacheUtil;
 import com.crazysunj.crazydaily.util.SnackbarUtil;
@@ -46,7 +48,7 @@ import permissions.dispatcher.RuntimePermissions;
  * description: https://github.com/crazysunj/CrazyDaily
  */
 @RuntimePermissions
-public class AboutMeActivity extends BaseActivity {
+public class AboutMeActivity extends BaseActivity implements PermissionStorage {
 
     private static final int REQUEST_SELECT_PICTURE = 0x01;
 
@@ -125,22 +127,21 @@ public class AboutMeActivity extends BaseActivity {
     }
 
     @OnShowRationale({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
-    void showRationaleForStorage(final PermissionRequest request) {
-        new AlertDialog.Builder(this)
-                .setMessage(R.string.permission_storage_rationale)
-                .setPositiveButton(R.string.button_allow, (dialog, button) -> request.proceed())
-                .setNegativeButton(R.string.button_deny, (dialog, button) -> request.cancel())
-                .show();
+    @Override
+    public void showRationaleForStorage(PermissionRequest request) {
+        PermissionHelper.storageShowRationale(this, request);
     }
 
     @OnPermissionDenied({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
-    void showDeniedForStorage() {
-        SnackbarUtil.show(this, R.string.permission_storage_denied);
+    @Override
+    public void showDeniedForStorage() {
+        PermissionHelper.storagePermissionDenied(this);
     }
 
     @OnNeverAskAgain({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
-    void showNeverAskForStorage() {
-        SnackbarUtil.show(this, R.string.permission_storage_neverask);
+    @Override
+    public void showNeverAskForStorage() {
+        PermissionHelper.storageNeverAskAgain(this);
     }
 
     @Override

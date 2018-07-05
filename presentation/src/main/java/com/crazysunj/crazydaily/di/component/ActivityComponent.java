@@ -20,8 +20,8 @@ import android.app.Activity;
 import com.crazysunj.crazydaily.di.module.ActivityModule;
 import com.crazysunj.crazydaily.di.module.EntityModule;
 import com.crazysunj.crazydaily.di.scope.ActivityScope;
-import com.crazysunj.crazydaily.ui.HomeActivity;
-import com.crazysunj.crazydaily.ui.ZhihuNewsDetailActivity;
+import com.crazysunj.crazydaily.ui.home.HomeActivity;
+import com.crazysunj.crazydaily.ui.zhihu.ZhihuNewsDetailActivity;
 import com.crazysunj.crazydaily.ui.contact.ContactActivity;
 import com.crazysunj.crazydaily.ui.splash.SplashActivity;
 

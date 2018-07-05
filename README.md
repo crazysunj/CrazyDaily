@@ -1,5 +1,5 @@
 # CrazyDaily
-一款程序员日常放松的App，基于Material Design + MVP-Clean + Weex + RxJava2 + Retrofit + Dagger2 + Glide + Okhttp + MTRVA + 炫酷控件 + 炫酷动画
+学习Android的开源项目，基于Material Design + MVP-Clean + Weex + RxJava2 + Retrofit + Dagger2 + Glide + OkHttp + MTRVA + 炫酷控件 + 炫酷动画
 
 ## 效果图
 ### 首页

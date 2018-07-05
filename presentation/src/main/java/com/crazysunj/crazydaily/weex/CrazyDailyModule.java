@@ -18,7 +18,7 @@ package com.crazysunj.crazydaily.weex;
 import android.app.Activity;
 import android.content.Context;
 
-import com.crazysunj.crazydaily.ui.BrowserActivity;
+import com.crazysunj.crazydaily.ui.browser.BrowserActivity;
 import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.common.WXModule;
 

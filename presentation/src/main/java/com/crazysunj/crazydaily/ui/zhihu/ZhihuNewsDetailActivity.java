@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crazysunj.crazydaily.ui;
+package com.crazysunj.crazydaily.ui.zhihu;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
