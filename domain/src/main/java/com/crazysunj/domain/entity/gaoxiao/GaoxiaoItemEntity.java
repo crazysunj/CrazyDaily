@@ -41,6 +41,7 @@ public class GaoxiaoItemEntity extends MultiTypeIdEntity {
     private String thumbnail;
     private long duration;
     private String videoUrl;
+    private boolean isPlaying;
 
     public static GaoxiaoItemEntity get(GaoxiaoEntity.DataEntity entity) {
         final String videouri = entity.getVideouri();
@@ -64,6 +65,14 @@ public class GaoxiaoItemEntity extends MultiTypeIdEntity {
         this.thumbnail = thumbnail;
         this.duration = duration;
         this.videoUrl = videoUrl;
+    }
+
+    public boolean isPlaying() {
+        return isPlaying;
+    }
+
+    public void setPlaying(boolean playing) {
+        isPlaying = playing;
     }
 
     public String getAvatar() {

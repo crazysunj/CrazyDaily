@@ -16,8 +16,10 @@
 package com.crazysunj.crazydaily.ui.adapter;
 
 import android.app.Activity;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatImageView;
 import android.text.format.DateFormat;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -26,9 +28,9 @@ import com.crazysunj.crazydaily.base.BaseAdapter;
 import com.crazysunj.crazydaily.di.module.EntityModule;
 import com.crazysunj.crazydaily.entity.ExpandCollapseFooterEntity;
 import com.crazysunj.crazydaily.moudle.image.ImageLoader;
+import com.crazysunj.crazydaily.ui.adapter.helper.HomeAdapterHelper;
 import com.crazysunj.crazydaily.ui.browser.BrowserActivity;
 import com.crazysunj.crazydaily.ui.zhihu.ZhihuNewsDetailActivity;
-import com.crazysunj.crazydaily.ui.adapter.helper.HomeAdapterHelper;
 import com.crazysunj.crazydaily.util.DateUtil;
 import com.crazysunj.crazydaily.util.FileUtil;
 import com.crazysunj.crazydaily.util.WeatherUtil;
@@ -85,6 +87,7 @@ public class HomeAdapter extends BaseAdapter<MultiTypeIdEntity, BaseViewHolder, 
     @Named(EntityModule.NAME_GAOXIAO)
     @Inject
     CommonFooterEntity mGaoxiaoFooterEntity;
+    private NiceVideoPlayer mVideoPlayer;
 
     @Inject
     public HomeAdapter(HomeAdapterHelper helper) {
@@ -144,9 +147,54 @@ public class HomeAdapter extends BaseAdapter<MultiTypeIdEntity, BaseViewHolder, 
         ImageLoader.load(mContext, item.getThumbnail(), R.drawable.img_default, controller.imageView());
     }
 
+    @Override
+    public void onViewAttachedToWindow(BaseViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        final int position = holder.getAdapterPosition() - getHeaderLayoutCount();
+        if (position < 0) {
+            return;
+        }
+        final int itemViewType = holder.getItemViewType();
+        if (itemViewType == GaoxiaoItemEntity.TYPE_GAOXIAO && mTinyWindowPosition == position) {
+            mVideoPlayer.exitTinyWindow();
+            ViewGroup wrapView = (ViewGroup) holder.itemView;
+            wrapView.addView(mVideoPlayer);
+            mVideoPlayer = null;
+            mTinyWindowPosition = -1;
+        }
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull BaseViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        final int position = holder.getAdapterPosition() - getHeaderLayoutCount();
+        if (position < 0) {
+            return;
+        }
+        MultiTypeIdEntity item = mData.get(position);
+        if (item.getItemType() == GaoxiaoItemEntity.TYPE_GAOXIAO) {
+            GaoxiaoItemEntity gaoxiaoItem = (GaoxiaoItemEntity) item;
+            NiceVideoPlayer niceVideoPlayer = holder.getView(R.id.item_neihan_video);
+            if (niceVideoPlayer.isPlaying()) {
+//                ThreadManager.single().execute(niceVideoPlayer::release);
+                ViewGroup wrapView = (ViewGroup) holder.itemView;
+                wrapView.removeView(niceVideoPlayer);
+                mVideoPlayer = niceVideoPlayer;
+                mTinyWindowPosition = position;
+                mVideoPlayer.enterTinyWindow();
+            }
+        }
+    }
+
+    private int mTinyWindowPosition = -1;
 
     public void notifyGaoxiaoList(List<GaoxiaoItemEntity> data) {
         final int level = HomeAdapterHelper.LEVEL_GAOXIAO;
+//        if (mVideoPlayer == null) {
+//            mVideoPlayer = new NiceVideoPlayer(mContext);
+//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mContext.getResources().getDimensionPixelSize(R.dimen.space_240));
+//            mVideoPlayer.setLayoutParams(params);
+//        }
         mHelper.notifyMoudleDataAndHeaderAndFooterChanged(data, mGaoxiaoHeaderEntity, mGaoxiaoFooterEntity, level);
     }
 

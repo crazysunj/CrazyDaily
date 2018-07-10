@@ -200,7 +200,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     protected void initListener() {
         mRefresh.setOnRefreshListener(this::onRefresh);
         mAdapter.setOnHeaderClickListener(this::handleHeaderOptions);
-        mHomeList.addOnChildAttachStateChangeListener(new HomeRecyclerViewStateChangeListener());
+//        mHomeList.addOnChildAttachStateChangeListener(new HomeRecyclerViewStateChangeListener());
         mAppbar.addOnOffsetChangedListener(this::handleAppbarOffsetChangedListener);
         mToolbar.setNavigationOnClickListener(v -> HomeActivityPermissionsDispatcher.openQRCodeWithPermissionCheck(this));
         mBottomNavigation.setOnNavigationItemSelectedListener(this::handleNavigationItemClick);
