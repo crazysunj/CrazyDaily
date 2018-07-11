@@ -29,7 +29,6 @@ import com.crazysunj.crazydaily.util.DeviceUtil;
 import com.crazysunj.domain.constant.CacheConstant;
 import com.tencent.smtt.export.external.interfaces.SslError;
 import com.tencent.smtt.export.external.interfaces.SslErrorHandler;
-import com.tencent.smtt.export.external.interfaces.WebResourceError;
 import com.tencent.smtt.export.external.interfaces.WebResourceRequest;
 import com.tencent.smtt.export.external.interfaces.WebResourceResponse;
 import com.tencent.smtt.sdk.DownloadListener;
@@ -46,6 +45,13 @@ import java.io.File;
  * description: https://github.com/crazysunj/CrazyDaily
  */
 public class CrazyDailyWebView extends WebView {
+
+    private static final String HTTP = "http:";
+    private static final String HTTPS = "https:";
+    /**
+     * 应用市场
+     */
+    private static final String MARKET = "market";
 
     private WebViewCallback mWebViewCallback;
     private DownloadCallback mDownloadCallback;
@@ -180,30 +186,28 @@ public class CrazyDailyWebView extends WebView {
         }
 
         @Override
-        public void onReceivedError(WebView webView, WebResourceRequest request, WebResourceError error) {
-            if (error.getErrorCode() == WebViewClient.ERROR_UNSUPPORTED_SCHEME) {
-                //兼容自定义协议
-                //很多浏览器并没有做，可考虑去掉
-                Uri uri = request.getUrl();
-                String scheme = uri.getScheme();
-                if (scheme != null) {
-                    if (scheme.contains("market")) {
-                        showEnterDialog(uri);
-                        return;
-                    }
-                }
+        public boolean shouldOverrideUrlLoading(WebView webView, String url) {
+            if (url == null) {
+                return false;
             }
-            super.onReceivedError(webView, request, error);
+            if (url.startsWith(HTTP) || url.startsWith(HTTPS)) {
+                return false;
+            }
+            Uri uri = Uri.parse(url);
+            // 这里只列了应用市场
+            if (uri.getScheme().contains(MARKET)) {
+                showEnterDialog(uri);
+            }
+            return true;
         }
 
         private void showEnterDialog(Uri uri) {
             if (mEnterDialog == null) {
                 final Context context = getContext();
                 mEnterDialog = new AlertDialog.Builder(context, R.style.NormalDialog)
-                        .setTitle("温馨提示")
-                        .setMessage("允许跳转到商店吗")
-                        .setNegativeButton("丑拒", null)
-                        .setPositiveButton("No problem", (dialogInterface, i) -> {
+                        .setMessage("要不要跳转到商店")
+                        .setNegativeButton("浪费流量", null)
+                        .setPositiveButton("无限流量", (dialogInterface, i) -> {
                             try {
                                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                                 context.startActivity(intent);
