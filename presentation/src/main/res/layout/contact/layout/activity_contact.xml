@@ -40,7 +40,7 @@
             android:paddingEnd="@dimen/space_4"
             android:paddingStart="@dimen/space_4"
             app:sidebar_text_color="@color/color_FF5C8D"
-            app:sidebar_text_size="@dimen/sp_14" />
+            app:sidebar_text_size="@dimen/text_14" />
 
     </FrameLayout>
 

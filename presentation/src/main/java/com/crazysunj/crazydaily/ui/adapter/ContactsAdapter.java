@@ -25,7 +25,7 @@ import android.support.v4.util.Pair;
 import android.view.View;
 
 import com.crazysunj.crazydaily.R;
-import com.crazysunj.crazydaily.base.BaseAdapter;
+import com.crazysunj.crazydaily.base.BaseHelperAdapter;
 import com.crazysunj.crazydaily.entity.ContactLoadingEntity;
 import com.crazysunj.crazydaily.extension.Extension;
 import com.crazysunj.crazydaily.extension.ItemTouchHelperExtension;
@@ -48,7 +48,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * created on: 2018/4/16 下午6:39
  * description:https://github.com/crazysunj/CrazyDaily
  */
-public class ContactsAdapter extends BaseAdapter<MultiTypeIndexEntity, ContactsAdapter.ContactViewHolder, ContactAdapterHelper> {
+public class ContactsAdapter extends BaseHelperAdapter<MultiTypeIndexEntity, ContactsAdapter.ContactViewHolder, ContactAdapterHelper> {
 
     private ItemTouchHelperExtension mItemTouchHelper;
 
@@ -82,34 +82,34 @@ public class ContactsAdapter extends BaseAdapter<MultiTypeIndexEntity, ContactsA
     }
 
     @Override
-    public void onViewAttachedToWindow(ContactViewHolder helper) {
-        helper.startAnim();
+    public void onViewAttachedToWindow(@NonNull ContactViewHolder holder) {
+        holder.startAnim();
     }
 
     @Override
-    public void onViewDetachedFromWindow(@NonNull ContactViewHolder helper) {
-        helper.stopAnim();
+    public void onViewDetachedFromWindow(@NonNull ContactViewHolder holder) {
+        holder.stopAnim();
     }
 
     @Override
-    protected void convert(ContactViewHolder helper, MultiTypeIndexEntity item) {
+    protected void convert(ContactViewHolder holder, MultiTypeIndexEntity item) {
         switch (item.getItemType()) {
             case Contact.TYPE:
-                renderContact(helper, (Contact) item);
+                renderContact(holder, (Contact) item);
                 break;
             case ContactHeader.TYPE:
-                renderContactHeader(helper, (ContactHeader) item);
+                renderContactHeader(holder, (ContactHeader) item);
                 break;
             default:
                 break;
         }
     }
 
-    private void renderContactHeader(ContactViewHolder helper, ContactHeader item) {
-        helper.setText(R.id.index, item.getStringId());
-        View icon = helper.getView(R.id.header_icon);
+    private void renderContactHeader(ContactViewHolder holder, ContactHeader item) {
+        holder.setText(R.id.index, item.getStringId());
+        View icon = holder.getView(R.id.header_icon);
         final boolean flod = item.isFlod();
-        helper.setVisible(R.id.bottom_line, !flod);
+        holder.setVisible(R.id.bottom_line, !flod);
         if (flod) {
             icon.animate().cancel();
             icon.setRotation(-90);
@@ -117,11 +117,12 @@ public class ContactsAdapter extends BaseAdapter<MultiTypeIndexEntity, ContactsA
             icon.animate().cancel();
             icon.setRotation(0);
         }
-        helper.itemView.setOnClickListener(v -> switchStatus(item, icon));
+        holder.itemView.setOnClickListener(v -> switchStatus(item, icon));
     }
 
     private void switchStatus(ContactHeader item, View icon) {
-        final int index = mData.indexOf(item);
+        final List<MultiTypeIndexEntity> data = mHelper.getData();
+        final int index = data.indexOf(item);
         final String flag = item.getIndex();
         if (item.isFlod()) {
             icon.animate().rotation(90).setDuration(500).start();
@@ -130,7 +131,7 @@ public class ContactsAdapter extends BaseAdapter<MultiTypeIndexEntity, ContactsA
             icon.animate().rotation(-90).setDuration(500).start();
             List<MultiTypeIndexEntity> childs;
             int count = 0;
-            for (MultiTypeIndexEntity entity : mData) {
+            for (MultiTypeIndexEntity entity : data) {
                 if (entity.getIndex().equals(flag)) {
                     count++;
                 }
@@ -147,20 +148,20 @@ public class ContactsAdapter extends BaseAdapter<MultiTypeIndexEntity, ContactsA
         mHelper.setData(index, item);
     }
 
-    private void renderContact(ContactViewHolder helper, Contact contact) {
-        CircleImageView icon = helper.getView(R.id.ic_head);
+    private void renderContact(ContactViewHolder holder, Contact contact) {
+        CircleImageView icon = holder.getView(R.id.ic_head);
         ImageLoader.load(mContext, contact.getAvatar(), R.mipmap.ic_huaji, icon);
-        helper.setText(R.id.tx_name, contact.getName());
-        helper.setText(R.id.tx_location, contact.getLocation());
-        helper.getView(R.id.content).setOnClickListener(v -> enterContactDetail(v.getContext(), helper, contact));
-        helper.getView(R.id.msg).setOnClickListener(v -> enterSms(v.getContext(), contact.getPhone()));
-        helper.getView(R.id.call).setOnClickListener(v -> enterPhone(v.getContext(), contact.getPhone()));
-        helper.getView(R.id.delete).setOnClickListener(v -> deleteContact(helper));
-        helper.setVisible(R.id.bottom_line, !contact.isLast());
+        holder.setText(R.id.tx_name, contact.getName());
+        holder.setText(R.id.tx_location, contact.getLocation());
+        holder.getView(R.id.content).setOnClickListener(v -> enterContactDetail(v.getContext(), holder, contact));
+        holder.getView(R.id.msg).setOnClickListener(v -> enterSms(v.getContext(), contact.getPhone()));
+        holder.getView(R.id.call).setOnClickListener(v -> enterPhone(v.getContext(), contact.getPhone()));
+        holder.getView(R.id.delete).setOnClickListener(v -> deleteContact(holder));
+        holder.setVisible(R.id.bottom_line, !contact.isLast());
     }
 
     @SuppressWarnings("unchecked")
-    private void enterContactDetail(Context context, ContactViewHolder helper, Contact contact) {
+    private void enterContactDetail(Context context, ContactViewHolder holder, Contact contact) {
         if (mItemTouchHelper.isOpened()) {
             mItemTouchHelper.closeOpened();
             return;
@@ -176,18 +177,18 @@ public class ContactsAdapter extends BaseAdapter<MultiTypeIndexEntity, ContactsA
 
 
         ContactDetailActivity.start(activity, bitmap, contact,
-                Pair.create(helper.getView(R.id.tx_name), activity.getString(R.string.transition_name)),
-                Pair.create(helper.getView(R.id.ic_head), activity.getString(R.string.transition_head)),
-                Pair.create(helper.getView(R.id.ic_location), activity.getString(R.string.transition_location_icon)),
-                Pair.create(helper.getView(R.id.tx_location), activity.getString(R.string.transition_location)));
+                Pair.create(holder.getView(R.id.tx_name), activity.getString(R.string.transition_name)),
+                Pair.create(holder.getView(R.id.ic_head), activity.getString(R.string.transition_head)),
+                Pair.create(holder.getView(R.id.ic_location), activity.getString(R.string.transition_location_icon)),
+                Pair.create(holder.getView(R.id.tx_location), activity.getString(R.string.transition_location)));
     }
 
-    private void deleteContact(ContactViewHolder helper) {
-        int position = helper.getLayoutPosition() - getHeaderLayoutCount();
+    private void deleteContact(ContactViewHolder holder) {
+        final int position = holder.getLayoutPosition();
         Contact removeData = (Contact) mHelper.removeData(position);
         if (removeData.isLast()) {
             int prePosition = position - 1;
-            MultiTypeIndexEntity entity = mData.get(prePosition);
+            MultiTypeIndexEntity entity = mHelper.getItem(prePosition);
             if (entity instanceof ContactHeader) {
                 mHelper.removeData(prePosition);
             } else {

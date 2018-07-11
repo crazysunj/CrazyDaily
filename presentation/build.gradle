@@ -82,7 +82,6 @@ dependencies {
     implementation libs.multidex
     implementation libs.butterknife
     implementation libs.MTRVA //recyclerview数据处理
-    implementation libs.BRVAH
     implementation libs.statusbarutil //状态栏
     implementation libs.pickerdialog //选择对话框
     implementation libs.circleimageview //圆形imageview

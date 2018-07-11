@@ -39,7 +39,7 @@
 * MTRVA轻松处理RecyclerViewAdapter的数据，实现多列表效果更佳
 * 大量自定义控件，如Camera、Matrix、贝塞尔曲线、高斯模糊、Behavior、事件拦截、沉浸式、QQ侧滑菜单等等运用
 * 大量动画，如lottie、补间动画、3D动画、属性动画（ObjectAnimator、ValueAnimator、View.animate和PropertyValuesHolder）和转场动画（自定义Transition）运用
-* 视频列表
+* 视频列表滑动支持小窗口播放，本地保存
 * 支持图片预览、编辑(如裁剪、压缩)和保存本地
 * 支持下载机制，通知栏回显(兼容8.0)，下载完成可打开
 * 支持扫码，扫码支持访问链接和下载，界面仿微信，支持本地图片扫码
@@ -60,7 +60,6 @@
 * 加上引导页
 * Navigation支持多fragment(AS3.2启动)
 * 添加微信精选，稀土掘金模块
-* 视频列表支持小窗口播放，本地保存
 * 添加音乐模块
 * 添加分享
 * 添加ConstraintLayout进阶用法

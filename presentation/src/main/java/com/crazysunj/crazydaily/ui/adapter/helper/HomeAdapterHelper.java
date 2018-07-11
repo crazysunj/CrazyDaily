@@ -19,13 +19,12 @@ import android.graphics.Color;
 import android.support.v7.util.DiffUtil;
 
 import com.crazysunj.crazydaily.R;
-import com.crazysunj.crazydaily.base.BaseAdapter;
 import com.crazysunj.crazydaily.ui.adapter.helper.callback.StringDiffCallBack;
+import com.crazysunj.domain.entity.base.MultiTypeIdEntity;
 import com.crazysunj.domain.entity.gankio.GankioEntity;
 import com.crazysunj.domain.entity.gaoxiao.GaoxiaoItemEntity;
 import com.crazysunj.domain.entity.weather.WeatherRemoteEntity;
 import com.crazysunj.domain.entity.zhihu.ZhihuNewsEntity;
-import com.crazysunj.domain.entity.base.MultiTypeIdEntity;
 import com.crazysunj.multitypeadapter.helper.AsynAdapterHelper;
 
 import java.util.List;
@@ -38,7 +37,7 @@ import javax.inject.Inject;
  * description: https://github.com/crazysunj/CrazyDaily
  */
 
-public class HomeAdapterHelper extends AsynAdapterHelper<MultiTypeIdEntity, BaseAdapter> {
+public class HomeAdapterHelper extends AsynAdapterHelper<MultiTypeIdEntity> {
 
     public static final int MIN_ZHIHU = 2;
     public static final int MIN_GANK_IO = 3;

@@ -24,9 +24,7 @@ import com.crazysunj.data.service.DownloadService;
 import com.crazysunj.domain.repository.download.DownloadRepository;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
@@ -36,6 +34,9 @@ import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
+import okio.BufferedSink;
+import okio.Okio;
+import okio.Source;
 import retrofit2.Response;
 
 /**
@@ -68,28 +69,24 @@ public class DownloadDataRepository implements DownloadRepository {
         if (responseBody == null) {
             return null;
         }
-        InputStream is = null;
-        byte[] buffer = new byte[1024];
-        int len;
-        FileOutputStream fos = null;
-        File saveFile = new File(saveFileDir, getFileName(response));
+        BufferedSink bufferedSink = null;
+        Source source = null;
         try {
-            is = responseBody.byteStream();
-            fos = new FileOutputStream(saveFile);
-            while ((len = is.read(buffer)) != -1) {
-                fos.write(buffer, 0, len);
-            }
-            fos.flush();
+            File saveFile = new File(saveFileDir, getFileName(response));
+            bufferedSink = Okio.buffer(Okio.sink(saveFile));
+            source = Okio.source(responseBody.byteStream());
+            bufferedSink.writeAll(source);
+            bufferedSink.flush();
             return saveFile;
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             try {
-                if (is != null) {
-                    is.close();
+                if (bufferedSink != null) {
+                    bufferedSink.close();
                 }
-                if (fos != null) {
-                    fos.close();
+                if (source != null) {
+                    source.close();
                 }
             } catch (IOException e) {
                 e.printStackTrace();

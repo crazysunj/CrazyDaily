@@ -16,7 +16,6 @@
 package com.crazysunj.crazydaily.ui.adapter.helper;
 
 import com.crazysunj.crazydaily.R;
-import com.crazysunj.crazydaily.base.BaseAdapter;
 import com.crazysunj.domain.entity.contact.Contact;
 import com.crazysunj.domain.entity.contact.ContactHeader;
 import com.crazysunj.domain.entity.contact.MultiTypeIndexEntity;
@@ -29,7 +28,7 @@ import java.util.List;
  * created on: 2018/4/17 下午3:54
  * description:https://github.com/crazysunj/CrazyDaily
  */
-public class ContactAdapterHelper extends AsynAdapterHelper<MultiTypeIndexEntity, BaseAdapter> {
+public class ContactAdapterHelper extends AsynAdapterHelper<MultiTypeIndexEntity> {
 
     public static final int CONTACT_LEVEL = 0;
 

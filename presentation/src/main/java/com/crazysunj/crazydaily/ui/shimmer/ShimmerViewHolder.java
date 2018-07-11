@@ -2,7 +2,7 @@ package com.crazysunj.crazydaily.ui.shimmer;
 
 import android.view.View;
 
-import com.chad.library.adapter.base.BaseViewHolder;
+import com.crazysunj.crazydaily.base.BaseViewHolder;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 public class ShimmerViewHolder extends BaseViewHolder {

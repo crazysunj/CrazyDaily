@@ -53,13 +53,15 @@ import com.crazysunj.crazydaily.entity.CityEntity;
 import com.crazysunj.crazydaily.moudle.image.ImageLoader;
 import com.crazysunj.crazydaily.moudle.permission.PermissionCamera;
 import com.crazysunj.crazydaily.moudle.permission.PermissionHelper;
+import com.crazysunj.crazydaily.moudle.permission.PermissionStorage;
 import com.crazysunj.crazydaily.presenter.HomePresenter;
 import com.crazysunj.crazydaily.presenter.contract.HomeContract;
-import com.crazysunj.crazydaily.ui.me.MeActivity;
+import com.crazysunj.crazydaily.service.DownloadService;
 import com.crazysunj.crazydaily.ui.adapter.HomeAdapter;
 import com.crazysunj.crazydaily.ui.adapter.helper.HomeAdapterHelper;
 import com.crazysunj.crazydaily.ui.browser.BrowserActivity;
 import com.crazysunj.crazydaily.ui.contact.ContactActivity;
+import com.crazysunj.crazydaily.ui.me.MeActivity;
 import com.crazysunj.crazydaily.ui.photo.PhotoActivity;
 import com.crazysunj.crazydaily.ui.scan.ScannerActivity;
 import com.crazysunj.crazydaily.util.SnackbarUtil;
@@ -80,7 +82,6 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.sunjian.android_pickview_lib.BaseOptionsPickerDialog;
 import com.sunjian.android_pickview_lib.PhoneOptionsPickerDialog;
-import com.xiao.nicevideoplayer.NiceVideoPlayer;
 import com.xiao.nicevideoplayer.NiceVideoPlayerManager;
 
 import java.util.ArrayList;
@@ -102,7 +103,7 @@ import permissions.dispatcher.RuntimePermissions;
  * description: https://github.com/crazysunj/CrazyDaily
  */
 @RuntimePermissions
-public class HomeActivity extends BaseActivity<HomePresenter> implements HomeContract.View, PermissionCamera {
+public class HomeActivity extends BaseActivity<HomePresenter> implements HomeContract.View, PermissionCamera, PermissionStorage {
 
     @BindView(R.id.refresh)
     SwipeRefreshLayout mRefresh;
@@ -200,13 +201,13 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     protected void initListener() {
         mRefresh.setOnRefreshListener(this::onRefresh);
         mAdapter.setOnHeaderClickListener(this::handleHeaderOptions);
-//        mHomeList.addOnChildAttachStateChangeListener(new HomeRecyclerViewStateChangeListener());
         mAppbar.addOnOffsetChangedListener(this::handleAppbarOffsetChangedListener);
         mToolbar.setNavigationOnClickListener(v -> HomeActivityPermissionsDispatcher.openQRCodeWithPermissionCheck(this));
         mBottomNavigation.setOnNavigationItemSelectedListener(this::handleNavigationItemClick);
         mCubeAnchor.setOnClickListener(v -> clickCubeAnchor());
         mCubeFirst.setOnClickListener(v -> clickCubeFirst());
         mCubeSecond.setOnClickListener(v -> clickCubeSecond());
+        mAdapter.setDownloadCallback(url -> HomeActivityPermissionsDispatcher.downloadWithPermissionCheck(this, url));
     }
 
     @Override
@@ -319,6 +320,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
 
     private void onRefresh() {
         mPresenter.endBanner();
+        NiceVideoPlayerManager.instance().releaseNiceVideoPlayer();
         initData();
     }
 
@@ -487,6 +489,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
                 SnackbarUtil.show(this, "已经最新了，别点了！");
                 break;
             case HomeAdapterHelper.LEVEL_GAOXIAO:
+                NiceVideoPlayerManager.instance().releaseNiceVideoPlayer();
                 mPresenter.getGaoxiaoList(++gaoxiaoIndex);
                 break;
             default:
@@ -540,26 +543,26 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         PermissionHelper.cameraNeverAskAgain(this);
     }
 
-    private class HomeRecyclerViewStateChangeListener implements RecyclerView.OnChildAttachStateChangeListener {
+    @NeedsPermission({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void download(String url) {
+        DownloadService.start(this, url);
+    }
 
-        @Override
-        public void onChildViewAttachedToWindow(View view) {
+    @OnShowRationale({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    @Override
+    public void showRationaleForStorage(PermissionRequest request) {
 
-        }
+    }
 
-        @Override
-        public void onChildViewDetachedFromWindow(View view) {
-            final int position = mHomeList.getChildAdapterPosition(view) - mAdapter.getHeaderLayoutCount();
-            if (position < 0) {
-                return;
-            }
-            final int itemViewType = mAdapter.getHelper().getItemViewType(position);
-            if (itemViewType == GaoxiaoItemEntity.TYPE_GAOXIAO) {
-                NiceVideoPlayer niceVideoPlayer = view.findViewById(R.id.item_neihan_video);
-                if (niceVideoPlayer.isPlaying()) {
-                    ThreadManager.single().execute(niceVideoPlayer::release);
-                }
-            }
-        }
+    @OnPermissionDenied({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    @Override
+    public void showDeniedForStorage() {
+
+    }
+
+    @OnNeverAskAgain({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    @Override
+    public void showNeverAskForStorage() {
+
     }
 }

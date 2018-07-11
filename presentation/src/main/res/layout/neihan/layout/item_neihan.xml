@@ -44,12 +44,7 @@
         android:paddingEnd="@dimen/space_15"
         android:paddingStart="@dimen/space_15"
         android:paddingTop="@dimen/space_6"
-        android:textSize="@dimen/sp_16"
+        android:textSize="@dimen/text_16"
         tools:text="我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天我的天" />
-
-    <com.xiao.nicevideoplayer.NiceVideoPlayer
-        android:id="@+id/item_neihan_video"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/space_240" />
 
 </LinearLayout>

@@ -39,6 +39,7 @@ import com.xiao.nicevideoplayer.NiceUtil;
 import com.xiao.nicevideoplayer.NiceVideoPlayer;
 import com.xiao.nicevideoplayer.NiceVideoPlayerController;
 
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -95,7 +96,7 @@ public class NeihanVideoPlayerController
 
     private LinearLayout mCompleted;
     private TextView mReplay;
-    private TextView mShare;
+    private TextView mSave;
 
     private boolean topBottomVisible;
     private CountDownTimer mDismissTopBottomCountDownTimer;
@@ -153,7 +154,7 @@ public class NeihanVideoPlayerController
 
         mCompleted = (LinearLayout) findViewById(R.id.completed);
         mReplay = (TextView) findViewById(R.id.replay);
-        mShare = (TextView) findViewById(R.id.share);
+        mSave = (TextView) findViewById(R.id.save);
 
         mCenterStart.setOnClickListener(this);
         mBack.setOnClickListener(this);
@@ -162,7 +163,7 @@ public class NeihanVideoPlayerController
         mClarity.setOnClickListener(this);
         mRetry.setOnClickListener(this);
         mReplay.setOnClickListener(this);
-        mShare.setOnClickListener(this);
+        mSave.setOnClickListener(this);
         mSeek.setOnSeekBarChangeListener(this);
         this.setOnClickListener(this);
     }
@@ -370,6 +371,16 @@ public class NeihanVideoPlayerController
         mCompleted.setVisibility(View.GONE);
     }
 
+    private DownloadCallback mDownloadCallback;
+
+    public void setDownloadCallback(DownloadCallback callback) {
+        mDownloadCallback = callback;
+    }
+
+    public interface DownloadCallback {
+        void onDownload(String url);
+    }
+
     /**
      * 尽量不要在onClick中直接处理控件的隐藏、显示及各种UI逻辑。
      * UI相关的逻辑都尽量到{@link #onPlayStateChanged}和{@link #onPlayModeChanged}中处理.
@@ -405,8 +416,19 @@ public class NeihanVideoPlayerController
             mNiceVideoPlayer.restart();
         } else if (v == mReplay) {
             mRetry.performClick();
-        } else if (v == mShare) {
-            Toast.makeText(mContext, "不要方，以后会做分享", Toast.LENGTH_SHORT).show();
+        } else if (v == mSave) {
+            try {
+                Class<NiceVideoPlayer> videoPlayerClass = NiceVideoPlayer.class;
+                Field urlField = videoPlayerClass.getDeclaredField("mUrl");
+                urlField.setAccessible(true);
+                final String url = (String) urlField.get(mNiceVideoPlayer);
+                if (mDownloadCallback != null) {
+                    mDownloadCallback.onDownload(url);
+                }
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                e.printStackTrace();
+                Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         } else if (v == this) {
             if (mNiceVideoPlayer.isPlaying()
                     || mNiceVideoPlayer.isPaused()
