@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -221,6 +222,21 @@ public class CrazyDailyWebView extends WebView {
                 return;
             }
             mEnterDialog.show();
+        }
+    }
+
+    @Override
+    public void loadUrl(String s) {
+        try {
+            Uri uri = Uri.parse(s);
+            if (TextUtils.isEmpty(uri.getScheme())) {
+                loadData(s, "text/html; charset=UTF-8", null);
+            } else {
+                super.loadUrl(s);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            loadData(s, "text/html; charset=UTF-8", null);
         }
     }
 

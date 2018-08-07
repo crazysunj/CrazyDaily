@@ -140,9 +140,14 @@ public class BrowserActivity extends BaseActivity implements CrazyDailyWebView.W
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_browser_open) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUrl));
-            intent.putExtra(Browser.EXTRA_APPLICATION_ID, getPackageName());
-            startActivity(intent);
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUrl));
+                intent.putExtra(Browser.EXTRA_APPLICATION_ID, getPackageName());
+                startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(this, "该url无法解析", Toast.LENGTH_SHORT).show();
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
