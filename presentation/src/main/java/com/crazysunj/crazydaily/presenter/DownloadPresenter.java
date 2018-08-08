@@ -18,6 +18,7 @@ package com.crazysunj.crazydaily.presenter;
 import com.crazysunj.crazydaily.base.BaseSubscriber;
 import com.crazysunj.crazydaily.di.scope.ServiceScope;
 import com.crazysunj.crazydaily.presenter.contract.DownloadContract;
+import com.crazysunj.crazydaily.util.HandlerHelper;
 import com.crazysunj.domain.bus.RxBus;
 import com.crazysunj.domain.bus.event.DownloadEvent;
 import com.crazysunj.domain.interactor.download.DownloadUseCase;
@@ -46,7 +47,7 @@ public class DownloadPresenter implements DownloadContract.Presenter {
             @Override
             public void onNext(DownloadEvent downloadEvent) {
                 final int progress = (int) (downloadEvent.loaded * 100f / downloadEvent.total + 0.5f);
-                mView.onProgress(progress);
+                mView.onProgress(downloadEvent.taskId, progress);
             }
 
             @Override
@@ -62,22 +63,22 @@ public class DownloadPresenter implements DownloadContract.Presenter {
     }
 
     @Override
-    public void download(String url, File saveFile) {
-        mDownloadUseCase.execute(DownloadUseCase.Params.get(url, saveFile), new BaseSubscriber<File>() {
+    public void download(final int taskId, String url, File saveFile) {
+        mDownloadUseCase.execute(DownloadUseCase.Params.get(taskId, url, saveFile), new BaseSubscriber<File>() {
             @Override
             public void onNext(File file) {
-                mView.onSuccess(file);
+                HandlerHelper.get().postDelayed(() -> mView.onSuccess(taskId, file), 300);
             }
 
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
-                mView.onFailed(e);
+                HandlerHelper.get().postDelayed(() -> mView.onFailed(taskId, e), 300);
             }
 
             @Override
             public void onComplete() {
-                mView.onComplete();
+                HandlerHelper.get().postDelayed(() -> mView.onComplete(taskId), 600);
             }
         });
     }

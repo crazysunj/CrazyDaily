@@ -13,32 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.crazysunj.crazydaily.presenter.contract;
+package com.crazysunj.crazydaily.util;
 
-import java.io.File;
+import android.os.Handler;
+import android.os.Looper;
 
 /**
  * author: sunjian
- * created on: 2017/9/19 下午5:05
- * description: https://github.com/crazysunj/CrazyDaily
+ * created on: 2018/8/8 下午4:44
+ * description:https://github.com/crazysunj/CrazyDaily
  */
-public interface DownloadContract {
-
-    interface View {
-        void onProgress(int taskId, int progress);
-
-        void onSuccess(int taskId, File saveFile);
-
-        void onFailed(int taskId, Throwable e);
-
-        void onComplete(int taskId);
+public class HandlerHelper {
+    private HandlerHelper() {
     }
 
-    interface Presenter {
-        void download(int taskId, String url, File saveFile);
+    public static Handler get() {
+        return Holder.sHandler;
+    }
 
-        void attachView(View view);
-
-        void detachView();
+    private static class Holder {
+        private static Handler sHandler = new Handler(Looper.getMainLooper());
     }
 }

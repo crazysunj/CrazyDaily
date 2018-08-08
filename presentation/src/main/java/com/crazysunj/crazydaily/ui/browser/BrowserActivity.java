@@ -15,10 +15,12 @@
  */
 package com.crazysunj.crazydaily.ui.browser;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.Browser;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -30,6 +32,8 @@ import android.widget.Toast;
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
 import com.crazysunj.crazydaily.constant.ActivityConstant;
+import com.crazysunj.crazydaily.moudle.permission.PermissionHelper;
+import com.crazysunj.crazydaily.moudle.permission.PermissionStorage;
 import com.crazysunj.crazydaily.moudle.web.CrazyDailySonicSessionClient;
 import com.crazysunj.crazydaily.service.DownloadService;
 import com.crazysunj.crazydaily.util.StorageUtil;
@@ -40,13 +44,20 @@ import com.tencent.sonic.sdk.SonicSession;
 import com.tencent.sonic.sdk.SonicSessionConfig;
 
 import butterknife.BindView;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 
 /**
  * author: sunjian
  * created on: 2017/9/10 下午5:01
  * description: https://github.com/crazysunj/CrazyDaily
  */
-public class BrowserActivity extends BaseActivity implements CrazyDailyWebView.WebViewCallback {
+@RuntimePermissions
+public class BrowserActivity extends BaseActivity implements CrazyDailyWebView.WebViewCallback, PermissionStorage {
 
     @BindView(R.id.browser_web_container)
     FrameLayout mWebContainer;
@@ -90,7 +101,8 @@ public class BrowserActivity extends BaseActivity implements CrazyDailyWebView.W
     protected void initView() {
         showBack();
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        mWebView = new CrazyDailyWebView(this); //引用getApplicationContext可以防止webview中弹窗，例如长按弹出菜单等
+        //引用getApplicationContext可以防止webview中弹窗，例如长按弹出菜单等
+        mWebView = new CrazyDailyWebView(this);
         mWebContainer.addView(mWebView, params);
     }
 
@@ -103,7 +115,7 @@ public class BrowserActivity extends BaseActivity implements CrazyDailyWebView.W
                         .setCancelable(false)
                         .setMessage(String.format("下载链接：%s\n下载大小：%sMB", url, StorageUtil.byteToMB(contentLength)))
                         .setNegativeButton("不下", null)
-                        .setPositiveButton("下载", (dialogInterface, i) -> DownloadService.start(this, url))
+                        .setPositiveButton("下载", (dialogInterface, i) -> BrowserActivityPermissionsDispatcher.startDownloadWithPermissionCheck(this, url))
                         .show());
     }
 
@@ -170,5 +182,34 @@ public class BrowserActivity extends BaseActivity implements CrazyDailyWebView.W
     @Override
     public void onReceivedTitle(String title) {
         setTitle(title);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        BrowserActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
+    @NeedsPermission({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void startDownload(String url) {
+        DownloadService.start(this, url);
+    }
+
+    @OnShowRationale({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    @Override
+    public void showRationaleForStorage(PermissionRequest request) {
+        PermissionHelper.storageShowRationale(this, request);
+    }
+
+    @OnPermissionDenied({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    @Override
+    public void showDeniedForStorage() {
+        PermissionHelper.storagePermissionDenied(this);
+    }
+
+    @OnNeverAskAgain({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    @Override
+    public void showNeverAskForStorage() {
+        PermissionHelper.storageNeverAskAgain(this);
     }
 }

@@ -64,13 +64,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Singleton
 public class HttpHelper {
 
-    private ZhihuService mZhihuService;
-    private GankioService mGankioService;
-    private WeatherService mWeatherService;
-    private NeihanService mNeihanService;
-    private GaoxiaoService mGaoxiaoService;
+    private volatile ZhihuService mZhihuService;
+    private volatile GankioService mGankioService;
+    private volatile WeatherService mWeatherService;
+    private volatile NeihanService mNeihanService;
+    private volatile GaoxiaoService mGaoxiaoService;
     private OkHttpClient mOkHttpClient;
-    private DownloadService mDownloadService;
 
     @Inject
     public HttpHelper(Context context) {
@@ -178,26 +177,19 @@ public class HttpHelper {
         return mGaoxiaoService;
     }
 
-    public DownloadService getDownloadService() {
-        if (mDownloadService == null) {
-            synchronized (this) {
-                if (mDownloadService == null) {
-                    mDownloadService = new Retrofit.Builder()
-                            .baseUrl("https://www.baidu.com/")
-                            .client(new OkHttpClient.Builder()
-                                    .addInterceptor(new HttpLoggingInterceptor(new HttpLogger()).setLevel(HttpLoggingInterceptor.Level.BODY))
-                                    .addInterceptor(new ProgressInterceptor())
-                                    .connectTimeout(10, TimeUnit.SECONDS)
-                                    .readTimeout(20, TimeUnit.SECONDS)
-                                    .writeTimeout(20, TimeUnit.SECONDS)
-                                    .retryOnConnectionFailure(true)
-                                    .build())
-                            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                            .build().create(DownloadService.class);
-                }
-            }
-        }
-        return mDownloadService;
+    public DownloadService getDownloadService(int taskId) {
+        return new Retrofit.Builder()
+                .baseUrl("https://www.baidu.com/")
+                .client(new OkHttpClient.Builder()
+                        .addInterceptor(new HttpLoggingInterceptor(new HttpLogger()).setLevel(HttpLoggingInterceptor.Level.BODY))
+                        .addInterceptor(new ProgressInterceptor(taskId))
+                        .connectTimeout(10, TimeUnit.SECONDS)
+                        .readTimeout(20, TimeUnit.SECONDS)
+                        .writeTimeout(20, TimeUnit.SECONDS)
+                        .retryOnConnectionFailure(true)
+                        .build())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build().create(DownloadService.class);
     }
 
     /**
@@ -241,21 +233,29 @@ public class HttpHelper {
     }
 
     private static class ProgressInterceptor implements Interceptor {
+
+        private final int taskId;
+
+        private ProgressInterceptor(int taskId) {
+            this.taskId = taskId;
+        }
+
         @Override
         public Response intercept(Chain chain) throws IOException {
             Response originalResponse = chain.proceed(chain.request());
             return originalResponse.newBuilder()
-                    .body(new ProgressResponseBody(originalResponse.body()))
+                    .body(new ProgressResponseBody(taskId, originalResponse.body()))
                     .build();
         }
     }
 
     private static class ProgressResponseBody extends ResponseBody {
         private ResponseBody responseBody;
-
+        private final int taskId;
         private BufferedSource bufferedSource;
 
-        public ProgressResponseBody(ResponseBody responseBody) {
+        private ProgressResponseBody(int taskId, ResponseBody responseBody) {
+            this.taskId = taskId;
             this.responseBody = responseBody;
         }
 
@@ -280,12 +280,11 @@ public class HttpHelper {
         private Source source(Source source) {
             return new ForwardingSource(source) {
                 long bytesReaded = 0;
-
                 @Override
                 public long read(Buffer sink, long byteCount) throws IOException {
                     long bytesRead = super.read(sink, byteCount);
                     bytesReaded += bytesRead == -1 ? 0 : bytesRead;
-                    RxBus.getDefault().post(new DownloadEvent(contentLength(), bytesReaded));
+                    RxBus.getDefault().post(new DownloadEvent(taskId, contentLength(), bytesReaded));
                     return bytesRead;
                 }
             };

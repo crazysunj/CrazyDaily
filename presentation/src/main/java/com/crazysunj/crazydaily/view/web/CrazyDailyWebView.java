@@ -17,6 +17,7 @@ package com.crazysunj.crazydaily.view.web;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -171,6 +172,17 @@ public class CrazyDailyWebView extends WebView {
                 return webResourceResponse;
             }
             return super.shouldInterceptRequest(webView, webResourceRequest, bundle);
+        }
+
+        private boolean isLoaded = false;
+
+        @Override
+        public void onPageStarted(WebView webView, String s, Bitmap bitmap) {
+            if (!isLoaded) {
+                isLoaded = true;
+                webView.loadUrl(s);
+            }
+            super.onPageStarted(webView, s, bitmap);
         }
 
         @Override

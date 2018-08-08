@@ -25,5 +25,5 @@ import io.reactivex.Flowable;
  * description:https://github.com/crazysunj/CrazyDaily
  */
 public interface DownloadRepository {
-    Flowable<File> download(String url, File saveFileDir);
+    Flowable<File> download(int taskId, String url, File saveFileDir);
 }

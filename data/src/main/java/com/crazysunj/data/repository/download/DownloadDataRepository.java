@@ -20,13 +20,13 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.crazysunj.data.api.HttpHelper;
-import com.crazysunj.data.service.DownloadService;
 import com.crazysunj.domain.repository.download.DownloadRepository;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -46,16 +46,16 @@ import retrofit2.Response;
  */
 public class DownloadDataRepository implements DownloadRepository {
 
-    private DownloadService mDownloadService;
+    private HttpHelper mHttpHelper;
 
     @Inject
     public DownloadDataRepository(HttpHelper httpHelper) {
-        mDownloadService = httpHelper.getDownloadService();
+        mHttpHelper = httpHelper;
     }
 
     @Override
-    public Flowable<File> download(String url, File saveFileDir) {
-        return mDownloadService.download(url)
+    public Flowable<File> download(int taskId, String url, File saveFileDir) {
+        return mHttpHelper.getDownloadService(taskId).download(url)
                 .observeOn(Schedulers.io())
                 .map(response -> convertFile(saveFileDir, response))
                 .subscribeOn(Schedulers.io())
@@ -72,7 +72,7 @@ public class DownloadDataRepository implements DownloadRepository {
         BufferedSink bufferedSink = null;
         Source source = null;
         try {
-            File saveFile = new File(saveFileDir, getFileName(response));
+            File saveFile = new File(saveFileDir, getFileName(saveFileDir, response));
             bufferedSink = Okio.buffer(Okio.sink(saveFile));
             source = Okio.source(responseBody.byteStream());
             bufferedSink.writeAll(source);
@@ -96,14 +96,15 @@ public class DownloadDataRepository implements DownloadRepository {
     }
 
     @NonNull
-    private String getFileName(Response<ResponseBody> response) {
+    private String getFileName(File saveFileDir, Response<ResponseBody> response) {
         final okhttp3.Response raw = response.raw();
         String contentDisposition = raw.header("Content-Disposition");
+        String fileName;
         if (TextUtils.isEmpty(contentDisposition)) {
             String file = raw.request().url().url().getFile();
-            return file.substring(file.lastIndexOf("/") + 1, file.contains("?") ? file.indexOf("?") : file.length());
+            fileName = file.substring(file.lastIndexOf("/") + 1, file.contains("?") ? file.indexOf("?") : file.length());
         } else {
-            String fileName;
+
             try {
                 fileName = URLDecoder.decode(contentDisposition.substring(contentDisposition.indexOf("filename=") + 9), "UTF-8");
                 fileName = fileName.replaceAll("\"", "");
@@ -112,7 +113,28 @@ public class DownloadDataRepository implements DownloadRepository {
                 fileName = contentDisposition.substring(contentDisposition.indexOf("filename=") + 9);
                 fileName = fileName.replaceAll("\"", "");
             }
-            return fileName;
         }
+        int count = 0;
+        String temFileName = fileName;
+        String fileNamePrefix;
+        String fileNameSuffix;
+        int pointIndex = fileName.indexOf(".");
+        if (pointIndex > -1) {
+            fileNamePrefix = fileName.substring(0, pointIndex);
+            fileNameSuffix = fileName.substring(pointIndex, fileName.length());
+        } else {
+            fileNamePrefix = fileName;
+            fileNameSuffix = "";
+        }
+        do {
+            File saveFile = new File(saveFileDir, temFileName);
+            if (saveFile.exists()) {
+                temFileName = String.format(Locale.getDefault(), "%s(%d)%s", fileNamePrefix, ++count, fileNameSuffix);
+            } else {
+                fileName = temFileName;
+                break;
+            }
+        } while (true);
+        return fileName;
     }
 }

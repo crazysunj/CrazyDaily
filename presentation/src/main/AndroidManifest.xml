@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.GET_TASKS" />
 
     <application
@@ -85,7 +86,7 @@
             android:name="PGYER_APPID"
             android:value="4ab0fe9f70ce06be768d15a97f88c311" />
 
-        <activity android:name="com.pgyersdk.feedback.FeedbackActivity"/>
+        <activity android:name="com.pgyersdk.feedback.FeedbackActivity" />
 
         <activity
             android:name=".ui.photo.PhotoActivity"

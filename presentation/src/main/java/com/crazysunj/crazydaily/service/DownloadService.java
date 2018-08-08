@@ -29,6 +29,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
+import android.util.SparseArray;
 import android.widget.Toast;
 
 import com.crazysunj.crazydaily.R;
@@ -53,10 +54,8 @@ import javax.inject.Inject;
  */
 public class DownloadService extends Service implements DownloadContract.View {
 
-    private static final int NOTIFICATION_ID = UUID.randomUUID().hashCode();
     private static final String CHANNEL_ID_DOWNLOAD = "'download'";
     private NotificationManager mNotificationManager;
-    private NotificationCompat.Builder mNotificationBuilder;
 
     public static void start(Context context, String url) {
         Intent intent = new Intent(context, DownloadService.class);
@@ -97,13 +96,6 @@ public class DownloadService extends Service implements DownloadContract.View {
                 stopSelf();
             }
         }
-        mNotificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID_DOWNLOAD)
-                .setContentText("正在下载")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setOngoing(true)
-                .setWhen(System.currentTimeMillis());
-        mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
-        Toast.makeText(this, "正在下载，可在通知栏查看进度哦", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -115,7 +107,17 @@ public class DownloadService extends Service implements DownloadContract.View {
         if (TextUtils.isEmpty(url)) {
             return super.onStartCommand(intent, flags, startId);
         }
-        mPresenter.download(url, FileUtil.getDownloadFile(this));
+        final int taskId = getTaskId();
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID_DOWNLOAD)
+                .setContentText("正在下载")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setOngoing(true)
+                .setAutoCancel(true)
+                .setWhen(System.currentTimeMillis());
+        mNotificationManager.notify(taskId, notificationBuilder.build());
+        mTaskIds.put(taskId, notificationBuilder);
+        Toast.makeText(this, "正在下载，可在通知栏查看进度哦", Toast.LENGTH_SHORT).show();
+        mPresenter.download(taskId, url, FileUtil.getDownloadFile(this));
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -133,14 +135,15 @@ public class DownloadService extends Service implements DownloadContract.View {
     }
 
     @Override
-    public void onProgress(int progress) {
-        mNotificationBuilder.setContentText(String.format(Locale.getDefault(), "正在下载:%d%%", progress))
+    public void onProgress(int taskId, int progress) {
+        NotificationCompat.Builder notificationBuilder = mTaskIds.get(taskId);
+        notificationBuilder.setContentText(String.format(Locale.getDefault(), "正在下载:%d%%", progress))
                 .setProgress(100, progress, false);
-        mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
+        mNotificationManager.notify(taskId, notificationBuilder.build());
     }
 
     @Override
-    public void onSuccess(File saveFile) {
+    public void onSuccess(int taskId, File saveFile) {
         Toast.makeText(this, "下载完成，保存路径：" + saveFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -155,20 +158,38 @@ public class DownloadService extends Service implements DownloadContract.View {
         intent.setData(uri);
         PendingIntent pendingintent = PendingIntent.getActivity(this, 0, intent, PendingIntent
                 .FLAG_UPDATE_CURRENT);
-        mNotificationBuilder.setContentIntent(pendingintent);
+        mTaskIds.get(taskId).setContentIntent(pendingintent);
     }
 
     @Override
-    public void onFailed(Throwable e) {
-        mNotificationBuilder.setContentText("下载失败");
-        mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
+    public void onFailed(int taskId, Throwable e) {
+        NotificationCompat.Builder notificationBuilder = mTaskIds.get(taskId);
+        notificationBuilder.setContentText("下载失败");
+        mNotificationManager.notify(taskId, notificationBuilder.build());
+        mTaskIds.remove(taskId);
     }
 
     @Override
-    public void onComplete() {
-        mNotificationBuilder.setContentText("下载完成，请点击使用");
-        mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
-        stopSelf();
+    public void onComplete(int taskId) {
+        NotificationCompat.Builder notificationBuilder = mTaskIds.get(taskId);
+        notificationBuilder.setContentText("下载完成，请点击使用");
+        mNotificationManager.notify(taskId, notificationBuilder.build());
+        mTaskIds.remove(taskId);
+        if (mTaskIds.size() == 0) {
+            // 全部下载完成
+            stopSelf();
+        }
+    }
+
+    private SparseArray<NotificationCompat.Builder> mTaskIds = new SparseArray<>();
+
+    private int getTaskId() {
+        do {
+            int taskId = UUID.randomUUID().hashCode();
+            if (mTaskIds.indexOfKey(taskId) == -1) {
+                return taskId;
+            }
+        } while (true);
     }
 
     private void onPrepare() {
