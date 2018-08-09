@@ -141,6 +141,7 @@ public class MeActivity extends BaseActivity implements PermissionStorage {
 
                     @Override
                     public void onUpdateAvailable(AppBean appBean) {
+                        SnackbarUtil.show(MeActivity.this, "正在下载中");
                         PgyUpdateManager.downLoadApk(appBean.getDownloadURL());
                     }
 
@@ -163,7 +164,6 @@ public class MeActivity extends BaseActivity implements PermissionStorage {
                     public void downloadSuccessful(Uri uri) {
                         // 使用蒲公英提供的安装方法提示用户 安装apk
                         PgyUpdateManager.installApk(uri);
-
                     }
 
                     @Override

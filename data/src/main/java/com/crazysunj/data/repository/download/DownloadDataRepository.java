@@ -104,21 +104,20 @@ public class DownloadDataRepository implements DownloadRepository {
             String file = raw.request().url().url().getFile();
             fileName = file.substring(file.lastIndexOf("/") + 1, file.contains("?") ? file.indexOf("?") : file.length());
         } else {
-
             try {
                 fileName = URLDecoder.decode(contentDisposition.substring(contentDisposition.indexOf("filename=") + 9), "UTF-8");
-                fileName = fileName.replaceAll("\"", "");
+                fileName = fileName.split("\"")[fileName.contains("\"") ? 1 : 0];
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
                 fileName = contentDisposition.substring(contentDisposition.indexOf("filename=") + 9);
-                fileName = fileName.replaceAll("\"", "");
+                fileName = fileName.split("\"")[fileName.contains("\"") ? 1 : 0];
             }
         }
         int count = 0;
         String temFileName = fileName;
         String fileNamePrefix;
         String fileNameSuffix;
-        int pointIndex = fileName.indexOf(".");
+        int pointIndex = fileName.lastIndexOf(".");
         if (pointIndex > -1) {
             fileNamePrefix = fileName.substring(0, pointIndex);
             fileNameSuffix = fileName.substring(pointIndex, fileName.length());
