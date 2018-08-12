@@ -171,9 +171,11 @@ public class DownloadService extends Service implements DownloadContract.View {
         notificationBuilder.setContentText("下载失败");
         mNotificationManager.notify(taskId, notificationBuilder.build());
         downloadInfo.isComplete = true;
-        boolean isComplete = false;
+        boolean isComplete = true;
         for (int i = 0, size = mTaskIds.size(); i < size; i++) {
-            isComplete = mTaskIds.valueAt(i).isComplete;
+            if (!mTaskIds.valueAt(i).isComplete) {
+                isComplete = false;
+            }
         }
         if (isComplete) {
             // 全部下载完成，5s后关闭
@@ -188,9 +190,11 @@ public class DownloadService extends Service implements DownloadContract.View {
         notificationBuilder.setContentText("下载完成，请点击使用");
         mNotificationManager.notify(taskId, notificationBuilder.build());
         downloadInfo.isComplete = true;
-        boolean isComplete = false;
+        boolean isComplete = true;
         for (int i = 0, size = mTaskIds.size(); i < size; i++) {
-            isComplete = mTaskIds.valueAt(i).isComplete;
+            if (!mTaskIds.valueAt(i).isComplete) {
+                isComplete = false;
+            }
         }
         if (isComplete) {
             // 全部下载完成，5s后关闭
