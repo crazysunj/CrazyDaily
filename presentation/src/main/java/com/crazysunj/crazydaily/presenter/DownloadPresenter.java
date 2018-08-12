@@ -18,7 +18,6 @@ package com.crazysunj.crazydaily.presenter;
 import com.crazysunj.crazydaily.base.BaseSubscriber;
 import com.crazysunj.crazydaily.di.scope.ServiceScope;
 import com.crazysunj.crazydaily.presenter.contract.DownloadContract;
-import com.crazysunj.crazydaily.util.HandlerHelper;
 import com.crazysunj.domain.bus.RxBus;
 import com.crazysunj.domain.bus.event.DownloadEvent;
 import com.crazysunj.domain.interactor.download.DownloadUseCase;
@@ -48,10 +47,15 @@ public class DownloadPresenter implements DownloadContract.Presenter {
     @Override
     public void progress(String tag) {
         mDownloadUseCase.execute(RxBus.getDefault().toFlowable(tag, DownloadEvent.class), new DisposableSubscriber<DownloadEvent>() {
+            int preProgress;
+
             @Override
             public void onNext(DownloadEvent downloadEvent) {
                 final int progress = (int) (downloadEvent.loaded * 100f / downloadEvent.total + 0.5f);
-                mView.onProgress(downloadEvent.taskId, progress);
+                if (preProgress != progress) {
+                    preProgress = progress;
+                    mView.onProgress(downloadEvent.taskId, progress);
+                }
             }
 
             @Override
@@ -71,18 +75,18 @@ public class DownloadPresenter implements DownloadContract.Presenter {
         mDownloadUseCase.execute(DownloadUseCase.Params.get(taskId, url, saveFile), new BaseSubscriber<File>() {
             @Override
             public void onNext(File file) {
-                HandlerHelper.get().postDelayed(() -> mView.onSuccess(taskId, file), 800);
+                mView.onSuccess(taskId, file);
             }
 
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
-                HandlerHelper.get().postDelayed(() -> mView.onFailed(taskId, e), 800);
+                mView.onFailed(taskId, e);
             }
 
             @Override
             public void onComplete() {
-                HandlerHelper.get().postDelayed(() -> mView.onComplete(taskId), 1000);
+                mView.onComplete(taskId);
             }
         });
     }
