@@ -40,6 +40,7 @@ import com.crazysunj.crazydaily.di.module.ServiceModule;
 import com.crazysunj.crazydaily.presenter.DownloadPresenter;
 import com.crazysunj.crazydaily.presenter.contract.DownloadContract;
 import com.crazysunj.crazydaily.util.FileUtil;
+import com.crazysunj.crazydaily.util.HandlerHelper;
 
 import java.io.File;
 import java.util.Locale;
@@ -115,7 +116,8 @@ public class DownloadService extends Service implements DownloadContract.View {
                 .setAutoCancel(true)
                 .setWhen(System.currentTimeMillis());
         mNotificationManager.notify(taskId, notificationBuilder.build());
-        mTaskIds.put(taskId, notificationBuilder);
+        mTaskIds.put(taskId, new DownloadInfo(notificationBuilder));
+        mPresenter.progress(String.valueOf(taskId));
         Toast.makeText(this, "正在下载，可在通知栏查看进度哦", Toast.LENGTH_SHORT).show();
         mPresenter.download(taskId, url, FileUtil.getDownloadFile(this));
         return super.onStartCommand(intent, flags, startId);
@@ -123,6 +125,7 @@ public class DownloadService extends Service implements DownloadContract.View {
 
     @Override
     public void onDestroy() {
+        mTaskIds.clear();
         if (mPresenter != null) {
             mPresenter.detachView();
         }
@@ -136,7 +139,7 @@ public class DownloadService extends Service implements DownloadContract.View {
 
     @Override
     public void onProgress(int taskId, int progress) {
-        NotificationCompat.Builder notificationBuilder = mTaskIds.get(taskId);
+        NotificationCompat.Builder notificationBuilder = mTaskIds.get(taskId).builder;
         notificationBuilder.setContentText(String.format(Locale.getDefault(), "正在下载:%d%%", progress))
                 .setProgress(100, progress, false);
         mNotificationManager.notify(taskId, notificationBuilder.build());
@@ -158,30 +161,44 @@ public class DownloadService extends Service implements DownloadContract.View {
         intent.setData(uri);
         PendingIntent pendingintent = PendingIntent.getActivity(this, 0, intent, PendingIntent
                 .FLAG_UPDATE_CURRENT);
-        mTaskIds.get(taskId).setContentIntent(pendingintent);
+        mTaskIds.get(taskId).builder.setContentIntent(pendingintent);
     }
 
     @Override
     public void onFailed(int taskId, Throwable e) {
-        NotificationCompat.Builder notificationBuilder = mTaskIds.get(taskId);
+        DownloadInfo downloadInfo = mTaskIds.get(taskId);
+        NotificationCompat.Builder notificationBuilder = downloadInfo.builder;
         notificationBuilder.setContentText("下载失败");
         mNotificationManager.notify(taskId, notificationBuilder.build());
-        mTaskIds.remove(taskId);
+        downloadInfo.isComplete = true;
+        boolean isComplete = false;
+        for (int i = 0, size = mTaskIds.size(); i < size; i++) {
+            isComplete = mTaskIds.valueAt(i).isComplete;
+        }
+        if (isComplete) {
+            // 全部下载完成，5s后关闭
+            HandlerHelper.get().postDelayed(this::stopSelf, 5000);
+        }
     }
 
     @Override
     public void onComplete(int taskId) {
-        NotificationCompat.Builder notificationBuilder = mTaskIds.get(taskId);
+        DownloadInfo downloadInfo = mTaskIds.get(taskId);
+        NotificationCompat.Builder notificationBuilder = downloadInfo.builder;
         notificationBuilder.setContentText("下载完成，请点击使用");
         mNotificationManager.notify(taskId, notificationBuilder.build());
-        mTaskIds.remove(taskId);
-        if (mTaskIds.size() == 0) {
-            // 全部下载完成
-            stopSelf();
+        downloadInfo.isComplete = true;
+        boolean isComplete = false;
+        for (int i = 0, size = mTaskIds.size(); i < size; i++) {
+            isComplete = mTaskIds.valueAt(i).isComplete;
+        }
+        if (isComplete) {
+            // 全部下载完成，5s后关闭
+            HandlerHelper.get().postDelayed(this::stopSelf, 5000);
         }
     }
 
-    private SparseArray<NotificationCompat.Builder> mTaskIds = new SparseArray<>();
+    private SparseArray<DownloadInfo> mTaskIds = new SparseArray<>();
 
     private int getTaskId() {
         do {
@@ -209,5 +226,14 @@ public class DownloadService extends Service implements DownloadContract.View {
 
     private ServiceModule getServiceModule() {
         return new ServiceModule(this);
+    }
+
+    private class DownloadInfo {
+        NotificationCompat.Builder builder;
+        boolean isComplete;
+
+        private DownloadInfo(NotificationCompat.Builder builder) {
+            this.builder = builder;
+        }
     }
 }

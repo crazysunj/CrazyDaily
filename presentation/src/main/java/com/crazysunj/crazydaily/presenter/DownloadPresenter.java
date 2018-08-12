@@ -43,7 +43,11 @@ public class DownloadPresenter implements DownloadContract.Presenter {
     @Inject
     public DownloadPresenter(DownloadUseCase downloadUseCase) {
         mDownloadUseCase = downloadUseCase;
-        mDownloadUseCase.execute(RxBus.getDefault().toFlowable(DownloadEvent.class), new DisposableSubscriber<DownloadEvent>() {
+    }
+
+    @Override
+    public void progress(String tag) {
+        mDownloadUseCase.execute(RxBus.getDefault().toFlowable(tag, DownloadEvent.class), new DisposableSubscriber<DownloadEvent>() {
             @Override
             public void onNext(DownloadEvent downloadEvent) {
                 final int progress = (int) (downloadEvent.loaded * 100f / downloadEvent.total + 0.5f);
@@ -67,18 +71,18 @@ public class DownloadPresenter implements DownloadContract.Presenter {
         mDownloadUseCase.execute(DownloadUseCase.Params.get(taskId, url, saveFile), new BaseSubscriber<File>() {
             @Override
             public void onNext(File file) {
-                HandlerHelper.get().postDelayed(() -> mView.onSuccess(taskId, file), 300);
+                HandlerHelper.get().postDelayed(() -> mView.onSuccess(taskId, file), 800);
             }
 
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
-                HandlerHelper.get().postDelayed(() -> mView.onFailed(taskId, e), 300);
+                HandlerHelper.get().postDelayed(() -> mView.onFailed(taskId, e), 800);
             }
 
             @Override
             public void onComplete() {
-                HandlerHelper.get().postDelayed(() -> mView.onComplete(taskId), 600);
+                HandlerHelper.get().postDelayed(() -> mView.onComplete(taskId), 1000);
             }
         });
     }

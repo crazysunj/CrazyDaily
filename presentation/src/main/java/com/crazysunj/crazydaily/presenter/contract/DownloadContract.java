@@ -35,6 +35,8 @@ public interface DownloadContract {
     }
 
     interface Presenter {
+        void progress(String tag);
+
         void download(int taskId, String url, File saveFile);
 
         void attachView(View view);

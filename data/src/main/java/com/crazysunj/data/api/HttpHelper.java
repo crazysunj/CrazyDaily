@@ -182,7 +182,7 @@ public class HttpHelper {
                 .baseUrl("https://www.baidu.com/")
                 .client(new OkHttpClient.Builder()
                         .addInterceptor(new HttpLoggingInterceptor(new HttpLogger()).setLevel(HttpLoggingInterceptor.Level.BODY))
-                        .addInterceptor(new ProgressInterceptor(taskId))
+                        .addNetworkInterceptor(new ProgressInterceptor(taskId))
                         .connectTimeout(10, TimeUnit.SECONDS)
                         .readTimeout(20, TimeUnit.SECONDS)
                         .writeTimeout(20, TimeUnit.SECONDS)
@@ -272,19 +272,20 @@ public class HttpHelper {
         @Override
         public BufferedSource source() {
             if (bufferedSource == null) {
-                bufferedSource = Okio.buffer(source(responseBody.source()));
+                bufferedSource = Okio.buffer(source(contentLength(), responseBody.source()));
             }
             return bufferedSource;
         }
 
-        private Source source(Source source) {
+        private Source source(long contentLength, Source source) {
             return new ForwardingSource(source) {
                 long bytesReaded = 0;
+
                 @Override
                 public long read(Buffer sink, long byteCount) throws IOException {
                     long bytesRead = super.read(sink, byteCount);
                     bytesReaded += bytesRead == -1 ? 0 : bytesRead;
-                    RxBus.getDefault().post(new DownloadEvent(taskId, contentLength(), bytesReaded));
+                    RxBus.getDefault().post(String.valueOf(taskId), new DownloadEvent(taskId, contentLength, bytesReaded));
                     return bytesRead;
                 }
             };
