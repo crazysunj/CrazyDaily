@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <!--底图-->
@@ -30,7 +31,8 @@
             android:layout_marginTop="8dp"
             android:text="正在缓冲..."
             android:textColor="@android:color/white"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            tools:ignore="HardcodedText" />
     </LinearLayout>
     <!--改变播放位置-->
     <LinearLayout
@@ -50,7 +52,8 @@
             android:layout_height="wrap_content"
             android:text="00:00"
             android:textColor="@android:color/white"
-            android:textSize="28sp" />
+            android:textSize="28sp"
+            tools:ignore="HardcodedText" />
 
         <ProgressBar
             android:id="@+id/change_position_progress"
@@ -132,24 +135,26 @@
             android:id="@+id/replay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_player_replay"
             android:drawablePadding="4dp"
+            android:drawableStart="@drawable/ic_player_replay"
             android:padding="8dp"
             android:text="重新播放"
             android:textColor="@android:color/white"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="64dp"
-            android:drawableLeft="@mipmap/ic_save"
+            android:layout_marginStart="64dp"
             android:drawablePadding="4dp"
+            android:drawableStart="@mipmap/ic_save"
             android:padding="8dp"
             android:text="保存"
             android:textColor="@android:color/white"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            tools:ignore="HardcodedText" />
     </LinearLayout>
     <!--播放错误-->
     <LinearLayout
@@ -166,7 +171,8 @@
             android:layout_height="wrap_content"
             android:text="播放错误，请重试。"
             android:textColor="@android:color/white"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/retry"
@@ -180,7 +186,8 @@
             android:paddingTop="4dp"
             android:text="点击重试"
             android:textColor="@android:color/white"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            tools:ignore="HardcodedText" />
     </LinearLayout>
     <!--顶部控制区-->
     <LinearLayout
@@ -206,15 +213,15 @@
             android:layout_weight="1"
             android:ellipsize="end"
             android:maxLines="2"
-            android:text="真实死亡游戏“蓝鲸”疑似进入国内，家长们要注意了"
             android:textColor="@android:color/white"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            tools:text="标题" />
 
         <LinearLayout
             android:id="@+id/battery_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
             android:orientation="vertical"
             android:visibility="gone">
 
@@ -230,7 +237,8 @@
                 android:layout_height="wrap_content"
                 android:text="00:00"
                 android:textColor="@android:color/white"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                tools:ignore="HardcodedText,SmallSp" />
         </LinearLayout>
     </LinearLayout>
     <!--底部控制区-->
@@ -254,17 +262,19 @@
             android:id="@+id/position"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:text="00:00"
             android:textColor="@android:color/white"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="/"
             android:textColor="@android:color/white"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/duration"
@@ -272,7 +282,8 @@
             android:layout_height="wrap_content"
             android:text="00:00"
             android:textColor="@android:color/white"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            tools:ignore="HardcodedText" />
 
         <SeekBar
             android:id="@+id/seek"
@@ -291,11 +302,12 @@
             android:id="@+id/clarity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="8dp"
+            android:paddingEnd="8dp"
             android:text="超清"
             android:textColor="@android:color/white"
             android:textSize="14sp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:ignore="HardcodedText,RtlSymmetry" />
 
         <ImageView
             android:id="@+id/full_screen"
@@ -309,13 +321,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginBottom="12dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
         android:padding="4dp"
         android:text="00:00"
         android:textColor="@android:color/white"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        tools:ignore="HardcodedText" />
     <!--中间开始播放按钮-->
     <ImageView
         android:id="@+id/center_start"
