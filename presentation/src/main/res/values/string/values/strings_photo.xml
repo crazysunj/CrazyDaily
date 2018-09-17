@@ -17,4 +17,5 @@
     <string name="setting">设置</string>
     <string name="photo_edit">编辑图片</string>
     <string name="photo_save">保存图片</string>
+    <string name="image_video">图片和视频</string>
 </resources>

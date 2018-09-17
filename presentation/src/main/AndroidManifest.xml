@@ -77,17 +77,16 @@
             </intent-filter>
         </activity>
 
-        <!--小米全面屏适配-->
+        <!-- 小米全面屏适配 -->
         <meta-data
             android:name="android.max_aspect"
             android:value="2.1" />
-        <!--集成蒲公英-->
+        <!-- 集成蒲公英 -->
         <meta-data
             android:name="PGYER_APPID"
             android:value="4ab0fe9f70ce06be768d15a97f88c311" />
 
         <activity android:name="com.pgyersdk.feedback.FeedbackActivity" />
-
         <activity
             android:name=".ui.photo.PhotoActivity"
             android:theme="@style/PhotoTheme" />
@@ -105,6 +104,10 @@
         <service
             android:name=".service.DownloadService"
             android:exported="false" />
+
+        <activity
+            android:name=".ui.photo.PhotoPickerActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

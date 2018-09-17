@@ -24,6 +24,7 @@ import com.crazysunj.data.repository.download.DownloadDataRepository;
 import com.crazysunj.data.repository.gankio.GankioDataRepository;
 import com.crazysunj.data.repository.gaoxiao.GaoxiaoDataRepository;
 import com.crazysunj.data.repository.neihan.NeihanDataRepository;
+import com.crazysunj.data.repository.photo.PhotoPickerDataRepository;
 import com.crazysunj.data.repository.weather.WeatherDataRepository;
 import com.crazysunj.data.repository.zhihu.ZhihuDataRepository;
 import com.crazysunj.domain.repository.contact.ContactRepository;
@@ -31,6 +32,7 @@ import com.crazysunj.domain.repository.download.DownloadRepository;
 import com.crazysunj.domain.repository.gankio.GankioRepository;
 import com.crazysunj.domain.repository.gaoxiao.GaoxiaoRepository;
 import com.crazysunj.domain.repository.neihan.NeihanRepository;
+import com.crazysunj.domain.repository.photo.PhotoPickerRepository;
 import com.crazysunj.domain.repository.weather.WeatherRepository;
 import com.crazysunj.domain.repository.zhihu.ZhihuRepository;
 import com.crazysunj.domain.util.NeihanManager;
@@ -112,5 +114,11 @@ public class AppModule {
     @Singleton
     DownloadRepository provideDownloadRepository(DownloadDataRepository downloadRepository) {
         return downloadRepository;
+    }
+
+    @Provides
+    @Singleton
+    PhotoPickerRepository providePhotoPickerRepository(PhotoPickerDataRepository photoPickerRepository) {
+        return photoPickerRepository;
     }
 }
