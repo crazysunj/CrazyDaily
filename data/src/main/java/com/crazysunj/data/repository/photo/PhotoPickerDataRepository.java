@@ -14,6 +14,8 @@ import com.crazysunj.domain.entity.photo.MediaEntity;
 import com.crazysunj.domain.repository.photo.PhotoPickerRepository;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -37,19 +39,59 @@ public class PhotoPickerDataRepository implements PhotoPickerRepository {
         mContentResolver = context.getContentResolver();
     }
 
+//    @Override
+//    public Flowable<List<MediaEntity>> getMediaList(String bucketId, int page, int limit) {
+//        if (TextUtils.equals(bucketId, String.valueOf(Integer.MAX_VALUE))) {
+//            // 图片和视频
+//            return null;
+//        } else if (TextUtils.equals(bucketId, String.valueOf(Integer.MIN_VALUE))) {
+//            // 所有视频
+//            return null;
+//        } else {
+//            final String selection = MediaStore.Images.Media.BUCKET_ID + "=?";
+//            final String[] selectionArgs = new String[]{bucketId};
+//            return Flowable.create((FlowableOnSubscribe<List<MediaEntity>>) e -> {
+//                e.onNext(handleImageMediaList(selection, selectionArgs, page, limit));
+//                e.onComplete();
+//            }, BackpressureStrategy.BUFFER).subscribeOn(Schedulers.io());
+//        }
+//    }
+
     @Override
-    public Flowable<List<MediaEntity>> getMediaList(String bucketId, int page, int limit) {
+    public Flowable<List<MediaEntity>> getMediaList(Date toDate, String... bucketIds) {
+        if (bucketIds == null || bucketIds.length == 0) {
+            return Flowable.empty();
+        }
+        final String bucketId = bucketIds[0];
         if (TextUtils.equals(bucketId, String.valueOf(Integer.MAX_VALUE))) {
             // 图片和视频
             return null;
         } else if (TextUtils.equals(bucketId, String.valueOf(Integer.MIN_VALUE))) {
             // 所有视频
-            return null;
-        } else {
-            final String selection = MediaStore.Images.Media.BUCKET_ID + "=?";
-            final String[] selectionArgs = new String[]{bucketId};
             return Flowable.create((FlowableOnSubscribe<List<MediaEntity>>) e -> {
-                e.onNext(handleImageMediaList(selection, selectionArgs, page, limit));
+                String[] videoProjection = new String[]{
+                        MediaStore.Video.Media._ID,
+                        MediaStore.Video.Media.DATA,
+                        MediaStore.Video.Media.DATE_ADDED,
+                        MediaStore.Video.Media.DATE_MODIFIED,
+                        MediaStore.Video.Media.SIZE,
+                };
+                Uri videoUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                e.onNext(handleVideoMediaList(videoUri, videoProjection, toDate, bucketIds));
+                e.onComplete();
+            }, BackpressureStrategy.BUFFER).subscribeOn(Schedulers.io());
+        } else {
+            return Flowable.create((FlowableOnSubscribe<List<MediaEntity>>) e -> {
+                String[] imageProjection = new String[]{
+                        MediaStore.Images.Media._ID,
+                        MediaStore.Images.Media.DATA,
+                        MediaStore.Images.Media.DATE_ADDED,
+                        MediaStore.Images.Media.DATE_MODIFIED,
+                        MediaStore.Images.Media.SIZE,
+                };
+                Uri imageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                e.onNext(handleImageMediaList(imageUri,
+                        imageProjection, toDate, bucketId));
                 e.onComplete();
             }, BackpressureStrategy.BUFFER).subscribeOn(Schedulers.io());
         }
@@ -64,25 +106,82 @@ public class PhotoPickerDataRepository implements PhotoPickerRepository {
     }
 
     @NonNull
-    private List<MediaEntity> handleImageMediaList(String selection, String[] selectionArgs, int page, int limit) {
-        final int offset = (page - 1) * limit;
-        String[] imageProjection = new String[]{
-                MediaStore.Images.Media._ID,
-                MediaStore.Images.Media.DATA,
-                MediaStore.Images.Media.DATE_ADDED,
-                MediaStore.Images.Media.DATE_MODIFIED,
-                MediaStore.Images.Media.SIZE,
-        };
-        Uri imageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        return handleImageMediaListByDB(selection, selectionArgs, limit, offset, imageUri, imageProjection);
+    private List<MediaEntity> handleVideoMediaList(Uri videoUri, String[] videoProjection, Date toDate, String[] bucketIds) {
+
+
+        int preCount = 1;
+        int length = 0;
+        List<MediaEntity> videoMediaList = new ArrayList<>();
+        do {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(toDate);
+            calendar.add(Calendar.MONTH, -preCount++);
+            Date fromDate = calendar.getTime();
+            String selection = String.format("%s=? and %s>=? and %s<=?", MediaStore.Images.Media.BUCKET_ID, MediaStore.Images.Media.DATE_ADDED, MediaStore.Images.Media.DATE_ADDED);
+            for (String bucketId : bucketIds) {
+                String[] selectionArgs = {bucketId, String.valueOf(fromDate.getTime() / 1000), String.valueOf(toDate.getTime() / 1000)};
+                List<MediaEntity> imageMediaListByDB = handleImageMediaListByDB(selection, selectionArgs, videoUri, videoProjection);
+
+            }
+            imageMediaList.addAll(imageMediaListByDB);
+            toDate = fromDate;
+            final int size = imageMediaListByDB.size();
+            length += size;
+        } while (length < MediaEntity.DEFAULT_LIMIT);
+        return handleVideoMediaListByDB(selection, selectionArgs, videoUri, videoProjection);
     }
 
     @NonNull
-    private List<MediaEntity> handleImageMediaListByDB(String selection, String[] selectionArgs, int limit, int offset, Uri imageUri, String[] imageProjection) {
+    private List<MediaEntity> handleVideoMediaListByDB(String selection, String[] selectionArgs, Uri videoUri, String[] videoProjection) {
+        List<MediaEntity> mediaEntityList = new ArrayList<>();
+        Cursor cursor = mContentResolver.query(
+                videoUri, videoProjection, selection,
+                selectionArgs, String.format("%s DESC", MediaStore.Video.Media.DATE_ADDED));
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                String data = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA));
+                long length = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.Media.SIZE));
+                if (TextUtils.isEmpty(data) || length <= 0) {
+                    continue;
+                }
+                long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.Media._ID));
+                long createDate = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.Media.DATE_ADDED));
+                long modifiedDate = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.Media.DATE_MODIFIED));
+                mediaEntityList.add(new MediaEntity(id, data, createDate, modifiedDate, length, false));
+            } while (cursor.moveToNext());
+        }
+
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+        return mediaEntityList;
+    }
+
+    @NonNull
+    private List<MediaEntity> handleImageMediaList(Uri imageUri, String[] imageProjection, Date toDate, String bucketId) {
+        int preCount = 1;
+        List<MediaEntity> imageMediaList = new ArrayList<>();
+        do {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(toDate);
+            calendar.add(Calendar.MONTH, -preCount++);
+            Date fromDate = calendar.getTime();
+            String[] selectionArgs = {bucketId, String.valueOf(fromDate.getTime() / 1000), String.valueOf(toDate.getTime() / 1000)};
+            String selection = String.format("%s=? and %s>=? and %s<=?", MediaStore.Images.Media.BUCKET_ID, MediaStore.Images.Media.DATE_ADDED, MediaStore.Images.Media.DATE_ADDED);
+            List<MediaEntity> imageMediaListByDB = handleImageMediaListByDB(selection, selectionArgs, imageUri, imageProjection);
+            imageMediaList.addAll(imageMediaListByDB);
+            toDate = fromDate;
+        } while (imageMediaList.size() < MediaEntity.DEFAULT_LIMIT);
+        return imageMediaList;
+    }
+
+    @NonNull
+    private List<MediaEntity> handleImageMediaListByDB(String selection, String[] selectionArgs, Uri imageUri, String[] imageProjection) {
         List<MediaEntity> mediaEntityList = new ArrayList<>();
         Cursor cursor = mContentResolver.query(
                 imageUri, imageProjection, selection,
-                selectionArgs, MediaStore.Images.Media.DATE_ADDED + " DESC LIMIT " + limit + " OFFSET " + offset);
+                selectionArgs, String.format("%s DESC", MediaStore.Images.Media.DATE_ADDED));
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             do {

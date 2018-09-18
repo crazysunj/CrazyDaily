@@ -7,6 +7,10 @@ package com.crazysunj.domain.entity.photo;
  */
 public class MediaEntity {
     /**
+     * 默认加载数量临界值
+     */
+    public static final int DEFAULT_LIMIT = 40;
+    /**
      * id
      */
     private long id;

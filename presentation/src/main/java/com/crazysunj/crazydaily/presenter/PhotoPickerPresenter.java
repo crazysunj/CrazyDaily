@@ -7,6 +7,7 @@ import com.crazysunj.crazydaily.presenter.contract.PhotoPickerContract;
 import com.crazysunj.domain.entity.photo.BucketEntity;
 import com.crazysunj.domain.interactor.photo.PhotoPickerUseCase;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -26,7 +27,7 @@ public class PhotoPickerPresenter extends BasePresenter<PhotoPickerContract.View
     }
 
     @Override
-    public void getMediaList(String bucketId, int page, int limit) {
+    public void getMediaList(Date toDate, String... bucketIds) {
 
     }
 
