@@ -18,7 +18,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
+import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -44,23 +46,25 @@ public class PhotoPickerDataRepository implements PhotoPickerRepository {
             // 所有视频
             return null;
         } else {
-            return null;
+            final String selection = MediaStore.Images.Media.BUCKET_ID + "=?";
+            final String[] selectionArgs = new String[]{bucketId};
+            return Flowable.create((FlowableOnSubscribe<List<MediaEntity>>) e -> {
+                e.onNext(handleImageMediaList(selection, selectionArgs, page, limit));
+                e.onComplete();
+            }, BackpressureStrategy.BUFFER).subscribeOn(Schedulers.io());
         }
     }
 
     @Override
     public Flowable<List<BucketEntity>> getBucketList() {
-        return Flowable.empty().observeOn(Schedulers.io()).flatMap(o -> Flowable.just(handleBucketData()));
+        return Flowable.create((FlowableOnSubscribe<List<BucketEntity>>) e -> {
+            e.onNext(handleBucketData());
+            e.onComplete();
+        }, BackpressureStrategy.BUFFER).subscribeOn(Schedulers.io());
     }
 
     @NonNull
-    private List<MediaEntity> handleImageMediaList(String bucketId, int page, int limit) {
-        String selection = null;
-        String[] selectionArgs = null;
-        if (!TextUtils.equals(bucketId, String.valueOf(Integer.MIN_VALUE))) {
-            selection = MediaStore.Images.Media.BUCKET_ID + "=?";
-            selectionArgs = new String[]{bucketId};
-        }
+    private List<MediaEntity> handleImageMediaList(String selection, String[] selectionArgs, int page, int limit) {
         final int offset = (page - 1) * limit;
         String[] imageProjection = new String[]{
                 MediaStore.Images.Media._ID,
@@ -70,11 +74,11 @@ public class PhotoPickerDataRepository implements PhotoPickerRepository {
                 MediaStore.Images.Media.SIZE,
         };
         Uri imageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        return handleImageMediaListByDB(limit, selection, selectionArgs, offset, imageProjection, imageUri);
+        return handleImageMediaListByDB(selection, selectionArgs, limit, offset, imageUri, imageProjection);
     }
 
     @NonNull
-    private List<MediaEntity> handleImageMediaListByDB(int limit, String selection, String[] selectionArgs, int offset, String[] imageProjection, Uri imageUri) {
+    private List<MediaEntity> handleImageMediaListByDB(String selection, String[] selectionArgs, int limit, int offset, Uri imageUri, String[] imageProjection) {
         List<MediaEntity> mediaEntityList = new ArrayList<>();
         Cursor cursor = mContentResolver.query(
                 imageUri, imageProjection, selection,
