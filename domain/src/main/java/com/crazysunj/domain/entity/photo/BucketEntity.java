@@ -1,5 +1,7 @@
 package com.crazysunj.domain.entity.photo;
 
+import android.support.annotation.NonNull;
+
 import java.util.List;
 
 /**
@@ -7,24 +9,26 @@ import java.util.List;
  * created on: 2018/9/17 下午3:03
  * description:
  */
-public class BucketEntity {
+public class BucketEntity implements Comparable<BucketEntity> {
+    public static final long DEFAULT_DATE_MODIFIED = -1;
+    public static final int DEFAULT_COUNT = -1;
     private String bucketId;
     private String bucketName;
     private String data;
+    private long dateModified;
     private int count;
     private List<String> bucketIds;
 
-    public BucketEntity(String bucketId, String bucketName, String data, int count) {
+    public BucketEntity(String bucketId, String bucketName, String data, long dateModified, int count) {
         this.bucketId = bucketId;
         this.bucketName = bucketName;
         this.data = data;
+        this.dateModified = dateModified;
         this.count = count;
     }
 
     public BucketEntity(String bucketId, String bucketName, String data) {
-        this.bucketId = bucketId;
-        this.bucketName = bucketName;
-        this.data = data;
+        this(bucketId, bucketName, data, DEFAULT_DATE_MODIFIED, DEFAULT_COUNT);
     }
 
     public String getBucketId() {
@@ -61,7 +65,20 @@ public class BucketEntity {
                 "bucketId='" + bucketId + '\'' +
                 ", bucketName='" + bucketName + '\'' +
                 ", data='" + data + '\'' +
+                ", dateModified=" + dateModified +
                 ", count=" + count +
+                ", bucketIds=" + bucketIds +
                 '}';
+    }
+
+    @Override
+    public int compareTo(@NonNull BucketEntity bucketEntity) {
+        if (bucketEntity.dateModified == -1) {
+            return 1;
+        }
+        if (dateModified == -1) {
+            return -1;
+        }
+        return Long.compare(bucketEntity.dateModified, dateModified);
     }
 }

@@ -31,17 +31,25 @@ public class MediaEntity {
      */
     private long length;
     /**
-     * 是否是图片
+     * 播放时长，可用于判断是否为视频
      */
-    private boolean isImage;
+    private long duration;
 
-    public MediaEntity(long id, String data, long createDate, long modifiedDate, long length, boolean isImage) {
+    public MediaEntity(long id, String data, long createDate, long modifiedDate, long length) {
         this.id = id;
         this.data = data;
         this.createDate = createDate;
         this.modifiedDate = modifiedDate;
         this.length = length;
-        this.isImage = isImage;
+    }
+
+    public MediaEntity(long id, String data, long createDate, long modifiedDate, long length, long duration) {
+        this.id = id;
+        this.data = data;
+        this.createDate = createDate;
+        this.modifiedDate = modifiedDate;
+        this.length = length;
+        this.duration = duration;
     }
 
     public long getId() {
@@ -64,8 +72,12 @@ public class MediaEntity {
         return length;
     }
 
+    public long getDuration() {
+        return duration;
+    }
+
     public boolean isImage() {
-        return isImage;
+        return duration == 0;
     }
 
     @Override
@@ -76,7 +88,7 @@ public class MediaEntity {
                 ", createDate=" + createDate +
                 ", modifiedDate=" + modifiedDate +
                 ", length=" + length +
-                ", isImage=" + isImage +
+                ", duration=" + duration +
                 '}';
     }
 }

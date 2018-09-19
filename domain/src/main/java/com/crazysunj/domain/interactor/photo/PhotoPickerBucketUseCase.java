@@ -17,21 +17,23 @@ import io.reactivex.schedulers.Schedulers;
  * created on: 2018/9/17 下午3:38
  * description:
  */
-public class PhotoPickerUseCase extends UseCase<List<BucketEntity>, Void> {
+public class PhotoPickerBucketUseCase extends UseCase<List<BucketEntity>, Void> {
     private final PhotoPickerRepository mPhotoPickerRepository;
 
     @Inject
-    public PhotoPickerUseCase(PhotoPickerRepository photoPickerRepository) {
+    public PhotoPickerBucketUseCase(PhotoPickerRepository photoPickerRepository) {
         mPhotoPickerRepository = photoPickerRepository;
     }
 
+    /**
+     * 根据修改时间排序，好像跟微信的没对上，微信应该想的更多
+     */
     @Override
     protected Flowable<List<BucketEntity>> buildUseCaseObservable(Void aVoid) {
         return mPhotoPickerRepository.getBucketList()
                 .observeOn(Schedulers.io())
                 .flatMap(Flowable::fromIterable)
-                .distinct(BucketEntity::getBucketId)
-                .toList()
+                .toSortedList(BucketEntity::compareTo)
                 .toFlowable()
                 .observeOn(AndroidSchedulers.mainThread());
     }

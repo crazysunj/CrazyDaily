@@ -33,6 +33,7 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
     @Override
     protected void initData() {
         mPresenter.getBucketList();
+        mPresenter.getMediaList(String.valueOf(Integer.MAX_VALUE));
     }
 
     @Override
@@ -42,7 +43,9 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
 
     @Override
     public void showBucketList(List<BucketEntity> bucketList) {
-        Log.d("PhotoPickerActivity", bucketList.toString());
+        for (BucketEntity bucketEntity : bucketList) {
+            Log.d("PhotoPickerActivity", bucketEntity.getBucketName());
+        }
     }
 
     @Override

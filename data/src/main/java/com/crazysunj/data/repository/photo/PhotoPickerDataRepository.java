@@ -58,7 +58,7 @@ public class PhotoPickerDataRepository implements PhotoPickerRepository {
 //    }
 
     @Override
-    public Flowable<List<MediaEntity>> getMediaList(Date toDate, String... bucketIds) {
+    public Flowable<List<MediaEntity>> getMediaList(Date toDate, String[] bucketIds) {
         if (bucketIds == null || bucketIds.length == 0) {
             return Flowable.empty();
         }
@@ -77,7 +77,7 @@ public class PhotoPickerDataRepository implements PhotoPickerRepository {
                         MediaStore.Video.Media.SIZE,
                 };
                 Uri videoUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                e.onNext(handleVideoMediaList(videoUri, videoProjection, toDate, bucketIds));
+                e.onNext(handleVideoMediaList(videoUri, videoProjection, toDate, bucketIds, true));
                 e.onComplete();
             }, BackpressureStrategy.BUFFER).subscribeOn(Schedulers.io());
         } else {
@@ -91,7 +91,7 @@ public class PhotoPickerDataRepository implements PhotoPickerRepository {
                 };
                 Uri imageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
                 e.onNext(handleImageMediaList(imageUri,
-                        imageProjection, toDate, bucketId));
+                        imageProjection, toDate, bucketId, true));
                 e.onComplete();
             }, BackpressureStrategy.BUFFER).subscribeOn(Schedulers.io());
         }
@@ -106,11 +106,8 @@ public class PhotoPickerDataRepository implements PhotoPickerRepository {
     }
 
     @NonNull
-    private List<MediaEntity> handleVideoMediaList(Uri videoUri, String[] videoProjection, Date toDate, String[] bucketIds) {
-
-
+    private List<MediaEntity> handleVideoMediaList(Uri videoUri, String[] videoProjection, Date toDate, String[] bucketIds, boolean isWhile) {
         int preCount = 1;
-        int length = 0;
         List<MediaEntity> videoMediaList = new ArrayList<>();
         do {
             Calendar calendar = Calendar.getInstance();
@@ -120,15 +117,12 @@ public class PhotoPickerDataRepository implements PhotoPickerRepository {
             String selection = String.format("%s=? and %s>=? and %s<=?", MediaStore.Images.Media.BUCKET_ID, MediaStore.Images.Media.DATE_ADDED, MediaStore.Images.Media.DATE_ADDED);
             for (String bucketId : bucketIds) {
                 String[] selectionArgs = {bucketId, String.valueOf(fromDate.getTime() / 1000), String.valueOf(toDate.getTime() / 1000)};
-                List<MediaEntity> imageMediaListByDB = handleImageMediaListByDB(selection, selectionArgs, videoUri, videoProjection);
-
+                List<MediaEntity> imageMediaListByDB = handleVideoMediaListByDB(selection, selectionArgs, videoUri, videoProjection);
+                videoMediaList.addAll(imageMediaListByDB);
             }
-            imageMediaList.addAll(imageMediaListByDB);
             toDate = fromDate;
-            final int size = imageMediaListByDB.size();
-            length += size;
-        } while (length < MediaEntity.DEFAULT_LIMIT);
-        return handleVideoMediaListByDB(selection, selectionArgs, videoUri, videoProjection);
+        } while (videoMediaList.size() < MediaEntity.DEFAULT_LIMIT && isWhile);
+        return videoMediaList;
     }
 
     @NonNull
@@ -148,7 +142,8 @@ public class PhotoPickerDataRepository implements PhotoPickerRepository {
                 long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.Media._ID));
                 long createDate = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.Media.DATE_ADDED));
                 long modifiedDate = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.Media.DATE_MODIFIED));
-                mediaEntityList.add(new MediaEntity(id, data, createDate, modifiedDate, length, false));
+                long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.Media.DURATION));
+                mediaEntityList.add(new MediaEntity(id, data, createDate, modifiedDate, length, duration));
             } while (cursor.moveToNext());
         }
 
@@ -159,7 +154,7 @@ public class PhotoPickerDataRepository implements PhotoPickerRepository {
     }
 
     @NonNull
-    private List<MediaEntity> handleImageMediaList(Uri imageUri, String[] imageProjection, Date toDate, String bucketId) {
+    private List<MediaEntity> handleImageMediaList(Uri imageUri, String[] imageProjection, Date toDate, String bucketId, boolean isWhile) {
         int preCount = 1;
         List<MediaEntity> imageMediaList = new ArrayList<>();
         do {
@@ -172,7 +167,7 @@ public class PhotoPickerDataRepository implements PhotoPickerRepository {
             List<MediaEntity> imageMediaListByDB = handleImageMediaListByDB(selection, selectionArgs, imageUri, imageProjection);
             imageMediaList.addAll(imageMediaListByDB);
             toDate = fromDate;
-        } while (imageMediaList.size() < MediaEntity.DEFAULT_LIMIT);
+        } while (imageMediaList.size() < MediaEntity.DEFAULT_LIMIT && isWhile);
         return imageMediaList;
     }
 
@@ -193,7 +188,7 @@ public class PhotoPickerDataRepository implements PhotoPickerRepository {
                 long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID));
                 long createDate = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED));
                 long modifiedDate = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_MODIFIED));
-                mediaEntityList.add(new MediaEntity(id, data, createDate, modifiedDate, length, true));
+                mediaEntityList.add(new MediaEntity(id, data, createDate, modifiedDate, length));
             } while (cursor.moveToNext());
         }
 
@@ -209,6 +204,7 @@ public class PhotoPickerDataRepository implements PhotoPickerRepository {
                 MediaStore.Images.Media.BUCKET_ID,
                 MediaStore.Images.Media.DATA,
                 MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
+                MediaStore.Images.Media.DATE_MODIFIED,
         };
         Uri imageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         String[] videoProjection = new String[]{
@@ -241,6 +237,9 @@ public class PhotoPickerDataRepository implements PhotoPickerRepository {
             cursor.moveToFirst();
             do {
                 String bucketId = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.BUCKET_ID));
+                if (bucketIds.contains(bucketId)) {
+                    continue;
+                }
                 String data = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA));
                 Cursor c = mContentResolver.query(uri, projection, MediaStore.Video.Media.BUCKET_ID + "=?", new String[]{bucketId}, null);
                 int count = 0;
@@ -256,7 +255,9 @@ public class PhotoPickerDataRepository implements PhotoPickerRepository {
                 allCount += count;
                 bucketIds.add(bucketId);
             } while (cursor.moveToNext());
-            videoBucketEntity.setBucketIds(bucketIds);
+            if (videoBucketEntity != null) {
+                videoBucketEntity.setBucketIds(bucketIds);
+            }
         }
 
         if (cursor != null && !cursor.isClosed()) {
@@ -283,8 +284,12 @@ public class PhotoPickerDataRepository implements PhotoPickerRepository {
             cursor.moveToFirst();
             do {
                 String bucketId = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID));
+                if (isFilterBucketEntity(bucketEntityList, bucketId)) {
+                    continue;
+                }
                 String bucketName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
                 String data = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+                long dateModified = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_MODIFIED));
                 Cursor c = mContentResolver.query(uri, projection, MediaStore.Images.Media.BUCKET_ID + "=?", new String[]{bucketId}, null);
                 int count = 0;
                 if (c != null && c.getCount() > 0) {
@@ -294,10 +299,10 @@ public class PhotoPickerDataRepository implements PhotoPickerRepository {
                     c.close();
                 }
                 if (imageAndVideoBucketEntity == null) {
-                    imageAndVideoBucketEntity = new BucketEntity(String.valueOf(Integer.MAX_VALUE), "图片和视频", data, -1);
+                    imageAndVideoBucketEntity = new BucketEntity(String.valueOf(Integer.MAX_VALUE), "图片和视频", data);
                     bucketEntityList.add(imageAndVideoBucketEntity);
                 }
-                bucketEntityList.add(new BucketEntity(bucketId, bucketName, data, count));
+                bucketEntityList.add(new BucketEntity(bucketId, bucketName, data, dateModified, count));
             } while (cursor.moveToNext());
         }
 
@@ -305,5 +310,20 @@ public class PhotoPickerDataRepository implements PhotoPickerRepository {
             cursor.close();
         }
         return bucketEntityList;
+    }
+
+    private boolean isFilterBucketEntity(List<BucketEntity> bucketEntityList, String bucketId) {
+        if (TextUtils.isEmpty(bucketId)) {
+            return true;
+        }
+        if (bucketEntityList == null || bucketEntityList.isEmpty()) {
+            return false;
+        }
+        for (BucketEntity bucketEntity : bucketEntityList) {
+            if (bucketId.equals(bucketEntity.getBucketId())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
