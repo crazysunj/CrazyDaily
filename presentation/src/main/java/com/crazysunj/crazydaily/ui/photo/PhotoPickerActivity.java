@@ -11,6 +11,7 @@ import com.crazysunj.crazydaily.presenter.contract.PhotoPickerContract;
 import com.crazysunj.domain.entity.photo.BucketEntity;
 import com.crazysunj.domain.entity.photo.MediaEntity;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,18 +34,35 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
     @Override
     protected void initData() {
         mPresenter.getBucketList();
-        mPresenter.getMediaList(String.valueOf(Integer.MAX_VALUE));
+//        mPresenter.getMediaList(String.valueOf(Integer.MIN_VALUE));
     }
 
     @Override
-    public void showMediaList(List<MediaEntity> mediaList) {
-
+    public void showMediaList(Date toDate, int page, int offset, List<MediaEntity> mediaList) {
+        Log.d("PhotoPickerActivity", "date:" + toDate);
+        Log.d("PhotoPickerActivity", "page:" + page);
+        Log.d("PhotoPickerActivity", "offset:" + offset);
+//        for (MediaEntity mediaEntity : mediaList) {
+//            Log.d("PhotoPickerActivity", "data:" + mediaEntity.getData());
+//            Log.d("PhotoPickerActivity", "modifiedDate:" + mediaEntity.getModifiedDate());
+//        }
+        Log.d("PhotoPickerActivity", "size:" + mediaList.size());
     }
 
     @Override
     public void showBucketList(List<BucketEntity> bucketList) {
         for (BucketEntity bucketEntity : bucketList) {
-            Log.d("PhotoPickerActivity", bucketEntity.getBucketName());
+//            Log.d("PhotoPickerActivity", "bucketName:" + bucketEntity.getBucketName());
+//            Log.d("PhotoPickerActivity", "count:" + bucketEntity.getCount());
+            if (!bucketEntity.getBucketName().equals("所有视频")) {
+                mPresenter.getMediaList(new Date(), 1, 0, bucketEntity.getCount(), bucketEntity.getBucketId());
+            }
+//            List<String> bucketIds = bucketEntity.getBucketIds();
+//            if (bucketIds != null) {
+//                bucketIds.add(0, String.valueOf(Integer.MIN_VALUE));
+//                mPresenter.getMediaList(bucketEntity.getCount(), bucketIds.toArray(new String[bucketIds.size()]));
+////                Log.d("PhotoPickerActivity", bucketIds.toString());
+//            }
         }
     }
 

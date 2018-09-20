@@ -14,7 +14,7 @@ import io.reactivex.Flowable;
  * description:
  */
 public interface PhotoPickerRepository {
-    Flowable<List<MediaEntity>> getMediaList(Date toDate, String[] bucketIds);
+    Flowable<MediaEntity.MediaResponseData> getMediaList(Date toDate, int page, int offset, int count, String bucketId);
 
     Flowable<List<BucketEntity>> getBucketList();
 }

@@ -1,11 +1,30 @@
 package com.crazysunj.domain.entity.photo;
 
+import android.support.annotation.NonNull;
+
+import java.util.Date;
+import java.util.List;
+
 /**
  * author: sunjian
  * created on: 2018/9/17 下午2:53
  * description:
  */
-public class MediaEntity {
+public class MediaEntity implements Comparable<MediaEntity> {
+    public class MediaResponseData {
+        public Date toDate;
+        public int page;
+        public int offset;
+        public List<MediaEntity> mediaList;
+
+        public MediaResponseData(Date toDate, int page, int offset, List<MediaEntity> mediaList) {
+            this.toDate = toDate;
+            this.page = page;
+            this.offset = offset;
+            this.mediaList = mediaList;
+        }
+    }
+
     /**
      * 默认加载数量临界值
      */
@@ -34,6 +53,9 @@ public class MediaEntity {
      * 播放时长，可用于判断是否为视频
      */
     private long duration;
+
+    public MediaEntity() {
+    }
 
     public MediaEntity(long id, String data, long createDate, long modifiedDate, long length) {
         this.id = id;
@@ -90,5 +112,10 @@ public class MediaEntity {
                 ", length=" + length +
                 ", duration=" + duration +
                 '}';
+    }
+
+    @Override
+    public int compareTo(@NonNull MediaEntity mediaEntity) {
+        return Long.compare(modifiedDate, mediaEntity.modifiedDate);
     }
 }

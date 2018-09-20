@@ -27,6 +27,10 @@ public class BucketEntity implements Comparable<BucketEntity> {
         this.count = count;
     }
 
+    public BucketEntity(String bucketId, String bucketName, String data, int count) {
+        this(bucketId, bucketName, data, DEFAULT_DATE_MODIFIED, count);
+    }
+
     public BucketEntity(String bucketId, String bucketName, String data) {
         this(bucketId, bucketName, data, DEFAULT_DATE_MODIFIED, DEFAULT_COUNT);
     }
