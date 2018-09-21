@@ -26,8 +26,8 @@ import android.support.v7.widget.Toolbar;
 
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
-import com.crazysunj.crazydaily.moudle.permission.PermissionHelper;
-import com.crazysunj.crazydaily.moudle.permission.PermissionStorage;
+import com.crazysunj.crazydaily.module.permission.PermissionHelper;
+import com.crazysunj.crazydaily.module.permission.PermissionStorage;
 import com.crazysunj.crazydaily.ui.browser.BrowserActivity;
 import com.crazysunj.crazydaily.ui.photo.PhotoActivity;
 import com.crazysunj.crazydaily.util.CacheUtil;

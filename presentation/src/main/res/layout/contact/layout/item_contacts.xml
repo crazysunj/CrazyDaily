@@ -18,7 +18,7 @@
             android:layout_width="@dimen/space_80"
             android:layout_height="match_parent"
             android:background="@color/color_FCAF17"
-            android:fontFamily="@font/contact"
+            android:fontFamily="@font/crazydailyicon"
             android:gravity="center"
             android:padding="12dp"
             android:text="@string/ic_msg" />
@@ -29,7 +29,7 @@
             android:layout_width="@dimen/space_80"
             android:layout_height="match_parent"
             android:background="@color/color_45B97C"
-            android:fontFamily="@font/contact"
+            android:fontFamily="@font/crazydailyicon"
             android:gravity="center"
             android:text="@string/ic_call" />
 
@@ -39,7 +39,7 @@
             android:layout_width="@dimen/space_80"
             android:layout_height="match_parent"
             android:background="@color/color_FF4444"
-            android:fontFamily="@font/contact"
+            android:fontFamily="@font/crazydailyicon"
             android:gravity="center"
             android:text="@string/ic_delete" />
 
@@ -90,7 +90,7 @@
                 style="@style/text_12_999999"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/contact"
+                android:fontFamily="@font/crazydailyicon"
                 android:text="@string/ic_location" />
 
             <TextView
@@ -109,7 +109,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/space_15"
-            android:fontFamily="@font/contact"
+            android:fontFamily="@font/crazydailyicon"
             android:text="@string/ic_go" />
 
         <View

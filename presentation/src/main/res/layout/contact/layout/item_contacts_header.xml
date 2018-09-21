@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/space_8"
-            android:fontFamily="@font/contact"
+            android:fontFamily="@font/crazydailyicon"
             android:text="@string/ic_arrow" />
 
         <TextView

@@ -32,10 +32,10 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
 import com.crazysunj.crazydaily.R;
-import com.crazysunj.crazydaily.moudle.animation.BezierTransition;
-import com.crazysunj.crazydaily.moudle.animation.CircularRevealTransition;
+import com.crazysunj.crazydaily.module.animation.BezierTransition;
+import com.crazysunj.crazydaily.module.animation.CircularRevealTransition;
 import com.crazysunj.crazydaily.base.BaseActivity;
-import com.crazysunj.crazydaily.moudle.image.ImageLoader;
+import com.crazysunj.crazydaily.module.image.ImageLoader;
 import com.crazysunj.crazydaily.util.SnackbarUtil;
 import com.crazysunj.crazydaily.view.contact.CoolBGView;
 import com.crazysunj.crazydaily.view.contact.ImgResEntity;
@@ -57,7 +57,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ContactDetailActivity extends BaseActivity {
 
     private static final String BITMAP = "bitmap";
-    private static final String CONTACT = "contact";
+    private static final String CONTACT = "crazydailyicon";
     @BindView(R.id.satellite_menu)
     SatelliteMenuView mSatelliteMenu;
     @BindView(R.id.cool_bg_view)

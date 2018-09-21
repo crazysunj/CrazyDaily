@@ -9,7 +9,6 @@ import com.crazysunj.domain.entity.photo.MediaEntity;
 import com.crazysunj.domain.interactor.photo.PhotoPickerBucketUseCase;
 import com.crazysunj.domain.interactor.photo.PhotoPickerMediaUseCase;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -31,11 +30,11 @@ public class PhotoPickerPresenter extends BasePresenter<PhotoPickerContract.View
     }
 
     @Override
-    public void getMediaList(Date toDate, int page, int offset, int count, String bucketId) {
-        mPhotoPickerMediaUseCase.execute(PhotoPickerMediaUseCase.Params.get(toDate, page, offset, count, bucketId), new BaseSubscriber<MediaEntity.MediaResponseData>() {
+    public void getMediaList(int imageOffset, int videoOffset, String bucketId) {
+        mPhotoPickerMediaUseCase.execute(PhotoPickerMediaUseCase.Params.get(imageOffset, videoOffset, bucketId), new BaseSubscriber<MediaEntity.MediaResponseData>() {
             @Override
             public void onNext(MediaEntity.MediaResponseData data) {
-                mView.showMediaList(data.toDate, data.page, data.offset, data.mediaList);
+                mView.showMediaList(data.imageOffset, data.videoOffset, data.mediaList);
             }
         });
     }

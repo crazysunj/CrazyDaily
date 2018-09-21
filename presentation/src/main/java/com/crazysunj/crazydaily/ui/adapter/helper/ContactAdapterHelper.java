@@ -37,8 +37,8 @@ public class ContactAdapterHelper extends AsynAdapterHelper<MultiTypeIndexEntity
     }
 
     @Override
-    protected void registerMoudle() {
-        registerMoudle(CONTACT_LEVEL)
+    protected void registerModule() {
+        registerModule(CONTACT_LEVEL)
                 .type(Contact.TYPE)
                 .layoutResId(R.layout.item_contacts)
                 .type(ContactHeader.TYPE)

@@ -54,8 +54,8 @@ public class HomeAdapterHelper extends AsynAdapterHelper<MultiTypeIdEntity> {
     }
 
     @Override
-    protected void registerMoudle() {
-        registerMoudle(LEVEL_ZHIHU)
+    protected void registerModule() {
+        registerModule(LEVEL_ZHIHU)
                 .type(ZhihuNewsEntity.StoriesEntity.TYPE_ZHIHU_NEWS)
                 .layoutResId(R.layout.item_zhihu_news)
                 .headerResId(R.layout.header_common)
@@ -64,7 +64,7 @@ public class HomeAdapterHelper extends AsynAdapterHelper<MultiTypeIdEntity> {
                 .isFolded(true)
                 .register();
 
-        registerMoudle(LEVEL_GANK_IO)
+        registerModule(LEVEL_GANK_IO)
                 .type(GankioEntity.ResultsEntity.TYPE_GANK_IO)
                 .layoutResId(R.layout.item_gank_io)
                 .headerResId(R.layout.header_common)
@@ -73,12 +73,12 @@ public class HomeAdapterHelper extends AsynAdapterHelper<MultiTypeIdEntity> {
                 .isFolded(true)
                 .register();
 
-        registerMoudle(LEVEL_WEATHER)
+        registerModule(LEVEL_WEATHER)
                 .type(WeatherRemoteEntity.WeatherEntity.TYPE_WEATHER)
                 .layoutResId(R.layout.item_weather)
                 .register();
 
-        registerMoudle(LEVEL_GAOXIAO)
+        registerModule(LEVEL_GAOXIAO)
                 .type(GaoxiaoItemEntity.TYPE_GAOXIAO)
                 .layoutResId(R.layout.item_neihan)
                 .headerResId(R.layout.header_common)

@@ -5,7 +5,6 @@ import com.crazysunj.crazydaily.base.IView;
 import com.crazysunj.domain.entity.photo.BucketEntity;
 import com.crazysunj.domain.entity.photo.MediaEntity;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -15,13 +14,13 @@ import java.util.List;
  */
 public interface PhotoPickerContract {
     interface View extends IView {
-        void showMediaList(Date toDate, int page, int offset, List<MediaEntity> mediaList);
+        void showMediaList(int imageOffset, int videoOffset, List<MediaEntity> mediaList);
 
         void showBucketList(List<BucketEntity> bucketList);
     }
 
     interface Presenter extends IPresenter<View> {
-        void getMediaList(Date toDate, int page, int offset, int count, String bucketId);
+        void getMediaList(int imageOffset, int videoOffset, String bucketId);
 
         void getBucketList();
     }

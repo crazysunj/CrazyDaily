@@ -7,14 +7,24 @@
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
+        android:id="@+id/photo_picker_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:background="@color/colorPrimary"
-        app:title="@string/image_video">
+        app:title="@string/image_video"
+        app:titleTextColor="@color/color_white">
 
         <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/photo_picker_complete"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:enabled="false"
+            android:gravity="center"
+            android:paddingEnd="@dimen/space_16"
+            android:paddingStart="@dimen/space_16"
+            android:textColor="@drawable/text_photo_picker_selector"
+            android:textSize="@dimen/text_14"
             tools:text="完成" />
     </android.support.v7.widget.Toolbar>
 
@@ -24,15 +34,28 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:orientation="horizontal">
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/space_10"
+        android:paddingStart="@dimen/space_10">
 
         <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/photo_picker_select"
+            style="@style/text_16_white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:text="@string/image_video" />
-    </LinearLayout>
+
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="@dimen/space_20"
+            android:layout_height="@dimen/space_20"
+            android:layout_alignBottom="@id/photo_picker_select"
+            android:layout_toEndOf="@id/photo_picker_select"
+            android:src="@mipmap/ic_triangle" />
+    </RelativeLayout>
 
 </LinearLayout>

@@ -19,7 +19,7 @@ import android.graphics.Color;
 import android.text.TextUtils;
 
 import com.crazysunj.domain.entity.base.MultiTypeIdEntity;
-import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
+import com.crazysunj.domain.util.ColorUtil;
 
 /**
  * author: sunjian
@@ -51,7 +51,7 @@ public class GaoxiaoItemEntity extends MultiTypeIdEntity {
         final String categoryName = TextUtils.isEmpty(themeName) ? "其它" : themeName;
         final String title = entity.getText();
         final String temTitle = String.format("[%s] %s", categoryName, title);
-        CharSequence realTitle = RecyclerViewAdapterHelper.handleKeyWordHighLight(temTitle, String.format("\\[%s\\]", categoryName), Color.parseColor("#FF5C8D"));
+        CharSequence realTitle = ColorUtil.handleKeyWordHighLight(temTitle, String.format("\\[%s\\]", categoryName), Color.parseColor("#FF5C8D"));
         final String thumbnail = entity.getBimageuri();
         return new GaoxiaoItemEntity(videouri, avatar, name, realTitle, thumbnail, duration, videouri);
     }

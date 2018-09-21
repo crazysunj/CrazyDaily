@@ -26,7 +26,7 @@ import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.di.component.AppComponent;
 import com.crazysunj.crazydaily.di.component.DaggerAppComponent;
 import com.crazysunj.crazydaily.di.module.AppModule;
-import com.crazysunj.crazydaily.moudle.web.CrazyDailySonicRuntime;
+import com.crazysunj.crazydaily.module.web.CrazyDailySonicRuntime;
 import com.crazysunj.crazydaily.weex.CrazyDailyModule;
 import com.crazysunj.crazydaily.weex.LogModule;
 import com.crazysunj.crazydaily.weex.WXCustomTextDomObject;

@@ -17,10 +17,9 @@ package com.crazysunj.crazydaily.weex;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.ImageView;
 
-import com.crazysunj.crazydaily.moudle.image.ImageLoader;
+import com.crazysunj.crazydaily.module.image.ImageLoader;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
 import com.taobao.weex.common.WXImageStrategy;
 import com.taobao.weex.dom.WXImageQuality;

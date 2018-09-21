@@ -35,7 +35,7 @@ import android.widget.ImageView;
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
 import com.crazysunj.crazydaily.constant.ActivityConstant;
-import com.crazysunj.crazydaily.moudle.image.ImageLoader;
+import com.crazysunj.crazydaily.module.image.ImageLoader;
 import com.crazysunj.crazydaily.presenter.ZhihuNewsDetailPresenter;
 import com.crazysunj.crazydaily.presenter.contract.ZhihuNewsDetailContract;
 import com.crazysunj.crazydaily.util.HtmlUtil;

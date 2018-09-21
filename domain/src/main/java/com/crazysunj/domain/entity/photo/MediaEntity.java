@@ -2,7 +2,8 @@ package com.crazysunj.domain.entity.photo;
 
 import android.support.annotation.NonNull;
 
-import java.util.Date;
+import com.crazysunj.multitypeadapter.entity.MultiTypeEntity;
+
 import java.util.List;
 
 /**
@@ -10,20 +11,20 @@ import java.util.List;
  * created on: 2018/9/17 下午2:53
  * description:
  */
-public class MediaEntity implements Comparable<MediaEntity> {
-    public class MediaResponseData {
-        public Date toDate;
-        public int page;
-        public int offset;
+public class MediaEntity implements Comparable<MediaEntity>, MultiTypeEntity {
+    public static class MediaResponseData {
+        public int imageOffset;
+        public int videoOffset;
         public List<MediaEntity> mediaList;
 
-        public MediaResponseData(Date toDate, int page, int offset, List<MediaEntity> mediaList) {
-            this.toDate = toDate;
-            this.page = page;
-            this.offset = offset;
+        public MediaResponseData(int imageOffset, int videoOffset, List<MediaEntity> mediaList) {
+            this.imageOffset = imageOffset;
+            this.videoOffset = videoOffset;
             this.mediaList = mediaList;
         }
     }
+
+    public static final int TYPE_PHOTO_PICKER = 0;
 
     /**
      * 默认加载数量临界值
@@ -53,6 +54,10 @@ public class MediaEntity implements Comparable<MediaEntity> {
      * 播放时长，可用于判断是否为视频
      */
     private long duration;
+    /**
+     * 用于记录选中下标
+     */
+    private int index;
 
     public MediaEntity() {
     }
@@ -74,6 +79,12 @@ public class MediaEntity implements Comparable<MediaEntity> {
         this.duration = duration;
     }
 
+    @Override
+    public int getItemType() {
+        return TYPE_PHOTO_PICKER;
+    }
+
+    @Override
     public long getId() {
         return id;
     }
@@ -98,8 +109,31 @@ public class MediaEntity implements Comparable<MediaEntity> {
         return duration;
     }
 
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
     public boolean isImage() {
         return duration == 0;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj instanceof MediaEntity) {
+            if (this == obj) {
+                return true;
+            } else {
+                return this.id == ((MediaEntity) obj).id;
+            }
+        }
+        return false;
     }
 
     @Override

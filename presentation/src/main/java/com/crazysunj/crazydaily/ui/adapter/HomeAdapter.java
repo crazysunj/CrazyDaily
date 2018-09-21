@@ -29,7 +29,7 @@ import com.crazysunj.crazydaily.base.BaseHelperAdapter;
 import com.crazysunj.crazydaily.base.BaseViewHolder;
 import com.crazysunj.crazydaily.di.module.EntityModule;
 import com.crazysunj.crazydaily.entity.ExpandCollapseFooterEntity;
-import com.crazysunj.crazydaily.moudle.image.ImageLoader;
+import com.crazysunj.crazydaily.module.image.ImageLoader;
 import com.crazysunj.crazydaily.ui.adapter.helper.HomeAdapterHelper;
 import com.crazysunj.crazydaily.ui.browser.BrowserActivity;
 import com.crazysunj.crazydaily.ui.zhihu.ZhihuNewsDetailActivity;
@@ -251,7 +251,7 @@ public class HomeAdapter extends BaseHelperAdapter<MultiTypeIdEntity, BaseViewHo
     public void notifyGaoxiaoList(List<GaoxiaoItemEntity> data) {
         mRemoveVideoItemId = null;
         final int level = HomeAdapterHelper.LEVEL_GAOXIAO;
-        mHelper.notifyMoudleDataAndHeaderAndFooterChanged(data, mGaoxiaoHeaderEntity, mGaoxiaoFooterEntity, level);
+        mHelper.notifyModuleDataAndHeaderAndFooterChanged(data, mGaoxiaoHeaderEntity, mGaoxiaoFooterEntity, level);
     }
 
     // *********************** 内涵段子 ***********************
@@ -274,7 +274,7 @@ public class HomeAdapter extends BaseHelperAdapter<MultiTypeIdEntity, BaseViewHo
 
     public void notifyNeihanList(List<NeihanItemEntity> data) {
         final int level = HomeAdapterHelper.LEVEL_NEIHAN;
-        mHelper.notifyMoudleDataAndHeaderChanged(data, mNeihanHeaderEntity, level);
+        mHelper.notifyModuleDataAndHeaderChanged(data, mNeihanHeaderEntity, level);
     }
 
     // *********************** Weather ***********************
@@ -296,7 +296,7 @@ public class HomeAdapter extends BaseHelperAdapter<MultiTypeIdEntity, BaseViewHo
 
     public void notifyWeatherList(List<WeatherRemoteEntity.WeatherEntity> data) {
         final int level = HomeAdapterHelper.LEVEL_WEATHER;
-        mHelper.notifyMoudleDataChanged(data, level);
+        mHelper.notifyModuleDataChanged(data, level);
     }
 
     // *********************** Gankio ***********************
@@ -328,7 +328,7 @@ public class HomeAdapter extends BaseHelperAdapter<MultiTypeIdEntity, BaseViewHo
         final String options = data.get(0).getType();
         CommonHeaderEntity headerEntity = new CommonHeaderEntity(options, level, GankioEntity.ResultsEntity.HEADER_TITLE, options);
         mGankioFooterEntity.initStatus(title);
-        mHelper.notifyMoudleDataAndHeaderAndFooterChanged(data, headerEntity, mGankioFooterEntity, level);
+        mHelper.notifyModuleDataAndHeaderAndFooterChanged(data, headerEntity, mGankioFooterEntity, level);
     }
 
     // ***********************知乎 ***********************
@@ -358,7 +358,7 @@ public class HomeAdapter extends BaseHelperAdapter<MultiTypeIdEntity, BaseViewHo
         final int level = HomeAdapterHelper.LEVEL_ZHIHU;
         final String title = String.format(Locale.getDefault(), "展开（剩余%d个）", data.size() - HomeAdapterHelper.MIN_ZHIHU);
         mZhihuFooterEntity.initStatus(title);
-        mHelper.notifyMoudleDataAndHeaderAndFooterChanged(data, mZhihuHeaderEntity, mZhihuFooterEntity, level);
+        mHelper.notifyModuleDataAndHeaderAndFooterChanged(data, mZhihuHeaderEntity, mZhihuFooterEntity, level);
     }
 
     private String getUrl(List<String> images) {

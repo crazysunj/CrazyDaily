@@ -46,7 +46,7 @@
             style="@style/text_16_color_primary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/contact"
+            android:fontFamily="@font/crazydailyicon"
             android:text="@string/ic_location"
             android:transitionName="@string/transition_location_icon" />
 

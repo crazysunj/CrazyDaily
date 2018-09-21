@@ -18,7 +18,7 @@ package com.crazysunj.domain.entity.neihan;
 import android.graphics.Color;
 
 import com.crazysunj.domain.entity.base.MultiTypeIdEntity;
-import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
+import com.crazysunj.domain.util.ColorUtil;
 import com.xiao.nicevideoplayer.Clarity;
 
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public class NeihanItemEntity extends MultiTypeIdEntity {
         String categoryName = group.getCategory_name();
         String title = group.getContent();
         String temTitle = String.format("[%s] %s", categoryName, title);
-        CharSequence realTitle = RecyclerViewAdapterHelper.handleKeyWordHighLight(temTitle, String.format("\\[%s\\]", categoryName), Color.parseColor("#FF5C8D"));
+        CharSequence realTitle = ColorUtil.handleKeyWordHighLight(temTitle, String.format("\\[%s\\]", categoryName), Color.parseColor("#FF5C8D"));
         List<Clarity> clarityList = new ArrayList<Clarity>();
         NeihanEntity.DataEntityX.DataEntity.GroupEntity.Video360pEntity video360P = group.getVideo_360p();
         if (video360P != null) {

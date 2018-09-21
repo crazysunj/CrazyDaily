@@ -40,7 +40,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.crazysunj.crazydaily.R;
-import com.crazysunj.crazydaily.moudle.image.ImageLoader;
+import com.crazysunj.crazydaily.module.image.ImageLoader;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -157,7 +157,7 @@ public class SatelliteMenuView extends FrameLayout {
         final Context context = getContext();
         TextView textView = new TextView(context);
         @SuppressLint("RestrictedApi")
-        Typeface typeface = TypefaceCompat.createFromResourcesFontFile(context, getResources(), R.font.contact, "", 0);
+        Typeface typeface = TypefaceCompat.createFromResourcesFontFile(context, getResources(), R.font.crazydailyicon, "", 0);
         textView.setTypeface(typeface);
         textView.setText(entity.text);
         textView.setTextSize(SIZE * BUTTON_RATIO * TEXT_RATIO);
@@ -301,7 +301,7 @@ public class SatelliteMenuView extends FrameLayout {
             ImgTextEntity entity = data.get(i);
             TextView textView = new TextView(context);
             @SuppressLint("RestrictedApi")
-            Typeface typeface = TypefaceCompat.createFromResourcesFontFile(context, getResources(), R.font.contact, "", 0);
+            Typeface typeface = TypefaceCompat.createFromResourcesFontFile(context, getResources(), R.font.crazydailyicon, "", 0);
             textView.setTypeface(typeface);
             textView.setText(entity.text);
             textView.setTextSize(SIZE * TEXT_RATIO);

@@ -3,7 +3,6 @@ package com.crazysunj.domain.repository.photo;
 import com.crazysunj.domain.entity.photo.BucketEntity;
 import com.crazysunj.domain.entity.photo.MediaEntity;
 
-import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Flowable;
@@ -14,7 +13,7 @@ import io.reactivex.Flowable;
  * description:
  */
 public interface PhotoPickerRepository {
-    Flowable<MediaEntity.MediaResponseData> getMediaList(Date toDate, int page, int offset, int count, String bucketId);
+    Flowable<MediaEntity.MediaResponseData> getMediaList(int imageOffset, int videoOffset, String bucketId);
 
     Flowable<List<BucketEntity>> getBucketList();
 }

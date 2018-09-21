@@ -24,7 +24,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
-import com.crazysunj.crazydaily.moudle.web.CrazyDailySonicSessionClient;
+import com.crazysunj.crazydaily.module.web.CrazyDailySonicSessionClient;
 import com.crazysunj.crazydaily.view.web.CrazyDailyWebView;
 import com.taobao.weex.ui.view.IWebView;
 import com.taobao.weex.utils.WXLogUtils;

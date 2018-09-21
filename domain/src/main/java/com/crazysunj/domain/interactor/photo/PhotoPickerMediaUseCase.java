@@ -5,14 +5,12 @@ import com.crazysunj.domain.interactor.UseCase;
 import com.crazysunj.domain.repository.photo.PhotoPickerRepository;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * author: sunjian
@@ -32,9 +30,7 @@ public class PhotoPickerMediaUseCase extends UseCase<MediaEntity.MediaResponseDa
      */
     @Override
     protected Flowable<MediaEntity.MediaResponseData> buildUseCaseObservable(Params params) {
-        return mPhotoPickerRepository.getMediaList(params.toDate, params.page, params.offset, params.count, params.bucketId)
-                .observeOn(Schedulers.io())
-                .map(this::sortList)
+        return mPhotoPickerRepository.getMediaList(params.imageOffset, params.videoOffset, params.bucketId)
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
@@ -48,23 +44,18 @@ public class PhotoPickerMediaUseCase extends UseCase<MediaEntity.MediaResponseDa
     }
 
     public static final class Params {
+        private final int imageOffset;
+        private final int videoOffset;
+        private final String bucketId;
 
-        private Date toDate;
-        private int page;
-        private int offset;
-        private int count;
-        private String bucketId;
-
-        private Params(Date toDate, int page, int offset, int count, String bucketId) {
-            this.toDate = toDate;
-            this.page = page;
-            this.offset = offset;
-            this.count = count;
+        private Params(int imageOffset, int videoOffset, String bucketId) {
+            this.imageOffset = imageOffset;
+            this.videoOffset = videoOffset;
             this.bucketId = bucketId;
         }
 
-        public static Params get(Date toDate, int page, int offset, int count, String bucketId) {
-            return new Params(toDate, page, offset, count, bucketId);
+        public static Params get(int imageOffset, int videoOffset, String bucketId) {
+            return new Params(imageOffset, videoOffset, bucketId);
         }
     }
 }

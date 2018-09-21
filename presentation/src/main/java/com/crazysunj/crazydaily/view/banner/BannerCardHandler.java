@@ -25,7 +25,7 @@ import com.crazysunj.cardslideview.CardHandler;
 import com.crazysunj.cardslideview.CardViewPager;
 import com.crazysunj.cardslideview.ElasticCardView;
 import com.crazysunj.crazydaily.R;
-import com.crazysunj.crazydaily.moudle.image.ImageLoader;
+import com.crazysunj.crazydaily.module.image.ImageLoader;
 import com.crazysunj.crazydaily.ui.zhihu.ZhihuNewsDetailActivity;
 import com.crazysunj.domain.entity.zhihu.ZhihuNewsEntity;
 
