@@ -1,57 +1,45 @@
-/**
- * Copyright 2017 Sun Jian
- * <p>
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.crazysunj.crazydaily.base;
 
 import android.content.Context;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.crazysunj.multitypeadapter.entity.MultiTypeEntity;
-import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * author: sunjian
- * created on: 2017/8/3 下午5:18
- * description:https://github.com/crazysunj/CrazyDaily
+ * created on: 2018/9/25 上午10:58
+ * description:
  */
-public abstract class BaseHelperAdapter<T extends MultiTypeEntity, VH extends BaseViewHolder, H extends RecyclerViewAdapterHelper<T>> extends RecyclerView.Adapter<VH> {
+public abstract class BaseAdapter<T extends Object, VH extends BaseViewHolder> extends RecyclerView.Adapter<VH> {
 
     protected Context mContext;
     protected LayoutInflater mLayoutInflater;
     protected List<T> mData;
-    protected H mHelper;
+    private int mLayoutId;
 
-    public BaseHelperAdapter(H helper) {
-        mData = helper.getData();
-        helper.bindAdapter(this);
-        mHelper = helper;
+    public BaseAdapter(@LayoutRes int layoutId) {
+        this(null, layoutId);
     }
 
+    public BaseAdapter(List<T> data, @LayoutRes int layoutId) {
+        mData = data == null ? new ArrayList<>() : data;
+        mLayoutId = layoutId;
+    }
+
+    @NonNull
     @Override
-    public int getItemViewType(int position) {
-        return mHelper.getItemViewType(position);
+    public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return createBaseViewHolder(parent, mLayoutId);
     }
 
     @Override
@@ -60,12 +48,6 @@ public abstract class BaseHelperAdapter<T extends MultiTypeEntity, VH extends Ba
     }
 
     protected abstract void convert(VH holder, T item);
-
-    @NonNull
-    @Override
-    public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return createBaseViewHolder(parent, mHelper.getLayoutId(viewType));
-    }
 
     @Override
     public int getItemCount() {

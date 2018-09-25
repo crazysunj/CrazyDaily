@@ -3,7 +3,6 @@ package com.crazysunj.crazydaily.ui.adapter;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
-import android.widget.Toast;
 
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseHelperAdapter;
@@ -33,18 +32,19 @@ public class PhotoPickerAdapter extends BaseHelperAdapter<MediaEntity, BaseViewH
     protected void convert(BaseViewHolder holder, MediaEntity item) {
         AppCompatImageView data = holder.getView(R.id.item_photo_picker_data, AppCompatImageView.class);
         ImageLoader.load(mContext, item.getData(), R.mipmap.ic_launcher, data);
+        // 选中
         AppCompatTextView select = holder.getView(R.id.item_photo_picker_select, AppCompatTextView.class);
         final int index = item.getIndex();
         if (index > 0) {
             // 选中
             select.setSelected(true);
             select.setText(String.valueOf(index));
-            Toast.makeText(mContext, "选中" + index, Toast.LENGTH_SHORT).show();
         } else {
             select.setSelected(false);
             select.setText(R.string.ic_tick);
         }
         View video = holder.getView(R.id.item_photo_picker_video);
+        // 视频信息
         final long duration = item.getDuration();
         if (duration > 0) {
             // 视频
@@ -54,7 +54,8 @@ public class PhotoPickerAdapter extends BaseHelperAdapter<MediaEntity, BaseViewH
         } else {
             video.setVisibility(View.GONE);
         }
-        select.setOnClickListener(v -> {
+        // 监听
+        holder.getView(R.id.item_photo_picker_select_wrap).setOnClickListener(v -> {
             if (mOnItemSelectClickListener != null) {
                 mOnItemSelectClickListener.onItemSelectClick(item);
             }

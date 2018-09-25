@@ -1,15 +1,15 @@
 package com.crazysunj.domain.entity.photo;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
-
-import java.util.List;
 
 /**
  * author: sunjian
  * created on: 2018/9/17 下午3:03
  * description:
  */
-public class BucketEntity implements Comparable<BucketEntity> {
+public class BucketEntity implements Comparable<BucketEntity>, Parcelable {
     public static final long DEFAULT_DATE_MODIFIED = -1;
     public static final int DEFAULT_COUNT = -1;
     private String bucketId;
@@ -17,7 +17,7 @@ public class BucketEntity implements Comparable<BucketEntity> {
     private String data;
     private long dateModified;
     private int count;
-    private List<String> bucketIds;
+    private boolean selected;
 
     public BucketEntity(String bucketId, String bucketName, String data, long dateModified, int count) {
         this.bucketId = bucketId;
@@ -51,16 +51,16 @@ public class BucketEntity implements Comparable<BucketEntity> {
         return count;
     }
 
-    public List<String> getBucketIds() {
-        return bucketIds;
-    }
-
-    public void setBucketIds(List<String> bucketIds) {
-        this.bucketIds = bucketIds;
-    }
-
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
     @Override
@@ -71,7 +71,7 @@ public class BucketEntity implements Comparable<BucketEntity> {
                 ", data='" + data + '\'' +
                 ", dateModified=" + dateModified +
                 ", count=" + count +
-                ", bucketIds=" + bucketIds +
+                ", selected=" + selected +
                 '}';
     }
 
@@ -85,4 +85,40 @@ public class BucketEntity implements Comparable<BucketEntity> {
         }
         return Long.compare(bucketEntity.dateModified, dateModified);
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.bucketId);
+        dest.writeString(this.bucketName);
+        dest.writeString(this.data);
+        dest.writeLong(this.dateModified);
+        dest.writeInt(this.count);
+        dest.writeByte(this.selected ? (byte) 1 : (byte) 0);
+    }
+
+    protected BucketEntity(Parcel in) {
+        this.bucketId = in.readString();
+        this.bucketName = in.readString();
+        this.data = in.readString();
+        this.dateModified = in.readLong();
+        this.count = in.readInt();
+        this.selected = in.readByte() != 0;
+    }
+
+    public static final Parcelable.Creator<BucketEntity> CREATOR = new Parcelable.Creator<BucketEntity>() {
+        @Override
+        public BucketEntity createFromParcel(Parcel source) {
+            return new BucketEntity(source);
+        }
+
+        @Override
+        public BucketEntity[] newArray(int size) {
+            return new BucketEntity[size];
+        }
+    };
 }

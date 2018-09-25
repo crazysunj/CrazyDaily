@@ -33,21 +33,27 @@
             style="@style/text_12_white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="13:00" />
+            tools:text="13:00" />
     </LinearLayout>
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/item_photo_picker_select"
-        style="@style/text_12_white"
-        android:layout_width="@dimen/space_20"
-        android:layout_height="@dimen/space_20"
+    <FrameLayout
+        android:id="@+id/item_photo_picker_select_wrap"
+        android:layout_width="@dimen/space_40"
+        android:layout_height="@dimen/space_40"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="@dimen/space_10"
-        android:layout_marginTop="@dimen/space_10"
-        android:background="@drawable/image_photo_picker_selector"
-        android:fontFamily="@font/crazydailyicon"
-        android:gravity="center"
-        android:text="@string/ic_tick" />
+        android:layout_alignParentTop="true">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/item_photo_picker_select"
+            style="@style/text_12_white"
+            android:layout_width="@dimen/space_20"
+            android:layout_height="@dimen/space_20"
+            android:layout_marginStart="@dimen/space_10"
+            android:layout_marginTop="@dimen/space_10"
+            android:background="@drawable/image_photo_picker_selector"
+            android:fontFamily="@font/crazydailyicon"
+            android:gravity="center"
+            android:text="@string/ic_tick" />
+    </FrameLayout>
 
 </com.crazysunj.crazydaily.view.photo.PhotoPickerWrapLayout>

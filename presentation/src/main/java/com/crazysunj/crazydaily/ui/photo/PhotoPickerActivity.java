@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -14,9 +15,11 @@ import com.crazysunj.crazydaily.base.BaseActivity;
 import com.crazysunj.crazydaily.presenter.PhotoPickerPresenter;
 import com.crazysunj.crazydaily.presenter.contract.PhotoPickerContract;
 import com.crazysunj.crazydaily.ui.adapter.PhotoPickerAdapter;
+import com.crazysunj.crazydaily.ui.photo.dialog.BucketDialog;
 import com.crazysunj.domain.entity.photo.BucketEntity;
 import com.crazysunj.domain.entity.photo.MediaEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -30,6 +33,7 @@ import butterknife.BindView;
 public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> implements PhotoPickerContract.View {
 
     private static final int MAX_SELECT_NUMBER = 9;
+    private static final int MAX_LOAD_NUMBER = 8; // 最后两排的时候加载
     @BindView(R.id.photo_picker_toolbar)
     Toolbar mToolbar;
     @BindView(R.id.photo_picker_complete)
@@ -42,6 +46,10 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
     private int mImageOffset = 0;
     private int mVideoOffset = 0;
     private int selectCount = 0;
+    private List<BucketEntity> mBucketList;
+    private BucketDialog mBucketDialog;
+    private boolean mIsComplete = false;
+    private String mBucketId = String.valueOf(Integer.MAX_VALUE);
 
     public static void start(Context context) {
         Intent intent = new Intent(context, PhotoPickerActivity.class);
@@ -52,6 +60,7 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
     protected void initView() {
         showBack(mToolbar);
         mPickerList.setLayoutManager(new GridLayoutManager(this, 4));
+        mPickerList.getItemAnimator().setChangeDuration(0);
         mAdapter = new PhotoPickerAdapter();
         mPickerList.setAdapter(mAdapter);
     }
@@ -60,14 +69,57 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
     protected void initData() {
         mComplete.setText("完成");
         mPresenter.getBucketList();
-        mPresenter.getMediaList(mImageOffset, mVideoOffset, String.valueOf(Integer.MAX_VALUE));
+        mPresenter.getMediaList(mImageOffset, mVideoOffset, mBucketId);
     }
 
     @Override
     protected void initListener() {
         mAdapter.setOnItemSelectClickListener(this::handleItemSelect);
+        mSelect.setOnClickListener(v -> showDialog());
+        mPickerList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                final int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+                final int count = layoutManager.getItemCount();
+                if (mIsComplete && dy > 0 && count - lastVisibleItemPosition >= MAX_LOAD_NUMBER) {
+                    mPresenter.getMediaList(mImageOffset, mVideoOffset, mBucketId);
+                }
+            }
+        });
     }
 
+    /**
+     * 后期可以把图片展示切换到fragment里面
+     */
+    private void showDialog() {
+        if (mBucketList == null) {
+            Toast.makeText(this, "图片还在加载中", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (mBucketDialog == null) {
+            mBucketDialog = BucketDialog.get((ArrayList<BucketEntity>) mBucketList);
+            mBucketDialog.setOnBucketItemClickListener(item -> {
+                resetData();
+                mBucketId = item.getBucketId();
+                mPresenter.getMediaList(mImageOffset, mVideoOffset, mBucketId);
+                mBucketDialog.dismiss();
+            });
+        }
+        mBucketDialog.show(this);
+    }
+
+    private void resetData() {
+        mImageOffset = 0;
+        mVideoOffset = 0;
+        selectCount = 0;
+        mComplete.setText("完成");
+        mComplete.setEnabled(false);
+    }
+
+    /**
+     * 处理图片选择
+     */
     private void handleItemSelect(MediaEntity item) {
         final int currentIndex = item.getIndex();
         if (currentIndex > 0) {
@@ -112,19 +164,7 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
 
     @Override
     public void showBucketList(List<BucketEntity> bucketList) {
-        for (BucketEntity bucketEntity : bucketList) {
-//            Log.d("PhotoPickerActivity", "bucketName:" + bucketEntity.getBucketName());
-//            Log.d("PhotoPickerActivity", "count:" + bucketEntity.getCount());
-            if (bucketEntity.getBucketName().equals("图片和视频")) {
-                mPresenter.getMediaList(0, 0, bucketEntity.getBucketId());
-            }
-//            List<String> bucketIds = bucketEntity.getBucketIds();
-//            if (bucketIds != null) {
-//                bucketIds.add(0, String.valueOf(Integer.MIN_VALUE));
-//                mPresenter.getMediaList(bucketEntity.getCount(), bucketIds.toArray(new String[bucketIds.size()]));
-////                Log.d("PhotoPickerActivity", bucketIds.toString());
-//            }
-        }
+        mBucketList = bucketList;
     }
 
     @Override

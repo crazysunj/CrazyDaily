@@ -136,17 +136,17 @@ public class MediaEntity implements Comparable<MediaEntity>, MultiTypeEntity {
         return false;
     }
 
-    @Override
-    public String toString() {
-        return "MediaEntity{" +
-                "id=" + id +
-                ", data='" + data + '\'' +
-                ", createDate=" + createDate +
-                ", modifiedDate=" + modifiedDate +
-                ", length=" + length +
-                ", duration=" + duration +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "MediaEntity{" +
+//                "id=" + id +
+//                ", data='" + data + '\'' +
+//                ", createDate=" + createDate +
+//                ", modifiedDate=" + modifiedDate +
+//                ", length=" + length +
+//                ", duration=" + duration +
+//                '}';
+//    }
 
     @Override
     public int compareTo(@NonNull MediaEntity mediaEntity) {

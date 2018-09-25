@@ -36,7 +36,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
+        android:layout_height="@dimen/space_60"
         android:background="@color/colorPrimary"
         android:orientation="horizontal"
         android:paddingEnd="@dimen/space_10"

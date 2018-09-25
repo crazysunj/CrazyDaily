@@ -221,7 +221,6 @@ public class PhotoPickerDataRepository implements PhotoPickerRepository {
 //            int videoMediaListSizeByDB = videoMediaListByDB.size();
 //
 //            testVideoMediaList.addAll(videoMediaListByDB);
-//            Log.d("PhotoPickerActivity", (fromDate.getMonth() + 1) + "月-" + (toDate.getMonth() + 1) + "月：" + testVideoMediaList.toString());
 //
 //            if (videoMediaListSizeByDB >= MediaEntity.DEFAULT_LIMIT) {
 //                page++;
@@ -395,6 +394,7 @@ public class PhotoPickerDataRepository implements PhotoPickerRepository {
             imageAndVideoBucketEntity = new BucketEntity(String.valueOf(Integer.MAX_VALUE), "图片和视频", videoBucketEntity.getData(), videoBucketEntity.getCount());
         }
         if (imageAndVideoBucketEntity != null) {
+            imageAndVideoBucketEntity.setSelected(true);
             imageAndVideoBucketList.add(imageAndVideoBucketEntity);
         }
         if (videoBucketEntity != null) {
@@ -406,7 +406,7 @@ public class PhotoPickerDataRepository implements PhotoPickerRepository {
 
     @Nullable
     private BucketEntity handleVideoBucketEntity(Uri uri, String[] projection) {
-        Cursor cursor = mContentResolver.query(uri, projection, null, null, null);
+        Cursor cursor = mContentResolver.query(uri, projection, null, null, String.format("%s DESC", MediaStore.Video.Media.DATE_MODIFIED));
         BucketEntity videoBucketEntity = null;
 //        int allCount = 0;
         if (cursor != null && cursor.getCount() > 0) {
@@ -450,7 +450,7 @@ public class PhotoPickerDataRepository implements PhotoPickerRepository {
     @NonNull
     private List<BucketEntity> handleImageBucketList(Uri uri, String[] projection) {
         List<BucketEntity> bucketEntityList = new ArrayList<>();
-        Cursor cursor = mContentResolver.query(uri, projection, null, null, null);
+        Cursor cursor = mContentResolver.query(uri, projection, null, null, String.format("%s DESC", MediaStore.Images.Media.DATE_MODIFIED));
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             do {

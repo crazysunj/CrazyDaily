@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <solid android:color="@color/color_white" />
+        </shape>
+    </item>
+    <item
+        android:left="@dimen/space_10"
+        android:right="@dimen/space_10">
+        <shape>
+            <solid android:color="@color/color_cccccc" />
+        </shape>
+    </item>
+    <item android:bottom="@dimen/space_0_5">
+        <shape>
+            <solid android:color="@color/color_white" />
+            <padding
+                android:bottom="@dimen/space_4"
+                android:left="@dimen/space_10"
+                android:right="@dimen/space_10"
+                android:top="@dimen/space_10" />
+        </shape>
+    </item>
+</layer-list>
