@@ -49,6 +49,10 @@ public abstract class BaseHelperAdapter<T extends MultiTypeEntity, VH extends Ba
         mHelper = helper;
     }
 
+    public H getHelper() {
+        return mHelper;
+    }
+
     @Override
     public int getItemViewType(int position) {
         return mHelper.getItemViewType(position);

@@ -82,6 +82,10 @@ public class PhotoPickerAdapter extends BaseHelperAdapter<MediaEntity, BaseViewH
         mHelper.notifyModuleDataChanged(mediaList, PhotoPickerAdapterHelper.LEVEL_PHOTO_PICKER);
     }
 
+    public void appendData(List<MediaEntity> mediaList) {
+        mHelper.addData(mediaList);
+    }
+
     public void notifyItem(MediaEntity item) {
         mHelper.notifyDataChanged(item);
     }

@@ -7,7 +7,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.crazysunj.crazydaily.R;
@@ -33,7 +32,10 @@ import butterknife.BindView;
 public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> implements PhotoPickerContract.View {
 
     private static final int MAX_SELECT_NUMBER = 9;
-    private static final int MAX_LOAD_NUMBER = 8; // 最后两排的时候加载
+    /**
+     * 最后两排的时候加载
+     */
+    private static final int MAX_LOAD_NUMBER = 8;
     @BindView(R.id.photo_picker_toolbar)
     Toolbar mToolbar;
     @BindView(R.id.photo_picker_complete)
@@ -49,6 +51,8 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
     private List<BucketEntity> mBucketList;
     private BucketDialog mBucketDialog;
     private boolean mIsComplete = false;
+    private boolean mIsFirst = false;
+    private boolean mIsLoading = false;
     private String mBucketId = String.valueOf(Integer.MAX_VALUE);
 
     public static void start(Context context) {
@@ -69,7 +73,6 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
     protected void initData() {
         mComplete.setText("完成");
         mPresenter.getBucketList();
-        mPresenter.getMediaList(mImageOffset, mVideoOffset, mBucketId);
     }
 
     @Override
@@ -82,8 +85,9 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
                 final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 final int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
                 final int count = layoutManager.getItemCount();
-                if (mIsComplete && dy > 0 && count - lastVisibleItemPosition >= MAX_LOAD_NUMBER) {
-                    mPresenter.getMediaList(mImageOffset, mVideoOffset, mBucketId);
+                if (!mIsComplete && !mIsLoading && dy > 0 && count - lastVisibleItemPosition <= MAX_LOAD_NUMBER) {
+                    // 可以设计成等待队列
+                    requestData();
                 }
             }
         });
@@ -102,7 +106,7 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
             mBucketDialog.setOnBucketItemClickListener(item -> {
                 resetData();
                 mBucketId = item.getBucketId();
-                mPresenter.getMediaList(mImageOffset, mVideoOffset, mBucketId);
+                requestData();
                 mBucketDialog.dismiss();
             });
         }
@@ -113,6 +117,8 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
         mImageOffset = 0;
         mVideoOffset = 0;
         selectCount = 0;
+        mIsComplete = false;
+        mIsFirst = true;
         mComplete.setText("完成");
         mComplete.setEnabled(false);
     }
@@ -152,19 +158,33 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
     public void showMediaList(int imageOffset, int videoOffset, List<MediaEntity> mediaList) {
         mImageOffset = imageOffset;
         mVideoOffset = videoOffset;
-        mAdapter.notifyData(mediaList);
-        Log.d("PhotoPickerActivity", "mImageOffset:" + imageOffset);
-        Log.d("PhotoPickerActivity", "videoOffset:" + videoOffset);
-        for (MediaEntity mediaEntity : mediaList) {
-            Log.d("PhotoPickerActivity", "modifiedDate:" + mediaEntity.getModifiedDate());
-            Log.d("PhotoPickerActivity", "duration:" + mediaEntity.getDuration());
+        if (mIsFirst) {
+            mAdapter.notifyData(mediaList);
+            mIsFirst = false;
+        } else {
+            mAdapter.appendData(mediaList);
         }
-        Log.d("PhotoPickerActivity", "size:" + mediaList.size());
+        mIsLoading = false;
+        if (mediaList.size() < MediaEntity.DEFAULT_LIMIT) {
+            mIsComplete = true;
+        }
     }
 
     @Override
     public void showBucketList(List<BucketEntity> bucketList) {
         mBucketList = bucketList;
+        for (BucketEntity entity : mBucketList) {
+            if (entity.isSelected()) {
+                mBucketId = entity.getBucketId();
+                requestData();
+                break;
+            }
+        }
+    }
+
+    private void requestData() {
+        mIsLoading = true;
+        mPresenter.getMediaList(mImageOffset, mVideoOffset, mBucketId);
     }
 
     @Override

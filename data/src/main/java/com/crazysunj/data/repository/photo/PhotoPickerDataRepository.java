@@ -105,20 +105,20 @@ public class PhotoPickerDataRepository implements PhotoPickerRepository {
             videoOffset = 0;
             mediaResponseData = new MediaEntity.MediaResponseData(imageOffset, videoOffset, mediaList);
         } else if (imageSize == 0 && videoSize != 0) {
-            imageOffset = 0;
             if (videoSize >= MediaEntity.DEFAULT_LIMIT) {
                 videoOffset += MediaEntity.DEFAULT_LIMIT;
             } else {
+                imageOffset = 0;
                 videoOffset = 0;
             }
             mediaList.addAll(videoMediaList);
             mediaResponseData = new MediaEntity.MediaResponseData(imageOffset, videoOffset, mediaList);
         } else if (imageSize != 0 && videoSize == 0) {
-            videoOffset = 0;
             if (imageSize >= MediaEntity.DEFAULT_LIMIT) {
                 imageOffset += MediaEntity.DEFAULT_LIMIT;
             } else {
                 imageOffset = 0;
+                videoOffset = 0;
             }
             mediaList.addAll(imageMediaList);
             mediaResponseData = new MediaEntity.MediaResponseData(imageOffset, videoOffset, mediaList);
@@ -131,16 +131,12 @@ public class PhotoPickerDataRepository implements PhotoPickerRepository {
             for (int i = 0; i < size; i++) {
                 if (imageMediaEntity == null && videoMediaEntity != null) {
                     mediaList.add(videoMediaEntity);
-                    if (i == size - 1) {
-                        imageIndex--;
-                    } else {
+                    if (i != size - 1) {
                         videoMediaEntity = videoIndex < videoSize ? videoMediaList.get(videoIndex++) : null;
                     }
                 } else if (imageMediaEntity != null && videoMediaEntity == null) {
                     mediaList.add(imageMediaEntity);
-                    if (i == size - 1) {
-                        videoIndex--;
-                    } else {
+                    if (i != size - 1) {
                         imageMediaEntity = imageIndex < imageSize ? imageMediaList.get(imageIndex++) : null;
                     }
                 } else if (imageMediaEntity != null && videoMediaEntity != null) {
