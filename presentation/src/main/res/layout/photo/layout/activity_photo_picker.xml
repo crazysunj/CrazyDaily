@@ -28,11 +28,26 @@
             tools:text="完成" />
     </android.support.v7.widget.Toolbar>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/photo_picker_list"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/photo_picker_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/photo_picker_time_info"
+            style="@style/text_12_white"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/space_30"
+            android:background="#80000000"
+            android:gravity="center_vertical"
+            android:paddingEnd="@dimen/space_10"
+            android:paddingStart="@dimen/space_10" />
+    </FrameLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

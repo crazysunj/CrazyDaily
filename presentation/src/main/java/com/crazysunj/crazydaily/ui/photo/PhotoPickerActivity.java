@@ -1,5 +1,6 @@
 package com.crazysunj.crazydaily.ui.photo;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.AppCompatTextView;
@@ -19,6 +20,7 @@ import com.crazysunj.domain.entity.photo.BucketEntity;
 import com.crazysunj.domain.entity.photo.MediaEntity;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -40,6 +42,8 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
     Toolbar mToolbar;
     @BindView(R.id.photo_picker_complete)
     AppCompatTextView mComplete;
+    @BindView(R.id.photo_picker_time_info)
+    AppCompatTextView mTimeInfo;
     @BindView(R.id.photo_picker_list)
     RecyclerView mPickerList;
     @BindView(R.id.photo_picker_select)
@@ -54,6 +58,8 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
     private boolean mIsFirst = false;
     private boolean mIsLoading = false;
     private String mBucketId = String.valueOf(Integer.MAX_VALUE);
+    private ObjectAnimator mTimeInfoShowAnim;
+    private ObjectAnimator mTimeInfoHideAnim;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, PhotoPickerActivity.class);
@@ -81,8 +87,19 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
         mSelect.setOnClickListener(v -> showDialog());
         mPickerList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    hideTimeInfo();
+                } else {
+                    showTimeInfo();
+                }
+            }
+
+            @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+                handleTimeInfo(firstVisibleItemPosition);
                 final int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
                 final int count = layoutManager.getItemCount();
                 if (!mIsComplete && !mIsLoading && dy > 0 && count - lastVisibleItemPosition <= MAX_LOAD_NUMBER) {
@@ -91,6 +108,50 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
                 }
             }
         });
+        hideTimeInfo();
+    }
+
+    private void showTimeInfo() {
+        if (mTimeInfoHideAnim != null && mTimeInfoHideAnim.isRunning()) {
+            mTimeInfoHideAnim.cancel();
+        }
+        if (mTimeInfoShowAnim == null) {
+            mTimeInfoShowAnim = ObjectAnimator.ofFloat(mTimeInfo, "alpha", 0f, 1.0f).setDuration(500);
+        }
+        if (!mTimeInfoShowAnim.isRunning()) {
+            mTimeInfoShowAnim.setFloatValues(mTimeInfo.getAlpha(), 1.0f);
+            mTimeInfoShowAnim.start();
+        }
+    }
+
+    private void hideTimeInfo() {
+        if (mTimeInfoHideAnim == null) {
+            mTimeInfoHideAnim = ObjectAnimator.ofFloat(mTimeInfo, "alpha", 1.0f, 0f).setDuration(500);
+            mTimeInfoHideAnim.setStartDelay(1500);
+        }
+        mTimeInfoHideAnim.start();
+    }
+
+    private void handleTimeInfo(int firstVisibleItemPosition) {
+        final long modifiedDate = mAdapter.getHelper().getData().get(firstVisibleItemPosition).getModifiedDate();
+        Calendar currentCalendar = Calendar.getInstance();
+        final int currentYear = currentCalendar.get(Calendar.YEAR);
+        final int currentYearWeek = currentCalendar.get(Calendar.WEEK_OF_YEAR);
+        Calendar modifiedCalendar = Calendar.getInstance();
+        modifiedCalendar.setTimeInMillis(modifiedDate * 1000);
+        final int modifiedYear = modifiedCalendar.get(Calendar.YEAR);
+        final int modifiedYearWeek = modifiedCalendar.get(Calendar.WEEK_OF_YEAR);
+        if (currentYear == modifiedYear && currentYearWeek == modifiedYearWeek) {
+            mTimeInfo.setText("本周");
+            return;
+        }
+        final int currentMonth = currentCalendar.get(Calendar.MONTH);
+        final int modifiedMonth = modifiedCalendar.get(Calendar.MONTH);
+        if (currentYear == modifiedYear && currentMonth == modifiedMonth) {
+            mTimeInfo.setText("这个月");
+            return;
+        }
+        mTimeInfo.setText(String.format(Locale.getDefault(), "%d/%d", modifiedYear, modifiedMonth + 1));
     }
 
     /**
