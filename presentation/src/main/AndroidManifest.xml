@@ -108,6 +108,10 @@
         <activity
             android:name=".ui.photo.PhotoPickerActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".ui.note.NoteEditActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
