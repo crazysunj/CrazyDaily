@@ -3,7 +3,6 @@ apply plugin: 'com.android.library'
 def configs = rootProject.ext.android //android配置
 android {
     compileSdkVersion configs.compileSdkVersion
-    buildToolsVersion configs.buildToolsVersion
 
     defaultConfig {
         minSdkVersion configs.minSdkVersion

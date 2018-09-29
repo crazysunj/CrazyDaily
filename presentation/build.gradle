@@ -4,7 +4,6 @@ apply plugin: 'com.jakewharton.butterknife'
 def configs = rootProject.ext.android //android配置
 android {
     compileSdkVersion configs.compileSdkVersion
-    buildToolsVersion configs.buildToolsVersion
     defaultConfig {
         applicationId "com.crazysunj.crazydaily"
         minSdkVersion configs.minSdkVersion

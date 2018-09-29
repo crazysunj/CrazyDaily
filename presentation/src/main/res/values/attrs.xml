@@ -21,4 +21,20 @@
         <attr name="common_item_text" />
         <attr name="common_item_bottom_line" />
     </declare-styleable>
+    <attr name="note_minHeight" format="dimension" />
+    <attr name="note_text_size" format="dimension" />
+    <attr name="note_delete_icon_top" format="dimension" />
+    <attr name="note_text_color" format="color" />
+    <attr name="note_hint_text_color" format="color" />
+    <attr name="note_hint_text" format="string" />
+    <attr name="note_delete_icon" format="reference" />
+    <declare-styleable name="NoteEditText">
+        <attr name="note_minHeight" />
+        <attr name="note_delete_icon" />
+        <attr name="note_text_size" />
+        <attr name="note_text_color" />
+        <attr name="note_hint_text_color" />
+        <attr name="note_hint_text" />
+        <attr name="note_delete_icon_top" />
+    </declare-styleable>
 </resources>
