@@ -47,7 +47,9 @@ public abstract class BaseAdapter<T extends Object, VH extends BaseViewHolder> e
         convert(holder, mData.get(position));
     }
 
-    protected abstract void convert(VH holder, T item);
+    protected void convert(VH holder, T item) {
+
+    }
 
     @Override
     public int getItemCount() {

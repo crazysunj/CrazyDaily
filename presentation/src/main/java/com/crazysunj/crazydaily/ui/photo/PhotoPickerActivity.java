@@ -1,8 +1,10 @@
 package com.crazysunj.crazydaily.ui.photo;
 
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +14,7 @@ import android.widget.Toast;
 
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
+import com.crazysunj.crazydaily.constant.ActivityConstant;
 import com.crazysunj.crazydaily.presenter.PhotoPickerPresenter;
 import com.crazysunj.crazydaily.presenter.contract.PhotoPickerContract;
 import com.crazysunj.crazydaily.ui.adapter.PhotoPickerAdapter;
@@ -32,6 +35,9 @@ import butterknife.BindView;
  * description: 选择相册视频
  */
 public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> implements PhotoPickerContract.View {
+
+    public static final int REQUEST_CODE = 1;
+    public static final int RESULT_CODE = 1;
 
     private static final int MAX_SELECT_NUMBER = 9;
     /**
@@ -60,15 +66,24 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
     private String mBucketId = String.valueOf(Integer.MAX_VALUE);
     private ObjectAnimator mTimeInfoShowAnim;
     private ObjectAnimator mTimeInfoHideAnim;
+    private int diffCount;
 
-    public static void start(Context context) {
+    public static void start(Context context, int selectCount) {
         Intent intent = new Intent(context, PhotoPickerActivity.class);
+        intent.putExtra(ActivityConstant.SELECT_COUNT, selectCount);
         context.startActivity(intent);
+    }
+
+    public static void start(Activity activity, int selectCount) {
+        Intent intent = new Intent(activity, PhotoPickerActivity.class);
+        intent.putExtra(ActivityConstant.SELECT_COUNT, selectCount);
+        activity.startActivityForResult(intent, REQUEST_CODE);
     }
 
     @Override
     protected void initView() {
         showBack(mToolbar);
+        mComplete.setEnabled(false);
         mPickerList.setLayoutManager(new GridLayoutManager(this, 4));
         mPickerList.getItemAnimator().setChangeDuration(0);
         mAdapter = new PhotoPickerAdapter();
@@ -78,6 +93,7 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
     @Override
     protected void initData() {
         mComplete.setText("完成");
+        diffCount = getIntent().getIntExtra(ActivityConstant.SELECT_COUNT, 0);
         mPresenter.getBucketList();
     }
 
@@ -87,7 +103,7 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
         mSelect.setOnClickListener(v -> showDialog());
         mPickerList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     hideTimeInfo();
                 } else {
@@ -96,7 +112,7 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
             }
 
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
                 handleTimeInfo(firstVisibleItemPosition);
@@ -109,6 +125,13 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
             }
         });
         hideTimeInfo();
+        mComplete.setOnClickListener(v -> {
+            String[] images = mAdapter.getSelectImage(selectCount);
+            Intent intent = new Intent();
+            intent.putExtra(ActivityConstant.IMAGES, images);
+            setResult(RESULT_CODE, intent);
+            finish();
+        });
     }
 
     private void showTimeInfo() {
@@ -189,6 +212,7 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
      */
     private void handleItemSelect(MediaEntity item) {
         final int currentIndex = item.getIndex();
+        final int maxNum = MAX_SELECT_NUMBER - diffCount;
         if (currentIndex > 0) {
             selectCount--;
             item.setIndex(0);
@@ -198,19 +222,19 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
                 mComplete.setText("完成");
                 mComplete.setEnabled(false);
             } else {
-                mComplete.setText(String.format(Locale.getDefault(), "完成(%d/%d)", selectCount, MAX_SELECT_NUMBER));
+                mComplete.setText(String.format(Locale.getDefault(), "完成(%d/%d)", selectCount, maxNum));
             }
         } else {
-            if (selectCount < MAX_SELECT_NUMBER) {
+            if (selectCount < maxNum) {
                 selectCount++;
                 item.setIndex(selectCount);
                 mAdapter.notifyItem(item);
                 if (!mComplete.isEnabled()) {
                     mComplete.setEnabled(true);
                 }
-                mComplete.setText(String.format(Locale.getDefault(), "完成(%d/%d)", selectCount, MAX_SELECT_NUMBER));
+                mComplete.setText(String.format(Locale.getDefault(), "完成(%d/%d)", selectCount, maxNum));
             } else {
-                Toast.makeText(this, "最多能选中" + MAX_SELECT_NUMBER + "张哦", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "最多能选中" + maxNum + "张哦", Toast.LENGTH_SHORT).show();
             }
         }
     }

@@ -90,6 +90,16 @@ public class PhotoPickerAdapter extends BaseHelperAdapter<MediaEntity, BaseViewH
         mHelper.notifyDataChanged(item);
     }
 
+    public String[] getSelectImage(int selectCount) {
+        String[] images = new String[selectCount];
+        for (MediaEntity entity : mData) {
+            if (entity.getIndex() > 0) {
+                images[selectCount - entity.getIndex() + 1] = entity.getData();
+            }
+        }
+        return images;
+    }
+
     public void setOnItemSelectClickListener(OnItemSelectClickListener listener) {
         mOnItemSelectClickListener = listener;
     }

@@ -1,4 +1,5 @@
 <resources>
+
     <style name="text_36_white">
         <item name="android:textSize">36sp</item>
         <item name="android:textColor">@color/color_white</item>
@@ -22,6 +23,11 @@
     <style name="text_16_333333">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/color_333333</item>
+    </style>
+
+    <style name="text_16_666666">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/color_666666</item>
     </style>
 
     <style name="text_14_white">

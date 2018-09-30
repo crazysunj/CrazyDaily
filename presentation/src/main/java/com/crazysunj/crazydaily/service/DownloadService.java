@@ -59,9 +59,14 @@ public class DownloadService extends Service implements DownloadContract.View {
     private NotificationManager mNotificationManager;
 
     public static void start(Context context, String url) {
-        Intent intent = new Intent(context, DownloadService.class);
-        intent.putExtra(ActivityConstant.URL, url);
-        context.startService(intent);
+        try {
+            Intent intent = new Intent(context, DownloadService.class);
+            intent.putExtra(ActivityConstant.URL, url);
+            context.startService(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(context, "请允许开启后台服务权限哦", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Inject

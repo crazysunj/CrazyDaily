@@ -25,4 +25,6 @@ public class ActivityConstant {
     public static final String URL = "url";
     public static final String PAGE = "page";
     public static final String PATH = "path";
+    public static final String SELECT_COUNT = "selectCount";
+    public static final String IMAGES = "images";
 }

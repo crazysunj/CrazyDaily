@@ -67,7 +67,11 @@ public class NoteEditText extends LinearLayout {
                 if (preTextHeight != height) {
                     layoutDelete(height);
                 }
-                mDelete.setVisibility(s.toString().length() > 0 ? VISIBLE : GONE);
+                String input = s.toString();
+                mDelete.setVisibility(input.length() > 0 ? VISIBLE : GONE);
+                if (monEditTextListener != null) {
+                    monEditTextListener.onShowInputText(input);
+                }
             }
         });
         mDelete.setOnClickListener(v -> mEditText.getText().clear());
@@ -82,7 +86,7 @@ public class NoteEditText extends LinearLayout {
     private void initAttrs(Context context, AttributeSet attrs) {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.NoteEditText);
         Drawable deleteIcon = a.getDrawable(R.styleable.NoteEditText_note_delete_icon);
-        mDelete.setImageDrawable(deleteIcon == null ? ContextCompat.getDrawable(context, R.mipmap.icon_expand) : deleteIcon);
+        mDelete.setImageDrawable(deleteIcon == null ? ContextCompat.getDrawable(context, R.mipmap.ic_delete) : deleteIcon);
         mEditText.setTextSize(TypedValue.COMPLEX_UNIT_PX, a.getDimensionPixelSize(R.styleable.NoteEditText_note_text_size, ScreenUtil.sp2px(context, 16)));
         mEditText.setMinHeight(a.getDimensionPixelSize(R.styleable.NoteEditText_note_minHeight, ScreenUtil.dp2px(context, 180)));
         mEditText.setTextColor(a.getColor(R.styleable.NoteEditText_note_text_color, ContextCompat.getColor(context, R.color.color_333333)));
@@ -112,5 +116,7 @@ public class NoteEditText extends LinearLayout {
 
     public interface onEditTextListener {
         void onShowSoftKeyBoard();
+
+        void onShowInputText(String text);
     }
 }

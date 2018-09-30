@@ -96,6 +96,9 @@ dependencies {
     implementation libs.ucrop //裁剪
     implementation libs.zxing //二维码
     implementation libs.pgyer //蒲公英
+    implementation libs.itemDecoration //recyclerviewItemDecoration
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+    implementation 'com.github.zcweng:switch-button:0.0.3@aar' // 仿ios开关
     debugImplementation libs.debugLeakcanary
     releaseImplementation libs.releaseLeakcanary
     annotationProcessor libs.butterknifeCompiler

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_white"
-    android:orientation="vertical">
+    android:background="@color/color_white">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/note_edit_toolbar"
@@ -49,33 +49,79 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/note_edit_toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingEnd="@dimen/space_15"
+            android:paddingStart="@dimen/space_15">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/note_edit_images"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:background="@color/color_black"
+                android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/space_10"
-                android:paddingEnd="@dimen/space_15"
-                android:paddingStart="@dimen/space_15"
                 android:paddingTop="@dimen/space_10" />
 
             <com.crazysunj.crazydaily.view.note.NoteEditText
                 android:id="@+id/note_edit_content_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/space_20"
-                android:paddingEnd="@dimen/space_25"
-                android:paddingStart="@dimen/space_25"
+                android:paddingBottom="@dimen/space_40"
                 android:paddingTop="@dimen/space_20"
                 app:note_hint_text="发表点什么吧，写得越好就越有机会被推送给更多用户，还能解锁分享技能哦..."
                 app:note_text_size="@dimen/text_16" />
+
+            <View style="@style/horizontal_line" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/space_15"
+                android:paddingTop="@dimen/space_15">
+
+                <TextView
+                    style="@style/text_16_666666"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="是否同意他人下载图片"
+                    tools:ignore="HardcodedText" />
+
+                <com.suke.widget.SwitchButton
+                    android:id="@+id/note_edit_can_image_download"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:sb_checked="true"
+                    app:sb_checked_color="@color/colorPrimary"
+                    app:sb_show_indicator="false" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/note_edit_drag_delete"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_50"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/note_edit_drag_delete_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/note_edit_drag_delete_text"
+            style="@style/text_12_white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="拖拽到此处删除" />
+    </LinearLayout>
+</RelativeLayout>
