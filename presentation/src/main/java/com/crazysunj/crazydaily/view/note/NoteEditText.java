@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
 import android.text.Editable;
+import android.text.Layout;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -33,7 +34,7 @@ public class NoteEditText extends LinearLayout {
     AppCompatImageView mDelete;
     private int preTextHeight = 0;
     private int deleteIconTop = 0;
-    private onEditTextListener monEditTextListener;
+    private OnEditTextListener monEditTextListener;
 
     public NoteEditText(Context context) {
         this(context, null);
@@ -63,7 +64,11 @@ public class NoteEditText extends LinearLayout {
 
             @Override
             public void afterTextChanged(Editable s) {
-                final int height = mEditText.getLayout().getHeight();
+                final Layout layout = mEditText.getLayout();
+                if (layout == null) {
+                    return;
+                }
+                final int height = layout.getHeight();
                 if (preTextHeight != height) {
                     layoutDelete(height);
                 }
@@ -110,11 +115,11 @@ public class NoteEditText extends LinearLayout {
         mDelete.setPadding(0, deleteIconTop + preTextHeight - (int) mEditText.getTextSize(), 0, 0);
     }
 
-    public void setonEditTextListener(onEditTextListener listener) {
+    public void setOnEditTextListener(OnEditTextListener listener) {
         monEditTextListener = listener;
     }
 
-    public interface onEditTextListener {
+    public interface OnEditTextListener {
         void onShowSoftKeyBoard();
 
         void onShowInputText(String text);

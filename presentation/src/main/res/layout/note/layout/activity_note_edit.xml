@@ -49,33 +49,41 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/note_edit_toolbar">
+        android:layout_height="match_parent"
+        android:layout_below="@id/note_edit_toolbar"
+        android:clipChildren="false"
+        android:clipToPadding="false">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingEnd="@dimen/space_15"
-            android:paddingStart="@dimen/space_15">
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:orientation="vertical">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/note_edit_images"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/space_10"
-                android:paddingTop="@dimen/space_10" />
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:padding="@dimen/space_10" />
 
             <com.crazysunj.crazydaily.view.note.NoteEditText
                 android:id="@+id/note_edit_content_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/space_40"
+                android:paddingEnd="@dimen/space_15"
+                android:paddingStart="@dimen/space_15"
                 android:paddingTop="@dimen/space_20"
                 app:note_hint_text="发表点什么吧，写得越好就越有机会被推送给更多用户，还能解锁分享技能哦..."
                 app:note_text_size="@dimen/text_16" />
 
-            <View style="@style/horizontal_line" />
+            <View
+                style="@style/horizontal_line"
+                android:layout_marginEnd="@dimen/space_15"
+                android:layout_marginStart="@dimen/space_15" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -83,6 +91,8 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingBottom="@dimen/space_15"
+                android:paddingEnd="@dimen/space_15"
+                android:paddingStart="@dimen/space_15"
                 android:paddingTop="@dimen/space_15">
 
                 <TextView

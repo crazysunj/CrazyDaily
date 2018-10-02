@@ -28,6 +28,7 @@ import android.view.ViewParent;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 
+import com.crazysunj.crazydaily.BuildConfig;
 import com.crazysunj.crazydaily.R;
 
 import java.util.ArrayList;
@@ -106,7 +107,7 @@ public class ItemTouchHelperExtension extends RecyclerView.ItemDecoration
 
     private static final String TAG = "ItemTouchHelper";
 
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = BuildConfig.DEBUG;
 
     private static final int ACTIVE_POINTER_ID_NONE = -1;
 
@@ -349,6 +350,7 @@ public class ItemTouchHelperExtension extends RecyclerView.ItemDecoration
 
                     // Find the index of the active pointer and fetch its position
                     if (activePointerIndex >= 0) {
+                        handleTouch(event);
                         updateDxDy(event, mSelectedFlags, activePointerIndex);
                         if (Math.abs(event.getX() - mLastX) > mSlop) {
                             mClick = false;
@@ -367,6 +369,7 @@ public class ItemTouchHelperExtension extends RecyclerView.ItemDecoration
                     }
                     // fall through
                 case MotionEvent.ACTION_UP:
+                    handleTouch(event);
                     if (mClick) {
                         doChildClickEvent(event.getRawX(), event.getRawY());
                     }
@@ -1223,6 +1226,18 @@ public class ItemTouchHelperExtension extends RecyclerView.ItemDecoration
             }
         }
         return null;
+    }
+
+    private void handleTouch(MotionEvent ev) {
+        if (mCallback != null && mSelected != null) {
+            mCallback.itemSelectMove(ev, mSelected);
+        }
+        if (DEBUG && mSelected != null) {
+            float x = ev.getX();
+            float y = ev.getY();
+            final int action = MotionEventCompat.getActionMasked(ev);
+            Log.d("updateDxDy", "x:" + x + " y:" + y + " action:" + action + " position:" + mSelected.getLayoutPosition());
+        }
     }
 
     private void updateDxDy(MotionEvent ev, int directionFlags, int pointerIndex) {
@@ -2259,6 +2274,9 @@ public class ItemTouchHelperExtension extends RecyclerView.ItemDecoration
             }
             return value;
         }
+
+        public void itemSelectMove(MotionEvent event, ViewHolder holder) {
+        }
     }
 
     /**
@@ -2400,6 +2418,7 @@ public class ItemTouchHelperExtension extends RecyclerView.ItemDecoration
                             select(vh, ACTION_STATE_DRAG);
                         }
                     }
+                    handleTouch(e);
                 }
             }
         }

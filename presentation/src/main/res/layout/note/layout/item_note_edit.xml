@@ -8,6 +8,7 @@
         android:id="@+id/item_note_edit_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="@dimen/space_5"
         android:scaleType="centerCrop"
         app:riv_corner_radius="@dimen/space_5" />
 
@@ -17,6 +18,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:padding="@dimen/space_6"
+        android:padding="@dimen/space_12"
         android:src="@mipmap/ic_delete_two" />
 </com.crazysunj.crazydaily.view.photo.PhotoPickerWrapLayout>

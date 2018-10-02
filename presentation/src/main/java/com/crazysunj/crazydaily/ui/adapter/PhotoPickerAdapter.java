@@ -94,7 +94,7 @@ public class PhotoPickerAdapter extends BaseHelperAdapter<MediaEntity, BaseViewH
         String[] images = new String[selectCount];
         for (MediaEntity entity : mData) {
             if (entity.getIndex() > 0) {
-                images[selectCount - entity.getIndex() + 1] = entity.getData();
+                images[selectCount - entity.getIndex()] = entity.getData();
             }
         }
         return images;

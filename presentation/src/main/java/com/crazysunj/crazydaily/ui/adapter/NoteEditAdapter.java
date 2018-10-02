@@ -44,11 +44,32 @@ public class NoteEditAdapter extends BaseAdapter<String, BaseViewHolder> {
             delete.setVisibility(View.VISIBLE);
             delete.setOnClickListener(v -> {
                 if (mOnItemDeleteListener != null) {
-                    mOnItemDeleteListener.onDelete(position);
+                    mOnItemDeleteListener.onDelete(holder.getLayoutPosition());
                 }
             });
             holder.itemView.setOnClickListener(null);
         }
+    }
+
+    public void removePhotoAddItem() {
+        removeImage(mData.size() - 1);
+    }
+
+    public void addPhotoAddItem() {
+        mData.add(null);
+        final int position = mData.size() - 1;
+        notifyItemInserted(position);
+        notifyItemChanged(position);
+    }
+
+    public boolean isMaxAddImageSize(int maxLength) {
+        final int size = mData.size();
+        return maxLength == size;
+    }
+
+    public boolean isMaxRemoveImageSize(int maxLength) {
+        final int size = mData.size();
+        return maxLength == size && mData.get(size - 1) != null;
     }
 
     public void appendImage(List<String> images) {
@@ -61,6 +82,17 @@ public class NoteEditAdapter extends BaseAdapter<String, BaseViewHolder> {
     public void removeImage(int position) {
         mData.remove(position);
         notifyItemRemoved(position);
+        notifyItemRangeChanged(position, mData.size() - position);
+    }
+
+    public boolean isPhotoAddItem(int position) {
+        return mData.get(position) == null;
+    }
+
+    public void moveImage(int dragPosition, int targetPosition) {
+        String dragItem = mData.remove(dragPosition);
+        mData.add(targetPosition, dragItem);
+        notifyItemMoved(dragPosition, targetPosition);
     }
 
     public void setOnItemSelectListener(OnItemSelectListener listener) {

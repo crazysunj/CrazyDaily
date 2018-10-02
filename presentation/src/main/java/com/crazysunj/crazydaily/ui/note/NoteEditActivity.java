@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +16,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -22,7 +25,9 @@ import android.widget.TextView;
 
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
+import com.crazysunj.crazydaily.base.BaseViewHolder;
 import com.crazysunj.crazydaily.constant.ActivityConstant;
+import com.crazysunj.crazydaily.extension.ItemTouchHelperExtension;
 import com.crazysunj.crazydaily.presenter.NoteEditPresenter;
 import com.crazysunj.crazydaily.presenter.contract.NoteEditContract;
 import com.crazysunj.crazydaily.ui.adapter.NoteEditAdapter;
@@ -30,6 +35,7 @@ import com.crazysunj.crazydaily.ui.photo.PhotoPickerActivity;
 import com.crazysunj.crazydaily.util.ScreenUtil;
 import com.crazysunj.crazydaily.view.note.NoteEditText;
 import com.crazysunj.domain.entity.note.NoteEntity;
+import com.jaeger.library.StatusBarUtil;
 import com.suke.widget.SwitchButton;
 
 import java.util.ArrayList;
@@ -70,10 +76,17 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
     private ObjectAnimator mShowDragDeleteAnim;
     private ObjectAnimator mHideDragDeleteAnim;
     private NoteEditAdapter mAdapter;
+    private ItemTouchHelperExtension mItemTouchHelper;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, NoteEditActivity.class);
         context.startActivity(intent);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        StatusBarUtil.setColor(this, Color.WHITE);
+        super.onCreate(savedInstanceState);
     }
 
     boolean testShow = true;
@@ -89,7 +102,8 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
 //                String.valueOf(id)));
         images.add(null);
         mImages.setLayoutManager(new GridLayoutManager(this, 3));
-//        mImages.addItemDecoration(new GridLayoutSpaceItemDecoration.Builder().setSpaceSize(10).build());
+        mItemTouchHelper = new ItemTouchHelperExtension(new NoteEditItemTouchHelperCallback());
+        mItemTouchHelper.attachToRecyclerView(mImages);
         mAdapter = new NoteEditAdapter(images);
         mImages.setAdapter(mAdapter);
     }
@@ -107,9 +121,9 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
         mSubmit.setOnClickListener(v -> {
             showCanDragDelete();
         });
-        mAdapter.setOnItemDeleteListener(position -> mAdapter.removeImage(position));
+        mAdapter.setOnItemDeleteListener(this::removeImage);
         mAdapter.setOnItemSelectListener(selectCount -> PhotoPickerActivity.start(this, selectCount));
-        mEdit.setonEditTextListener(new NoteEditText.onEditTextListener() {
+        mEdit.setOnEditTextListener(new NoteEditText.OnEditTextListener() {
             @Override
             public void onShowSoftKeyBoard() {
                 Rect r = new Rect();
@@ -135,12 +149,22 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
         });
     }
 
+    private void removeImage(int position) {
+        mAdapter.removeImage(position);
+        if (mAdapter.isMaxRemoveImageSize(PhotoPickerActivity.MAX_SELECT_NUMBER - 1)) {
+            mAdapter.addPhotoAddItem();
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (PhotoPickerActivity.REQUEST_CODE == requestCode && PhotoPickerActivity.RESULT_CODE == resultCode && data != null) {
             String[] images = data.getStringArrayExtra(ActivityConstant.IMAGES);
             mAdapter.appendImage(Arrays.asList(images));
+            if (mAdapter.isMaxAddImageSize(PhotoPickerActivity.MAX_SELECT_NUMBER + 1)) {
+                mAdapter.removePhotoAddItem();
+            }
         }
     }
 
@@ -195,6 +219,12 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
         mDragDeleteText.setText("松手即可删除");
     }
 
+    private void hideCanDragDelete() {
+        mDragDelete.setBackgroundColor(Color.parseColor("#CC7BD4FB"));
+        mDragDeleteIcon.setImageResource(R.mipmap.ic_delete_unopen);
+        mDragDeleteText.setText("拖拽到此处删除");
+    }
+
     private void showSoftKeyBoard(int heightDifference) {
         if (heightDifference > 0) {
             if (mSoftKeyBoardView == null) {
@@ -220,5 +250,69 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
     @Override
     public void showTemNote(NoteEntity noteEntity) {
 
+    }
+
+    private class NoteEditItemTouchHelperCallback extends ItemTouchHelperExtension.Callback {
+
+        @Override
+        public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+            NoteEditAdapter adapter = (NoteEditAdapter) recyclerView.getAdapter();
+            int position = viewHolder.getLayoutPosition();
+            final int dragFlags = ItemTouchHelperExtension.LEFT | ItemTouchHelperExtension.UP | ItemTouchHelperExtension.RIGHT | ItemTouchHelperExtension.DOWN;
+            assert adapter != null;
+            return makeMovementFlags(adapter.isPhotoAddItem(position) ? 0 : dragFlags, 0);
+        }
+
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            NoteEditAdapter adapter = (NoteEditAdapter) recyclerView.getAdapter();
+            assert adapter != null;
+            int targetPosition = target.getLayoutPosition();
+            if (adapter.isPhotoAddItem(targetPosition)) {
+                return false;
+            }
+            int dragPosition = viewHolder.getLayoutPosition();
+            adapter.moveImage(dragPosition, targetPosition);
+            return true;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+        }
+
+        @Override
+        public void itemSelectMove(MotionEvent event, RecyclerView.ViewHolder holder) {
+            final int action = MotionEventCompat.getActionMasked(event);
+            switch (action) {
+                case MotionEvent.ACTION_DOWN:
+                    showDragDelete();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    Rect moveRect = new Rect();
+                    mDragDelete.getGlobalVisibleRect(moveRect);
+                    Rect itemMoveRect = new Rect();
+                    ((BaseViewHolder) holder).getView(R.id.item_note_edit_image).getGlobalVisibleRect(itemMoveRect);
+                    if (Math.max(itemMoveRect.top, moveRect.top) < Math.min(itemMoveRect.bottom, moveRect.bottom)) {
+                        showCanDragDelete();
+                    } else {
+                        hideCanDragDelete();
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                    Rect upRect = new Rect();
+                    mDragDelete.getGlobalVisibleRect(upRect);
+                    Rect itemUpRect = new Rect();
+                    ((BaseViewHolder) holder).getView(R.id.item_note_edit_image).getGlobalVisibleRect(itemUpRect);
+                    hideDragDelete();
+                    if (Math.max(itemUpRect.top, upRect.top) < Math.min(itemUpRect.bottom, upRect.bottom)) {
+                        removeImage(holder.getLayoutPosition());
+                        mAdapter.notifyDataSetChanged();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

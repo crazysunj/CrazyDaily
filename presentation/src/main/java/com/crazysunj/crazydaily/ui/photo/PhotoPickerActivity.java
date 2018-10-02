@@ -39,7 +39,7 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
     public static final int REQUEST_CODE = 1;
     public static final int RESULT_CODE = 1;
 
-    private static final int MAX_SELECT_NUMBER = 9;
+    public static final int MAX_SELECT_NUMBER = 9;
     /**
      * 最后两排的时候加载
      */

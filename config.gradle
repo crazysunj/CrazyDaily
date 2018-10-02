@@ -47,7 +47,7 @@ ext {
             sonic                 : "3.0.0",
             zxing                 : "3.6.0",
             pgyer                 : "3.0.0",
-            itemDecoration        : "0.2.1",
+            itemDecoration        : "0.3.0",
     ]
 
     dataDependencies = [
