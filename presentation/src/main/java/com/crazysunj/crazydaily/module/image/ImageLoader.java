@@ -85,6 +85,17 @@ public class ImageLoader {
                 .into(imageView);
     }
 
+    public static void download(Context context, String url, OnDownloadCallback callback) {
+        GlideApp.with(context).downloadOnly().load(url).into(new SimpleTarget<File>() {
+            @Override
+            public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
+                if (callback != null) {
+                    callback.download(resource);
+                }
+            }
+        });
+    }
+
     public static void downloadFile(Context context, String url, File saveFile, OnFileCallback callback) {
         Glide.with(context).asFile().load(url)
                 .listener(new FileRequestListener())
@@ -184,6 +195,10 @@ public class ImageLoader {
                         }
                     }
                 });
+    }
+
+    public interface OnDownloadCallback {
+        void download(File file);
     }
 
     public interface OnFileCallback {

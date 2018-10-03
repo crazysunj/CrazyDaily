@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -123,6 +124,8 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
         });
         mAdapter.setOnItemDeleteListener(this::removeImage);
         mAdapter.setOnItemSelectListener(selectCount -> PhotoPickerActivity.start(this, selectCount));
+        //noinspection unchecked
+        mAdapter.setOnItemClickListener((position, data, view) -> NotePreviewActivity.start(this, position, data, Pair.<View, String>create(view, getString(R.string.transition_note_preview_image))));
         mEdit.setOnEditTextListener(new NoteEditText.OnEditTextListener() {
             @Override
             public void onShowSoftKeyBoard() {
@@ -165,6 +168,8 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
             if (mAdapter.isMaxAddImageSize(PhotoPickerActivity.MAX_SELECT_NUMBER + 1)) {
                 mAdapter.removePhotoAddItem();
             }
+        } else if (NotePreviewActivity.REQUEST_CODE == requestCode && NotePreviewActivity.RESULT_CODE == resultCode && data != null) {
+            removeImage(data.getIntExtra(ActivityConstant.POSITION, 0));
         }
     }
 

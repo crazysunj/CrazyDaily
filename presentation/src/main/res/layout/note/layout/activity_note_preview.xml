@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+        android:id="@+id/note_preview_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:transitionName="@string/transition_note_preview_image" />
+
+    <RelativeLayout
+        android:id="@+id/note_preview_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:paddingEnd="@dimen/space_10"
+        android:paddingStart="@dimen/space_10">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/note_preview_back"
+            android:layout_width="@dimen/space_32"
+            android:layout_height="@dimen/space_32"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/shape_circle_black_3"
+            android:scaleType="centerInside"
+            android:src="@mipmap/ic_back" />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/note_preview_delete"
+            style="@style/text_16_white"
+            android:layout_width="@dimen/space_32"
+            android:layout_height="@dimen/space_32"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/shape_circle_black_3"
+            android:scaleType="centerInside"
+            android:src="@mipmap/ic_delete_unopen" />
+
+    </RelativeLayout>
+</FrameLayout>

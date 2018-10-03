@@ -97,7 +97,8 @@ dependencies {
     implementation libs.zxing //二维码
     implementation libs.pgyer //蒲公英
     implementation libs.itemDecoration //recyclerviewItemDecoration
-    implementation 'com.makeramen:roundedimageview:2.3.0'
+    implementation 'com.makeramen:roundedimageview:2.3.0' // 圆角
+    implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0' // 长图
     implementation 'com.github.zcweng:switch-button:0.0.3@aar' // 仿ios开关
     debugImplementation libs.debugLeakcanary
     releaseImplementation libs.releaseLeakcanary

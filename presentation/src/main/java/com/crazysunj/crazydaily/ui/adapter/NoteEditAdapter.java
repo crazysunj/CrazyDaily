@@ -20,6 +20,7 @@ public class NoteEditAdapter extends BaseAdapter<String, BaseViewHolder> {
 
     private OnItemDeleteListener mOnItemDeleteListener;
     private OnItemSelectListener mOnItemSelectListener;
+    private OnItemClickListener mOnItemClickListener;
 
     public NoteEditAdapter(List<String> data) {
         super(data, R.layout.item_note_edit);
@@ -47,7 +48,12 @@ public class NoteEditAdapter extends BaseAdapter<String, BaseViewHolder> {
                     mOnItemDeleteListener.onDelete(holder.getLayoutPosition());
                 }
             });
-            holder.itemView.setOnClickListener(null);
+            holder.itemView.setOnClickListener(v -> {
+                if (mOnItemClickListener != null) {
+                    final int layoutPosition = holder.getLayoutPosition();
+                    mOnItemClickListener.onItemClick(layoutPosition, mData.get(layoutPosition), holder.getImageView(R.id.item_note_edit_image));
+                }
+            });
         }
     }
 
@@ -95,12 +101,20 @@ public class NoteEditAdapter extends BaseAdapter<String, BaseViewHolder> {
         notifyItemMoved(dragPosition, targetPosition);
     }
 
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        mOnItemClickListener = listener;
+    }
+
     public void setOnItemSelectListener(OnItemSelectListener listener) {
         mOnItemSelectListener = listener;
     }
 
     public void setOnItemDeleteListener(OnItemDeleteListener listener) {
         mOnItemDeleteListener = listener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int position, String data, View view);
     }
 
     public interface OnItemSelectListener {

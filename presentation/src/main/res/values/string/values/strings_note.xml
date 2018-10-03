@@ -3,4 +3,5 @@
     <string name="cancel">取消</string>
     <string name="index">我的主页</string>
     <string name="publish">发布</string>
+    <string name="transition_note_preview_image">note_preview_image</string>
 </resources>

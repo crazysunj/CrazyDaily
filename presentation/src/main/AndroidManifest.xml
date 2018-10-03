@@ -114,6 +114,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <activity
+            android:name=".ui.note.NotePreviewActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
