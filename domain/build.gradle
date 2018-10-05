@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'org.greenrobot.greendao'
 def configs = rootProject.ext.android //android配置
 android {
     compileSdkVersion configs.compileSdkVersion
@@ -16,6 +17,12 @@ android {
     }
 }
 
+greendao {
+    schemaVersion 1
+    daoPackage 'com.crazysunj.domain.db'
+    targetGenDir   'src/main/java'
+}
+
 dependencies {
 
     def domainDependencies = rootProject.ext.domainDependencies
@@ -26,6 +33,7 @@ dependencies {
     compileOnly domainDependencies.gson
     compileOnly domainDependencies.niceVieoPlayer
 
+    api 'org.greenrobot:greendao:3.2.2'
     api domainDependencies.javaxInject
     api domainDependencies.rxjava
     api domainDependencies.rxandroid

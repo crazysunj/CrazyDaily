@@ -22,6 +22,7 @@ import com.crazysunj.crazydaily.di.module.EntityModule;
 import com.crazysunj.crazydaily.di.scope.ActivityScope;
 import com.crazysunj.crazydaily.ui.contact.ContactActivity;
 import com.crazysunj.crazydaily.ui.home.HomeActivity;
+import com.crazysunj.crazydaily.ui.note.NoteEditActivity;
 import com.crazysunj.crazydaily.ui.photo.PhotoPickerActivity;
 import com.crazysunj.crazydaily.ui.splash.SplashActivity;
 import com.crazysunj.crazydaily.ui.zhihu.ZhihuNewsDetailActivity;
@@ -45,6 +46,8 @@ public interface ActivityComponent {
     void inject(ContactActivity contactActivity);
 
     void inject(SplashActivity splashActivity);
-    
+
     void inject(PhotoPickerActivity photoPickerActivity);
+
+    void inject(NoteEditActivity noteEditActivity);
 }

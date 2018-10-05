@@ -70,7 +70,6 @@ android {
 }
 
 dependencies {
-
     def libs = rootProject.ext.dependencies //依赖库配置
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation libs.appcompatv7

@@ -42,6 +42,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="@dimen/space_14"
                 android:background="@drawable/selector_note_edit_submit"
+                android:enabled="false"
                 android:gravity="center"
                 android:text="@string/publish" />
         </FrameLayout>

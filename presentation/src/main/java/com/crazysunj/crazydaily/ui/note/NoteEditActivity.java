@@ -2,7 +2,7 @@ package com.crazysunj.crazydaily.ui.note;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -16,13 +16,16 @@ import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
@@ -34,6 +37,7 @@ import com.crazysunj.crazydaily.presenter.contract.NoteEditContract;
 import com.crazysunj.crazydaily.ui.adapter.NoteEditAdapter;
 import com.crazysunj.crazydaily.ui.photo.PhotoPickerActivity;
 import com.crazysunj.crazydaily.util.ScreenUtil;
+import com.crazysunj.crazydaily.view.dialog.CrazyDailyAlertDialog;
 import com.crazysunj.crazydaily.view.note.NoteEditText;
 import com.crazysunj.domain.entity.note.NoteEntity;
 import com.jaeger.library.StatusBarUtil;
@@ -51,6 +55,9 @@ import butterknife.BindView;
  * description:
  */
 public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements NoteEditContract.View {
+
+    public static final int REQUEST_CODE = 3;
+    public static final int RESULT_CODE = 3;
 
     @BindView(R.id.note_edit_cancel)
     TextView mCancel;
@@ -78,10 +85,11 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
     private ObjectAnimator mHideDragDeleteAnim;
     private NoteEditAdapter mAdapter;
     private ItemTouchHelperExtension mItemTouchHelper;
+    private Long mSaveId = null;
 
-    public static void start(Context context) {
-        Intent intent = new Intent(context, NoteEditActivity.class);
-        context.startActivity(intent);
+    public static void start(Activity activity) {
+        Intent intent = new Intent(activity, NoteEditActivity.class);
+        activity.startActivityForResult(intent, REQUEST_CODE);
     }
 
     @Override
@@ -89,8 +97,6 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
         StatusBarUtil.setColor(this, Color.WHITE);
         super.onCreate(savedInstanceState);
     }
-
-    boolean testShow = true;
 
     @Override
     protected void initView() {
@@ -110,17 +116,19 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
     }
 
     @Override
+    protected void initData() {
+        mPresenter.getNote();
+    }
+
+    @Override
     protected void initListener() {
-        mCancel.setOnClickListener(v -> {
-            if (testShow) {
-                showDragDelete();
-            } else {
-                hideDragDelete();
-            }
-            testShow = !testShow;
-        });
+        mCancel.setOnClickListener(v -> showSaveDialog());
         mSubmit.setOnClickListener(v -> {
-            showCanDragDelete();
+            if (!mSubmitBtn.isEnabled()) {
+                return;
+            }
+            final String text = mEdit.getText();
+            mPresenter.submitNote(new NoteEntity(System.currentTimeMillis(), mAdapter.getImages(), text, mImageDownload.isChecked(), NoteEntity.FLAG_SUBMIT));
         });
         mAdapter.setOnItemDeleteListener(this::removeImage);
         mAdapter.setOnItemSelectListener(selectCount -> PhotoPickerActivity.start(this, selectCount));
@@ -148,8 +156,59 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
                     ssb.setSpan(new ForegroundColorSpan(Color.parseColor("#B2B2B2")), count.length() + 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
                     mSoftKeyBoardView.setText(ssb);
                 }
+                mSubmitBtn.setEnabled(length > 0 && !mAdapter.getImages().isEmpty());
             }
         });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            showSaveDialog();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void showSaveDialog() {
+        if (!mSubmitBtn.isEnabled()) {
+            finish();
+            return;
+        }
+//        new AlertDialog.Builder(this, R.style.NormalDialog)
+//                .setMessage("将此次笔记保存？")
+//                .setNegativeButton("不保存", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//
+//                    }
+//                })
+//                .setPositiveButton("保存", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        final String text = mEdit.getText();
+//                        mPresenter.saveNote(new NoteEntity(mSaveId == null ? System.currentTimeMillis() : mSaveId, mAdapter.getImages(), text, mImageDownload.isChecked(), NoteEntity.FLAG_DRAFT));
+//                    }
+//                })
+//                .show();
+        new CrazyDailyAlertDialog.Builder()
+                .setMessgae("将此次笔记保存？")
+                .setNegative("不保存")
+                .setOnNegativeClickListener(v -> {
+                    if (mSaveId == null) {
+                        cancelSuccess();
+                    } else {
+                        mPresenter.cancelNote(mSaveId);
+                    }
+                })
+                .setPositive("保存")
+                .setPositiveColor(Color.parseColor("#F93450"))
+                .setOnPositiveClickListener(v -> {
+                    final String text = mEdit.getText();
+                    mPresenter.saveNote(new NoteEntity(mSaveId == null ? System.currentTimeMillis() : mSaveId, mAdapter.getImages(), text, mImageDownload.isChecked(), NoteEntity.FLAG_DRAFT));
+                })
+                .build()
+                .show(this);
     }
 
     private void removeImage(int position) {
@@ -164,13 +223,18 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
         super.onActivityResult(requestCode, resultCode, data);
         if (PhotoPickerActivity.REQUEST_CODE == requestCode && PhotoPickerActivity.RESULT_CODE == resultCode && data != null) {
             String[] images = data.getStringArrayExtra(ActivityConstant.IMAGES);
-            mAdapter.appendImage(Arrays.asList(images));
-            if (mAdapter.isMaxAddImageSize(PhotoPickerActivity.MAX_SELECT_NUMBER + 1)) {
-                mAdapter.removePhotoAddItem();
-            }
+            appendImages(Arrays.asList(images));
         } else if (NotePreviewActivity.REQUEST_CODE == requestCode && NotePreviewActivity.RESULT_CODE == resultCode && data != null) {
             removeImage(data.getIntExtra(ActivityConstant.POSITION, 0));
         }
+    }
+
+    private void appendImages(List<String> images) {
+        mAdapter.appendImage(images);
+        if (mAdapter.isMaxAddImageSize(PhotoPickerActivity.MAX_SELECT_NUMBER + 1)) {
+            mAdapter.removePhotoAddItem();
+        }
+        mSubmitBtn.setEnabled(!images.isEmpty() && mEdit.getText().length() > 0);
     }
 
     private void showDragDelete() {
@@ -248,13 +312,45 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
     }
 
     @Override
+    protected void initInject() {
+        getActivityComponent()
+                .inject(this);
+    }
+
+    @Override
     protected int getContentResId() {
         return R.layout.activity_note_edit;
     }
 
     @Override
-    public void showTemNote(NoteEntity noteEntity) {
+    public void showNote(NoteEntity noteEntity) {
+        List<String> images = noteEntity.getImages();
+        appendImages(images);
+        String text = noteEntity.getText();
+        Log.d("NoteEditActivity", "text:" + text);
+        mEdit.setText("456\n789");
+        mImageDownload.setChecked(noteEntity.getIsCanDownload());
+        mSaveId = noteEntity.getId();
+    }
 
+    @Override
+    public void cancelSuccess() {
+        finish();
+    }
+
+    @Override
+    public void saveSuccess() {
+        Toast.makeText(getApplicationContext(), "保存成功", Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
+    @Override
+    public void submitSuccess(NoteEntity noteEntity) {
+        Toast.makeText(getApplicationContext(), "发布成功", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent();
+        intent.putExtra(ActivityConstant.DATA, noteEntity);
+        setResult(RESULT_CODE, intent);
+        finish();
     }
 
     private class NoteEditItemTouchHelperCallback extends ItemTouchHelperExtension.Callback {

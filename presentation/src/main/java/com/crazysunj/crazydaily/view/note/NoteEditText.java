@@ -102,12 +102,16 @@ public class NoteEditText extends LinearLayout {
         a.recycle();
     }
 
+    public void setText(String text) {
+        mEditText.setText(text);
+    }
+
     public String getText() {
         Editable editable = mEditText.getText();
         if (editable == null) {
             return "";
         }
-        return editable.toString().trim();
+        return editable.toString();
     }
 
     private void layoutDelete(int height) {

@@ -1,5 +1,17 @@
 package com.crazysunj.domain.entity.note;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.text.TextUtils;
+
+import org.greenrobot.greendao.annotation.Convert;
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.NotNull;
+import org.greenrobot.greendao.converter.PropertyConverter;
+
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -7,45 +19,111 @@ import java.util.List;
  * created on: 2018/9/27 下午4:00
  * description:
  */
-public class NoteEntity {
+@Entity(nameInDb = "Note")
+public class NoteEntity implements Parcelable {
+    public static class StringConverter implements PropertyConverter<List<String>, String> {
+
+        @Override
+        public List<String> convertToEntityProperty(String databaseValue) {
+            if (TextUtils.isEmpty(databaseValue)) {
+                return null;
+            }
+            return Arrays.asList(databaseValue.split(","));
+        }
+
+        @Override
+        public String convertToDatabaseValue(List<String> entityProperty) {
+            if (entityProperty == null || entityProperty.isEmpty()) {
+                return null;
+            }
+            StringBuilder sb = new StringBuilder();
+            for (String data : entityProperty) {
+                sb.append(data);
+                sb.append(",");
+            }
+            return sb.toString();
+        }
+    }
+
     /**
      * id
      */
-    private long id;
+    @Id
+    private Long id;
     /**
      * 图片
      */
+    @Convert(columnType = String.class, converter = StringConverter.class)
     private List<String> images;
     /**
      * 文本内容
      */
+    @NotNull
     private String text;
     /**
      * 是否能下载
      */
     private boolean isCanDownload;
+    /**
+     * 标志位 0 为草稿 1为已发布
+     */
+    private Integer flag;
 
-    public NoteEntity(long id, List<String> images, String text, boolean isCanDownload) {
+    public static final int FLAG_SUBMIT = 1;
+    public static final int FLAG_DRAFT = 0;
+
+    @Generated(hash = 2062519629)
+    public NoteEntity(Long id, List<String> images, @NotNull String text,
+                      boolean isCanDownload, Integer flag) {
         this.id = id;
         this.images = images;
         this.text = text;
         this.isCanDownload = isCanDownload;
+        this.flag = flag;
     }
 
-    public long getId() {
-        return id;
+    @Generated(hash = 734234824)
+    public NoteEntity() {
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public List<String> getImages() {
-        return images;
+        return this.images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
     }
 
     public String getText() {
-        return text;
+        return this.text;
     }
 
-    public boolean isCanDownload() {
-        return isCanDownload;
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public boolean getIsCanDownload() {
+        return this.isCanDownload;
+    }
+
+    public void setIsCanDownload(boolean isCanDownload) {
+        this.isCanDownload = isCanDownload;
+    }
+
+    public Integer getFlag() {
+        return this.flag;
+    }
+
+    public void setFlag(Integer flag) {
+        this.flag = flag;
     }
 
     @Override
@@ -55,6 +133,41 @@ public class NoteEntity {
                 ", images=" + images +
                 ", text='" + text + '\'' +
                 ", isCanDownload=" + isCanDownload +
+                ", flag=" + flag +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeStringList(this.images);
+        dest.writeString(this.text);
+        dest.writeByte(this.isCanDownload ? (byte) 1 : (byte) 0);
+        dest.writeValue(this.flag);
+    }
+
+    protected NoteEntity(Parcel in) {
+        this.id = (Long) in.readValue(Long.class.getClassLoader());
+        this.images = in.createStringArrayList();
+        this.text = in.readString();
+        this.isCanDownload = in.readByte() != 0;
+        this.flag = (Integer) in.readValue(Integer.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<NoteEntity> CREATOR = new Parcelable.Creator<NoteEntity>() {
+        @Override
+        public NoteEntity createFromParcel(Parcel source) {
+            return new NoteEntity(source);
+        }
+
+        @Override
+        public NoteEntity[] newArray(int size) {
+            return new NoteEntity[size];
+        }
+    };
 }

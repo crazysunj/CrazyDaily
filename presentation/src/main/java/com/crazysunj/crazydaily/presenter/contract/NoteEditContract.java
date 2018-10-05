@@ -14,19 +14,30 @@ public interface NoteEditContract {
         /**
          * 展示草稿
          */
-        void showTemNote(NoteEntity noteEntity);
+        void showNote(NoteEntity noteEntity);
+
+        void cancelSuccess();
+
+        void saveSuccess();
+
+        void submitSuccess(NoteEntity noteEntity);
     }
 
     interface Presenter extends IPresenter<View> {
         /**
+         * 取消草稿
+         */
+        void cancelNote(Long id);
+
+        /**
          * 保存草稿
          */
-        void saveTemNote(NoteEntity noteEntity);
+        void saveNote(NoteEntity noteEntity);
 
         /**
          * 获取草稿
          */
-        void getTemNote();
+        void getNote();
 
         /**
          * 上传笔记

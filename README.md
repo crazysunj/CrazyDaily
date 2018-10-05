@@ -1,5 +1,5 @@
 # CrazyDaily
-学习Android的开源项目，基于Material Design + MVP-Clean + Weex + RxJava2 + Retrofit + Dagger2 + Glide + OkHttp + MTRVA + 炫酷控件 + 炫酷动画
+学习Android的开源项目，基于Material Design + MVP-Clean + Weex + RxJava2 + Retrofit + Dagger2 + Glide + OkHttp + MTRVA + 炫酷控件 + 炫酷动画 + greenDAO
 
 ## 效果图
 ### 首页
@@ -48,6 +48,7 @@
 * 支持在线更新、在线反馈和Crash监控
 * webview支持x5及常见用法，例如缓存、预加载、内存优化、增量更新、并行加载、下载等
 * 兼容Android7.0，8.0
+* 数据库采用greenDAO
 
 尽量保持各种开源库最新状态，我踩坑，我骄傲！
 

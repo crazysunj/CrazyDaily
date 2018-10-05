@@ -9,6 +9,7 @@ import com.crazysunj.crazydaily.base.BaseAdapter;
 import com.crazysunj.crazydaily.base.BaseViewHolder;
 import com.crazysunj.crazydaily.module.image.ImageLoader;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,6 +56,17 @@ public class NoteEditAdapter extends BaseAdapter<String, BaseViewHolder> {
                 }
             });
         }
+    }
+
+    public List<String> getImages() {
+        List<String> images = new ArrayList<>();
+        for (String s : mData) {
+            if (s == null) {
+                continue;
+            }
+            images.add(s);
+        }
+        return images;
     }
 
     public void removePhotoAddItem() {
