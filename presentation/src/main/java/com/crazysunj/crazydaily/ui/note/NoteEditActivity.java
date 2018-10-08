@@ -128,7 +128,7 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
                 return;
             }
             final String text = mEdit.getText();
-            mPresenter.submitNote(new NoteEntity(System.currentTimeMillis(), mAdapter.getImages(), text, mImageDownload.isChecked(), NoteEntity.FLAG_SUBMIT));
+            mPresenter.submitNote(new NoteEntity(mSaveId == null ? System.currentTimeMillis() : mSaveId, mAdapter.getImages(), text, mImageDownload.isChecked(), NoteEntity.FLAG_SUBMIT));
         });
         mAdapter.setOnItemDeleteListener(this::removeImage);
         mAdapter.setOnItemSelectListener(selectCount -> PhotoPickerActivity.start(this, selectCount));
