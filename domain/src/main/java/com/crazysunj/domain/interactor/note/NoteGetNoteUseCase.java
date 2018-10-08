@@ -2,7 +2,7 @@ package com.crazysunj.domain.interactor.note;
 
 import com.crazysunj.domain.entity.note.NoteEntity;
 import com.crazysunj.domain.interactor.UseCase;
-import com.crazysunj.domain.repository.note.NoteEditRepository;
+import com.crazysunj.domain.repository.note.NoteRepository;
 
 import javax.inject.Inject;
 
@@ -13,16 +13,16 @@ import io.reactivex.Flowable;
  * created on: 2018/10/3 下午6:42
  * description:
  */
-public class NoteEditGetNoteUseCase extends UseCase<NoteEntity, Void> {
-    private final NoteEditRepository mNoteEditRepository;
+public class NoteGetNoteUseCase extends UseCase<NoteEntity, Void> {
+    private final NoteRepository mNoteRepository;
 
     @Inject
-    public NoteEditGetNoteUseCase(NoteEditRepository noteEditRepository) {
-        mNoteEditRepository = noteEditRepository;
+    public NoteGetNoteUseCase(NoteRepository noteRepository) {
+        mNoteRepository = noteRepository;
     }
 
     @Override
     protected Flowable<NoteEntity> buildUseCaseObservable(Void aVoid) {
-        return mNoteEditRepository.getNote();
+        return mNoteRepository.getNote();
     }
 }

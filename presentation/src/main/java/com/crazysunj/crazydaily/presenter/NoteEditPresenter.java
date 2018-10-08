@@ -5,9 +5,9 @@ import com.crazysunj.crazydaily.base.BaseSubscriber;
 import com.crazysunj.crazydaily.di.scope.ActivityScope;
 import com.crazysunj.crazydaily.presenter.contract.NoteEditContract;
 import com.crazysunj.domain.entity.note.NoteEntity;
-import com.crazysunj.domain.interactor.note.NoteEditCancelNoteUseCase;
-import com.crazysunj.domain.interactor.note.NoteEditGetNoteUseCase;
-import com.crazysunj.domain.interactor.note.NoteEditSaveNoteUseCase;
+import com.crazysunj.domain.interactor.note.NoteCancelNoteUseCase;
+import com.crazysunj.domain.interactor.note.NoteGetNoteUseCase;
+import com.crazysunj.domain.interactor.note.NoteSaveNoteUseCase;
 
 import javax.inject.Inject;
 
@@ -19,20 +19,20 @@ import javax.inject.Inject;
 @ActivityScope
 public class NoteEditPresenter extends BasePresenter<NoteEditContract.View> implements NoteEditContract.Presenter {
 
-    private final NoteEditSaveNoteUseCase mNoteEditSaveNoteUseCase;
-    private final NoteEditGetNoteUseCase mNoteEditGetNoteUseCase;
-    private final NoteEditCancelNoteUseCase mNoteEditCancelNoteUseCase;
+    private final NoteSaveNoteUseCase mNoteSaveNoteUseCase;
+    private final NoteGetNoteUseCase mNoteGetNoteUseCase;
+    private final NoteCancelNoteUseCase mNoteCancelNoteUseCase;
 
     @Inject
-    public NoteEditPresenter(NoteEditSaveNoteUseCase noteEditSaveNoteUseCase, NoteEditGetNoteUseCase noteEditGetNoteUseCase, NoteEditCancelNoteUseCase noteEditCancelNoteUseCase) {
-        mNoteEditSaveNoteUseCase = noteEditSaveNoteUseCase;
-        mNoteEditGetNoteUseCase = noteEditGetNoteUseCase;
-        mNoteEditCancelNoteUseCase = noteEditCancelNoteUseCase;
+    public NoteEditPresenter(NoteSaveNoteUseCase noteSaveNoteUseCase, NoteGetNoteUseCase noteGetNoteUseCase, NoteCancelNoteUseCase noteCancelNoteUseCase) {
+        mNoteSaveNoteUseCase = noteSaveNoteUseCase;
+        mNoteGetNoteUseCase = noteGetNoteUseCase;
+        mNoteCancelNoteUseCase = noteCancelNoteUseCase;
     }
 
     @Override
     public void cancelNote(Long id) {
-        mNoteEditCancelNoteUseCase.execute(NoteEditCancelNoteUseCase.Params.get(id), new BaseSubscriber<Boolean>() {
+        mNoteCancelNoteUseCase.execute(NoteCancelNoteUseCase.Params.get(id), new BaseSubscriber<Boolean>() {
             @Override
             public void onNext(Boolean aBoolean) {
                 if (aBoolean) {
@@ -44,7 +44,7 @@ public class NoteEditPresenter extends BasePresenter<NoteEditContract.View> impl
 
     @Override
     public void saveNote(NoteEntity noteEntity) {
-        mNoteEditSaveNoteUseCase.execute(NoteEditSaveNoteUseCase.Params.get(noteEntity), new BaseSubscriber<Boolean>() {
+        mNoteSaveNoteUseCase.execute(NoteSaveNoteUseCase.Params.get(noteEntity), new BaseSubscriber<Boolean>() {
             @Override
             public void onNext(Boolean aBoolean) {
                 if (aBoolean) {
@@ -56,7 +56,7 @@ public class NoteEditPresenter extends BasePresenter<NoteEditContract.View> impl
 
     @Override
     public void getNote() {
-        mNoteEditGetNoteUseCase.execute(new BaseSubscriber<NoteEntity>() {
+        mNoteGetNoteUseCase.execute(new BaseSubscriber<NoteEntity>() {
             @Override
             public void onNext(NoteEntity noteEntity) {
                 mView.showNote(noteEntity);
@@ -66,7 +66,7 @@ public class NoteEditPresenter extends BasePresenter<NoteEditContract.View> impl
 
     @Override
     public void submitNote(NoteEntity noteEntity) {
-        mNoteEditSaveNoteUseCase.execute(NoteEditSaveNoteUseCase.Params.get(noteEntity), new BaseSubscriber<Boolean>() {
+        mNoteSaveNoteUseCase.execute(NoteSaveNoteUseCase.Params.get(noteEntity), new BaseSubscriber<Boolean>() {
             @Override
             public void onNext(Boolean aBoolean) {
                 if (aBoolean) {

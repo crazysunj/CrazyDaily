@@ -24,7 +24,7 @@ import com.crazysunj.domain.repository.download.DownloadRepository;
 import com.crazysunj.domain.repository.gankio.GankioRepository;
 import com.crazysunj.domain.repository.gaoxiao.GaoxiaoRepository;
 import com.crazysunj.domain.repository.neihan.NeihanRepository;
-import com.crazysunj.domain.repository.note.NoteEditRepository;
+import com.crazysunj.domain.repository.note.NoteRepository;
 import com.crazysunj.domain.repository.photo.PhotoPickerRepository;
 import com.crazysunj.domain.repository.weather.WeatherRepository;
 import com.crazysunj.domain.repository.zhihu.ZhihuRepository;
@@ -63,5 +63,5 @@ public interface AppComponent {
 
     PhotoPickerRepository providePhotoPickerRepository();
 
-    NoteEditRepository provideNoteEditRepository();
+    NoteRepository provideNoteRepository();
 }

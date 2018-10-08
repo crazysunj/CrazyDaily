@@ -84,7 +84,6 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
     private ObjectAnimator mShowDragDeleteAnim;
     private ObjectAnimator mHideDragDeleteAnim;
     private NoteEditAdapter mAdapter;
-    private ItemTouchHelperExtension mItemTouchHelper;
     private Long mSaveId = null;
 
     public static void start(Activity activity) {
@@ -102,15 +101,10 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
     protected void initView() {
         mDragDelete.setTranslationY(getResources().getDimensionPixelSize(R.dimen.space_50));
         List<String> images = new ArrayList<>();
-//        final Resources resources = getResources();
-//        final int id = R.mipmap.ic_photo_picker_add;
-//        images.add(String.format("%s://%s/%s", ContentResolver.SCHEME_ANDROID_RESOURCE,
-//                resources.getResourcePackageName(id),
-//                String.valueOf(id)));
         images.add(null);
         mImages.setLayoutManager(new GridLayoutManager(this, 3));
-        mItemTouchHelper = new ItemTouchHelperExtension(new NoteEditItemTouchHelperCallback());
-        mItemTouchHelper.attachToRecyclerView(mImages);
+        ItemTouchHelperExtension itemTouchHelper = new ItemTouchHelperExtension(new NoteEditItemTouchHelperCallback());
+        itemTouchHelper.attachToRecyclerView(mImages);
         mAdapter = new NoteEditAdapter(images);
         mImages.setAdapter(mAdapter);
     }
@@ -175,22 +169,6 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
             finish();
             return;
         }
-//        new AlertDialog.Builder(this, R.style.NormalDialog)
-//                .setMessage("将此次笔记保存？")
-//                .setNegativeButton("不保存", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//
-//                    }
-//                })
-//                .setPositiveButton("保存", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        final String text = mEdit.getText();
-//                        mPresenter.saveNote(new NoteEntity(mSaveId == null ? System.currentTimeMillis() : mSaveId, mAdapter.getImages(), text, mImageDownload.isChecked(), NoteEntity.FLAG_DRAFT));
-//                    }
-//                })
-//                .show();
         new CrazyDailyAlertDialog.Builder()
                 .setMessgae("将此次笔记保存？")
                 .setNegative("不保存")

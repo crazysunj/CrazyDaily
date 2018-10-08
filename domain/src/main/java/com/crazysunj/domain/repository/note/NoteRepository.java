@@ -11,7 +11,7 @@ import io.reactivex.Flowable;
  * created on: 2018/10/3 下午6:05
  * description:
  */
-public interface NoteEditRepository {
+public interface NoteRepository {
     Flowable<Boolean> cancelNote(Long id);
 
     Flowable<Boolean> saveNote(NoteEntity noteEntity);

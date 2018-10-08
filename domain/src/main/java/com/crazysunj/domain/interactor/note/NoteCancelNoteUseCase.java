@@ -1,7 +1,7 @@
 package com.crazysunj.domain.interactor.note;
 
 import com.crazysunj.domain.interactor.UseCase;
-import com.crazysunj.domain.repository.note.NoteEditRepository;
+import com.crazysunj.domain.repository.note.NoteRepository;
 
 import javax.inject.Inject;
 
@@ -12,18 +12,18 @@ import io.reactivex.Flowable;
  * created on: 2018/10/3 下午6:01
  * description:
  */
-public class NoteEditCancelNoteUseCase extends UseCase<Boolean, NoteEditCancelNoteUseCase.Params> {
+public class NoteCancelNoteUseCase extends UseCase<Boolean, NoteCancelNoteUseCase.Params> {
 
-    private final NoteEditRepository mNoteEditRepository;
+    private final NoteRepository mNoteRepository;
 
     @Inject
-    public NoteEditCancelNoteUseCase(NoteEditRepository noteEditRepository) {
-        mNoteEditRepository = noteEditRepository;
+    public NoteCancelNoteUseCase(NoteRepository noteRepository) {
+        mNoteRepository = noteRepository;
     }
 
     @Override
     protected Flowable<Boolean> buildUseCaseObservable(Params params) {
-        return mNoteEditRepository.cancelNote(params.id);
+        return mNoteRepository.cancelNote(params.id);
     }
 
     public static final class Params {

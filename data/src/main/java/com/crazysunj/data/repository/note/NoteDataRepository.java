@@ -6,7 +6,7 @@ import com.crazysunj.data.api.DBHelper;
 import com.crazysunj.data.util.RxTransformerUtil;
 import com.crazysunj.domain.db.NoteEntityDao;
 import com.crazysunj.domain.entity.note.NoteEntity;
-import com.crazysunj.domain.repository.note.NoteEditRepository;
+import com.crazysunj.domain.repository.note.NoteRepository;
 
 import java.util.List;
 
@@ -20,12 +20,12 @@ import io.reactivex.schedulers.Schedulers;
  * created on: 2018/10/3 下午6:11
  * description:
  */
-public class NoteEditDataRepository implements NoteEditRepository {
+public class NoteDataRepository implements NoteRepository {
 
     private final NoteEntityDao mNoteDao;
 
     @Inject
-    public NoteEditDataRepository(DBHelper dbHelper) {
+    public NoteDataRepository(DBHelper dbHelper) {
         mNoteDao = dbHelper.getNoteDao();
     }
 

@@ -118,6 +118,8 @@
         <activity
             android:name=".ui.note.NotePreviewActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity android:name=".ui.note.NoteActivity" />
     </application>
 
 </manifest>
