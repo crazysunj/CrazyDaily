@@ -7,6 +7,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
@@ -14,6 +15,7 @@ import com.crazysunj.crazydaily.constant.ActivityConstant;
 import com.crazysunj.crazydaily.presenter.NotePresenter;
 import com.crazysunj.crazydaily.presenter.contract.NoteContract;
 import com.crazysunj.crazydaily.ui.adapter.NoteAdapter;
+import com.crazysunj.crazydaily.ui.note.dialog.NoteEditDialog;
 import com.crazysunj.domain.entity.note.NoteEntity;
 
 import java.util.List;
@@ -39,6 +41,7 @@ public class NoteActivity extends BaseActivity<NotePresenter> implements NoteCon
     AppCompatTextView mEdit;
     @BindView(R.id.note_toolbar)
     Toolbar mToolbar;
+    private NoteEditDialog mNoteEditDialog;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, NoteActivity.class);
@@ -47,6 +50,7 @@ public class NoteActivity extends BaseActivity<NotePresenter> implements NoteCon
 
     @Override
     protected void initView() {
+        mToolbar.setTitle("");
         setSupportActionBar(mToolbar);
         mNoteList.setLayoutManager(new LinearLayoutManager(this));
         mNoteList.setAdapter(mAdapter);
@@ -61,6 +65,31 @@ public class NoteActivity extends BaseActivity<NotePresenter> implements NoteCon
     protected void initListener() {
         mBack.setOnClickListener(v -> finish());
         mEdit.setOnClickListener(v -> NoteEditActivity.start(this));
+        mAdapter.setOnMenuClickListener(item -> {
+            if (mNoteEditDialog == null) {
+                mNoteEditDialog = NoteEditDialog.get();
+            }
+            mNoteEditDialog.setOnItemClickListener(new NoteEditDialog.OnItemClickListener() {
+                @Override
+                public void onEdit() {
+                    Toast.makeText(NoteActivity.this, "编辑", Toast.LENGTH_SHORT).show();
+                    mNoteEditDialog.dismiss();
+                }
+
+                @Override
+                public void onDelete() {
+                    Toast.makeText(NoteActivity.this, "删除", Toast.LENGTH_SHORT).show();
+                    mNoteEditDialog.dismiss();
+                }
+
+                @Override
+                public void onCancel() {
+                    Toast.makeText(NoteActivity.this, "取消", Toast.LENGTH_SHORT).show();
+                    mNoteEditDialog.dismiss();
+                }
+            });
+            mNoteEditDialog.show(this);
+        });
     }
 
     @Override

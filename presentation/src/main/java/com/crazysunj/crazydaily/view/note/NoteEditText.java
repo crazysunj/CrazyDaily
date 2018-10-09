@@ -79,6 +79,7 @@ public class NoteEditText extends LinearLayout {
                 }
             }
         });
+        //noinspection ConstantConditions
         mDelete.setOnClickListener(v -> mEditText.getText().clear());
         //当键盘弹出隐藏的时候会 调用此方法。
         mEditText.getViewTreeObserver().addOnGlobalLayoutListener(() -> {

@@ -70,35 +70,52 @@ android {
 }
 
 dependencies {
-    def libs = rootProject.ext.dependencies //依赖库配置
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    def libs = rootProject.ext.dependencies
+    //依赖库配置
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation libs.appcompatv7
     implementation libs.recyclerviewv7
     implementation libs.cardviewv7
     implementation libs.design
-    implementation libs.gpuimage //图像处理
+    implementation libs.gpuimage
+    //图像处理
     implementation libs.multidex
     implementation libs.butterknife
-    implementation libs.MTRVA //recyclerview数据处理
-    implementation libs.statusbarutil //状态栏
-    implementation libs.pickerdialog //选择对话框
-    implementation libs.circleimageview //圆形imageview
-    implementation libs.niceVieoPlayer//视频播放
-    implementation libs.cardslideview //卡片轮播
+    implementation libs.MTRVA
+    //recyclerview数据处理
+    implementation libs.statusbarutil
+    //状态栏
+    implementation libs.pickerdialog
+    //选择对话框
+    implementation libs.circleimageview
+    //圆形imageview
+    implementation libs.niceVieoPlayer
+    //视频播放
+    implementation libs.cardslideview
+    //卡片轮播
     implementation libs.fastjson
     implementation libs.weex
-    implementation libs.wavesidebar //字符波浪滑动
+    implementation libs.wavesidebar
+    //字符波浪滑动
     implementation libs.shimmer
     implementation libs.lottie
     implementation libs.photoview
-    implementation libs.richtext //富文本
-    implementation libs.ucrop //裁剪
-    implementation libs.zxing //二维码
-    implementation libs.pgyer //蒲公英
-    implementation libs.itemDecoration //recyclerviewItemDecoration
-    implementation 'com.makeramen:roundedimageview:2.3.0' // 圆角
-    implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0' // 长图
-    implementation 'com.github.zcweng:switch-button:0.0.3@aar' // 仿ios开关
+    implementation libs.richtext
+    //富文本
+    implementation libs.ucrop
+    //裁剪
+    implementation libs.zxing
+    //二维码
+    implementation libs.pgyer
+    //蒲公英
+    implementation libs.itemDecoration
+    //recyclerviewItemDecoration
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+    // 圆角
+    implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
+    // 长图
+    implementation 'com.github.zcweng:switch-button:0.0.3@aar'
+    // 仿ios开关
     debugImplementation libs.debugLeakcanary
     releaseImplementation libs.releaseLeakcanary
     annotationProcessor libs.butterknifeCompiler
@@ -121,4 +138,5 @@ dependencies {
     implementation(libs.sonic) {
         exclude group: "com.android.support"
     }
+    implementation 'com.android.support.constraint:constraint-layout:2.0.0-alpha2'
 }

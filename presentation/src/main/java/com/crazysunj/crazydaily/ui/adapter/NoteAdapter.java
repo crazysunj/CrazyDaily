@@ -34,6 +34,8 @@ import javax.inject.Inject;
  */
 public class NoteAdapter extends BaseAdapter<NoteEntity, BaseViewHolder> {
 
+    private OnMenuClickListener mOnMenuClickListener;
+
     @Inject
     public NoteAdapter() {
         super(R.layout.item_note);
@@ -62,12 +64,18 @@ public class NoteAdapter extends BaseAdapter<NoteEntity, BaseViewHolder> {
 
             @Override
             public void onPageSelected(int i) {
-                indicator.setText(String.format(Locale.getDefault(), "%d/%d", i + 1, item.getImages().size()));
+                holder.getTextView(R.id.item_note_images_indicator)
+                        .setText(String.format(Locale.getDefault(), "%d/%d", i + 1, mData.get(holder.getLayoutPosition()).getImages().size()));
             }
 
             @Override
             public void onPageScrollStateChanged(int i) {
 
+            }
+        });
+        menu.setOnClickListener(v -> {
+            if (mOnMenuClickListener != null) {
+                mOnMenuClickListener.onClick(mData.get(holder.getLayoutPosition()));
             }
         });
     }
@@ -81,6 +89,14 @@ public class NoteAdapter extends BaseAdapter<NoteEntity, BaseViewHolder> {
     public void appendNote(@NotNull NoteEntity note) {
         mData.add(0, note);
         notifyItemInserted(0);
+    }
+
+    public void setOnMenuClickListener(OnMenuClickListener listener) {
+        mOnMenuClickListener = listener;
+    }
+
+    public interface OnMenuClickListener {
+        void onClick(NoteEntity item);
     }
 
     private static class NoteHandler implements CardHandler<String> {

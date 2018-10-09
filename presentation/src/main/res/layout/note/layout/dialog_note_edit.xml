@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dialog_note_wrap"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/dialog_note_edit"
+        android:layout_width="@dimen/space_70"
+        android:layout_height="@dimen/space_70"
+        android:fontFamily="@font/crazydailyicon"
+        android:gravity="center"
+        android:text="@string/ic_edit"
+        android:textColor="@color/color_333333"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/dialog_note_delete"
+        android:layout_width="@dimen/space_70"
+        android:layout_height="@dimen/space_70"
+        android:fontFamily="@font/crazydailyicon"
+        android:gravity="center"
+        android:text="@string/ic_delete"
+        android:textColor="@color/color_333333"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.75"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25" />
+
+    <android.support.v7.widget.AppCompatTextView
+        style="@style/text_14_666666"
+        android:layout_width="@dimen/space_70"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_10"
+        android:gravity="center"
+        android:text="编辑"
+        app:layout_constraintStart_toStartOf="@id/dialog_note_edit"
+        app:layout_constraintTop_toBottomOf="@id/dialog_note_edit"
+        tools:ignore="HardcodedText" />
+
+    <android.support.v7.widget.AppCompatTextView
+        style="@style/text_14_666666"
+        android:layout_width="@dimen/space_70"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_10"
+        android:gravity="center"
+        android:text="删除"
+        app:layout_constraintStart_toStartOf="@id/dialog_note_delete"
+        app:layout_constraintTop_toBottomOf="@id/dialog_note_delete"
+        tools:ignore="HardcodedText" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/dialog_note_cancel"
+        style="@style/text_20_666666"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_55"
+        android:layout_marginTop="@dimen/space_10"
+        android:gravity="center"
+        android:text="取消"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="HardcodedText" />
+
+    <View
+        style="@style/horizontal_line"
+        app:layout_constraintBottom_toTopOf="@id/dialog_note_cancel" />
+
+</android.support.constraint.ConstraintLayout>
