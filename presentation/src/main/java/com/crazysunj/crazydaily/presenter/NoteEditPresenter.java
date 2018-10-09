@@ -5,7 +5,7 @@ import com.crazysunj.crazydaily.base.BaseSubscriber;
 import com.crazysunj.crazydaily.di.scope.ActivityScope;
 import com.crazysunj.crazydaily.presenter.contract.NoteEditContract;
 import com.crazysunj.domain.entity.note.NoteEntity;
-import com.crazysunj.domain.interactor.note.NoteCancelNoteUseCase;
+import com.crazysunj.domain.interactor.note.NoteDeleteNoteUseCase;
 import com.crazysunj.domain.interactor.note.NoteGetNoteUseCase;
 import com.crazysunj.domain.interactor.note.NoteSaveNoteUseCase;
 
@@ -21,18 +21,18 @@ public class NoteEditPresenter extends BasePresenter<NoteEditContract.View> impl
 
     private final NoteSaveNoteUseCase mNoteSaveNoteUseCase;
     private final NoteGetNoteUseCase mNoteGetNoteUseCase;
-    private final NoteCancelNoteUseCase mNoteCancelNoteUseCase;
+    private final NoteDeleteNoteUseCase mNoteDeleteNoteUseCase;
 
     @Inject
-    public NoteEditPresenter(NoteSaveNoteUseCase noteSaveNoteUseCase, NoteGetNoteUseCase noteGetNoteUseCase, NoteCancelNoteUseCase noteCancelNoteUseCase) {
+    public NoteEditPresenter(NoteSaveNoteUseCase noteSaveNoteUseCase, NoteGetNoteUseCase noteGetNoteUseCase, NoteDeleteNoteUseCase noteDeleteNoteUseCase) {
         mNoteSaveNoteUseCase = noteSaveNoteUseCase;
         mNoteGetNoteUseCase = noteGetNoteUseCase;
-        mNoteCancelNoteUseCase = noteCancelNoteUseCase;
+        mNoteDeleteNoteUseCase = noteDeleteNoteUseCase;
     }
 
     @Override
     public void cancelNote(Long id) {
-        mNoteCancelNoteUseCase.execute(NoteCancelNoteUseCase.Params.get(id), new BaseSubscriber<Boolean>() {
+        mNoteDeleteNoteUseCase.execute(NoteDeleteNoteUseCase.Params.get(id), new BaseSubscriber<Boolean>() {
             @Override
             public void onNext(Boolean aBoolean) {
                 if (aBoolean) {

@@ -13,7 +13,7 @@
         android:paddingEnd="@dimen/space_10"
         android:paddingStart="@dimen/space_10">
 
-        <TextView
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/item_note_date"
             style="@style/text_14_333333"
             android:layout_width="wrap_content"
@@ -21,11 +21,12 @@
             android:layout_centerVertical="true"
             tools:text="2018年8月1日" />
 
-        <ImageView
+        <android.support.v7.widget.AppCompatImageView
             android:id="@+id/item_note_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:src="@mipmap/ic_more" />
     </RelativeLayout>
 
@@ -34,6 +35,7 @@
         android:layout_height="match_parent">
 
         <com.crazysunj.cardslideview.CardViewPager
+            android:id="@+id/item_note_images"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:card_loop="true"
@@ -41,5 +43,32 @@
             app:card_max_offset="0dp"
             app:card_padding="0dp"
             app:card_scale_rate="0" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/item_note_images_indicator"
+            style="@style/text_12_white"
+            android:layout_width="@dimen/space_30"
+            android:layout_height="@dimen/space_30"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/space_10"
+            android:gravity="center"
+            tools:background="@color/color_black"
+            tools:text="1/2" />
     </com.crazysunj.crazydaily.view.photo.PhotoPickerWrapLayout>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/item_note_content"
+        style="@style/text_12_333333"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_white"
+        android:lineSpacingExtra="@dimen/space_4"
+        android:padding="@dimen/space_10"
+        tools:text="梦想粉色小屋，纯真少女感，分分钟秒杀网上的网红书坊，漫画里的仙境，居然就在你的身边找到啦～走过路过千万不要错过，人生难得几闻，一生一定要拍一…" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_10"
+        android:background="@color/color_cccccc" />
 </LinearLayout>

@@ -12,7 +12,7 @@ import io.reactivex.Flowable;
  * description:
  */
 public interface NoteRepository {
-    Flowable<Boolean> cancelNote(Long id);
+    Flowable<Boolean> deleteNote(Long id);
 
     Flowable<Boolean> saveNote(NoteEntity noteEntity);
 

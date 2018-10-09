@@ -10,4 +10,5 @@
     <string name="ic_msg">&#xe643;</string>
     <string name="ic_arrow">&#xe615;</string>
     <string name="ic_tick">&#xe7b8;</string>
+    <string name="ic_back">&#xe6bb;</string>
 </resources>

@@ -62,7 +62,7 @@ import com.crazysunj.crazydaily.ui.adapter.helper.HomeAdapterHelper;
 import com.crazysunj.crazydaily.ui.browser.BrowserActivity;
 import com.crazysunj.crazydaily.ui.contact.ContactActivity;
 import com.crazysunj.crazydaily.ui.me.MeActivity;
-import com.crazysunj.crazydaily.ui.note.NoteEditActivity;
+import com.crazysunj.crazydaily.ui.note.NoteActivity;
 import com.crazysunj.crazydaily.ui.photo.PhotoActivity;
 import com.crazysunj.crazydaily.ui.scan.ScannerActivity;
 import com.crazysunj.crazydaily.util.SnackbarUtil;
@@ -420,7 +420,8 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
             case R.id.navigation_more:
 //                SnackbarUtil.show(this, "更多模块敬请期待!");
 //                PhotoPickerActivity.start(this);
-                NoteEditActivity.start(this);
+//                NoteEditActivity.start(this);
+                NoteActivity.start(this);
                 break;
             default:
                 MeActivity.start(this);

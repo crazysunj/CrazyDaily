@@ -15,10 +15,12 @@
  */
 package com.crazysunj.crazydaily.util;
 
+import android.annotation.SuppressLint;
 import android.text.TextUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -28,15 +30,24 @@ import java.util.TimeZone;
  */
 
 public class DateUtil {
+    public static final String PATTERN_ONE = "yyyy年MM月dd日";
+
     private DateUtil() {
     }
 
+    @SuppressLint("SimpleDateFormat")
+    public static String formatDate(long millis, String pattern) {
+        Date date = new Date(millis);
+        final SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        return formatter.format(date);
+    }
+
+    @SuppressLint("SimpleDateFormat")
     public static String getLocalTime(String time) {
 
         if (TextUtils.isEmpty(time)) {
             return "";
         }
-
         SimpleDateFormat utc = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         SimpleDateFormat local = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         utc.setTimeZone(TimeZone.getTimeZone("UTC"));

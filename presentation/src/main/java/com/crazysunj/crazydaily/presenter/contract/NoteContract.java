@@ -16,7 +16,7 @@ public interface NoteContract {
         /**
          * 展示笔记
          */
-        void showNote(List<NoteEntity> noteEntity);
+        void showNote(List<NoteEntity> notes);
 
         void deleteSuccess();
     }

@@ -12,18 +12,18 @@ import io.reactivex.Flowable;
  * created on: 2018/10/3 下午6:01
  * description:
  */
-public class NoteCancelNoteUseCase extends UseCase<Boolean, NoteCancelNoteUseCase.Params> {
+public class NoteDeleteNoteUseCase extends UseCase<Boolean, NoteDeleteNoteUseCase.Params> {
 
     private final NoteRepository mNoteRepository;
 
     @Inject
-    public NoteCancelNoteUseCase(NoteRepository noteRepository) {
+    public NoteDeleteNoteUseCase(NoteRepository noteRepository) {
         mNoteRepository = noteRepository;
     }
 
     @Override
     protected Flowable<Boolean> buildUseCaseObservable(Params params) {
-        return mNoteRepository.cancelNote(params.id);
+        return mNoteRepository.deleteNote(params.id);
     }
 
     public static final class Params {

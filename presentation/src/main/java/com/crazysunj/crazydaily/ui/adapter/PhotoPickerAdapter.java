@@ -14,6 +14,8 @@ import com.crazysunj.domain.entity.photo.MediaEntity;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * author: sunjian
  * created on: 2018/9/21 下午1:51
@@ -24,6 +26,7 @@ public class PhotoPickerAdapter extends BaseHelperAdapter<MediaEntity, BaseViewH
     private OnItemClickListener mOnItemClickListener;
     private OnItemSelectClickListener mOnItemSelectClickListener;
 
+    @Inject
     public PhotoPickerAdapter() {
         super(new PhotoPickerAdapterHelper());
     }

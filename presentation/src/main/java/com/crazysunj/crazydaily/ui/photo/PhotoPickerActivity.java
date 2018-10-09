@@ -27,6 +27,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 
 /**
@@ -54,7 +56,8 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
     RecyclerView mPickerList;
     @BindView(R.id.photo_picker_select)
     AppCompatTextView mSelect;
-    private PhotoPickerAdapter mAdapter;
+    @Inject
+    PhotoPickerAdapter mAdapter;
     private int mImageOffset = 0;
     private int mVideoOffset = 0;
     private int selectCount = 0;
@@ -86,7 +89,6 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
         mComplete.setEnabled(false);
         mPickerList.setLayoutManager(new GridLayoutManager(this, 4));
         mPickerList.getItemAnimator().setChangeDuration(0);
-        mAdapter = new PhotoPickerAdapter();
         mPickerList.setAdapter(mAdapter);
     }
 

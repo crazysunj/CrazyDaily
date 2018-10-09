@@ -30,14 +30,14 @@ public class NoteDataRepository implements NoteRepository {
     }
 
     @Override
-    public Flowable<Boolean> cancelNote(Long id) {
+    public Flowable<Boolean> deleteNote(Long id) {
         return Flowable.just(id)
                 .observeOn(Schedulers.io())
-                .map(this::cancelNoteByDB)
+                .map(this::deleteNoteByDB)
                 .compose(RxTransformerUtil.normalTransformer());
     }
 
-    private boolean cancelNoteByDB(Long id) {
+    private boolean deleteNoteByDB(Long id) {
         mNoteDao.deleteByKey(id);
         return true;
     }
@@ -74,6 +74,15 @@ public class NoteDataRepository implements NoteRepository {
 
     @Override
     public Flowable<List<NoteEntity>> getNoteList() {
-        return null;
+        return Flowable.just(NoteEntity.FLAG_SUBMIT)
+                .observeOn(Schedulers.io())
+                .flatMap(this::getNoteListByDB)
+                .compose(RxTransformerUtil.normalTransformer());
+    }
+
+    @Nullable
+    private Flowable<List<NoteEntity>> getNoteListByDB(Integer flag) {
+        List<NoteEntity> notes = mNoteDao.queryBuilder().where(NoteEntityDao.Properties.Flag.eq(flag)).orderDesc(NoteEntityDao.Properties.Id).list();
+        return Flowable.just(notes);
     }
 }
