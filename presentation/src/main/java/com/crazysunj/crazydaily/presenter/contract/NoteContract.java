@@ -18,7 +18,7 @@ public interface NoteContract {
          */
         void showNote(List<NoteEntity> notes);
 
-        void deleteSuccess();
+        void deleteSuccess(Long id);
     }
 
     interface Presenter extends IPresenter<View> {

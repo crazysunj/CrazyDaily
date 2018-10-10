@@ -407,9 +407,12 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
             case R.id.navigation_contact:
                 ContactActivity.start(this);
                 break;
-            case R.id.navigation_live:
-                SnackbarUtil.show(this, "直播模块敬请期待!");
+            case R.id.navigation_note:
+                NoteActivity.start(this);
                 break;
+//            case R.id.navigation_live:
+//                SnackbarUtil.show(this, "直播模块敬请期待!");
+//                break;
             case R.id.navigation_music:
 //                WeexActivity.start(HomeActivity.this, WeexConstant.PAGE_NAME_ABOUT_ME, WeexConstant.PATH_ABOUT_ME);
                 SnackbarUtil.show(this, "音乐模块敬请期待!");
@@ -418,10 +421,9 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
                 MeActivity.start(this);
                 break;
             case R.id.navigation_more:
-//                SnackbarUtil.show(this, "更多模块敬请期待!");
+                SnackbarUtil.show(this, "更多模块敬请期待!");
 //                PhotoPickerActivity.start(this);
 //                NoteEditActivity.start(this);
-                NoteActivity.start(this);
                 break;
             default:
                 MeActivity.start(this);

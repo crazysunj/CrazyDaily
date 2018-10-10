@@ -16,7 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -57,7 +56,8 @@ import butterknife.BindView;
 public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements NoteEditContract.View {
 
     public static final int REQUEST_CODE = 3;
-    public static final int RESULT_CODE = 3;
+    public static final int RESULT_CREATE_CODE = 3;
+    public static final int RESULT_EDIT_CODE = 4;
 
     @BindView(R.id.note_edit_cancel)
     TextView mCancel;
@@ -85,9 +85,15 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
     private ObjectAnimator mHideDragDeleteAnim;
     private NoteEditAdapter mAdapter;
     private Long mSaveId = null;
+    private NoteEntity mEditNote;
 
     public static void start(Activity activity) {
+        start(activity, null);
+    }
+
+    public static void start(Activity activity, NoteEntity note) {
         Intent intent = new Intent(activity, NoteEditActivity.class);
+        intent.putExtra(ActivityConstant.DATA, note);
         activity.startActivityForResult(intent, REQUEST_CODE);
     }
 
@@ -111,7 +117,13 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
 
     @Override
     protected void initData() {
-        mPresenter.getNote();
+        mEditNote = getIntent().getParcelableExtra(ActivityConstant.DATA);
+        if (mEditNote == null) {
+            mPresenter.getNote();
+        } else {
+            showNote(mEditNote);
+            mSubmitBtn.setEnabled(true);
+        }
     }
 
     @Override
@@ -165,7 +177,7 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
     }
 
     private void showSaveDialog() {
-        if (!mSubmitBtn.isEnabled()) {
+        if (!mSubmitBtn.isEnabled() || mEditNote != null) {
             finish();
             return;
         }
@@ -193,6 +205,9 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
         mAdapter.removeImage(position);
         if (mAdapter.isMaxRemoveImageSize(PhotoPickerActivity.MAX_SELECT_NUMBER - 1)) {
             mAdapter.addPhotoAddItem();
+        }
+        if (mAdapter.isMinImageSize()) {
+            mSubmitBtn.setEnabled(false);
         }
     }
 
@@ -304,9 +319,7 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
     public void showNote(NoteEntity noteEntity) {
         List<String> images = noteEntity.getImages();
         appendImages(images);
-        String text = noteEntity.getText();
-        Log.d("NoteEditActivity", "text:" + text);
-        mEdit.setText("456\n789");
+        mEdit.setText(noteEntity.getText());
         mImageDownload.setChecked(noteEntity.getIsCanDownload());
         mSaveId = noteEntity.getId();
     }
@@ -324,10 +337,15 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
 
     @Override
     public void submitSuccess(NoteEntity noteEntity) {
-        Toast.makeText(getApplicationContext(), "发布成功", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent();
         intent.putExtra(ActivityConstant.DATA, noteEntity);
-        setResult(RESULT_CODE, intent);
+        if (mEditNote == null) {
+            Toast.makeText(getApplicationContext(), "发布成功", Toast.LENGTH_SHORT).show();
+            setResult(RESULT_CREATE_CODE, intent);
+        } else {
+            Toast.makeText(getApplicationContext(), "修改成功", Toast.LENGTH_SHORT).show();
+            setResult(RESULT_EDIT_CODE, intent);
+        }
         finish();
     }
 

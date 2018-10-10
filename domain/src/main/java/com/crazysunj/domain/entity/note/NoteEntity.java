@@ -138,6 +138,22 @@ public class NoteEntity implements Parcelable {
     }
 
     @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof NoteEntity)) {
+            return false;
+        }
+        return this == obj || id.equals(((NoteEntity) obj).getId());
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }

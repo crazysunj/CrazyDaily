@@ -72,19 +72,17 @@ public class NoteActivity extends BaseActivity<NotePresenter> implements NoteCon
             mNoteEditDialog.setOnItemClickListener(new NoteEditDialog.OnItemClickListener() {
                 @Override
                 public void onEdit() {
-                    Toast.makeText(NoteActivity.this, "编辑", Toast.LENGTH_SHORT).show();
+                    NoteEditActivity.start(NoteActivity.this, item);
                     mNoteEditDialog.dismiss();
                 }
 
                 @Override
                 public void onDelete() {
-                    Toast.makeText(NoteActivity.this, "删除", Toast.LENGTH_SHORT).show();
-                    mNoteEditDialog.dismiss();
+                    mPresenter.deleteNote(item.getId());
                 }
 
                 @Override
                 public void onCancel() {
-                    Toast.makeText(NoteActivity.this, "取消", Toast.LENGTH_SHORT).show();
                     mNoteEditDialog.dismiss();
                 }
             });
@@ -103,17 +101,28 @@ public class NoteActivity extends BaseActivity<NotePresenter> implements NoteCon
     }
 
     @Override
-    public void deleteSuccess() {
-
+    public void deleteSuccess(Long id) {
+        Toast.makeText(this, "删除成功", Toast.LENGTH_SHORT).show();
+        mAdapter.removeNote(id);
+        mNoteEditDialog.dismiss();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (NoteEditActivity.REQUEST_CODE == requestCode && NoteEditActivity.RESULT_CODE == resultCode && data != null) {
+        if (NoteEditActivity.REQUEST_CODE == requestCode && NoteEditActivity.RESULT_CREATE_CODE == resultCode && data != null) {
             NoteEntity noteEntity = data.getParcelableExtra(ActivityConstant.DATA);
             if (noteEntity != null) {
                 mAdapter.appendNote(noteEntity);
+                RecyclerView.LayoutManager layoutManager = mNoteList.getLayoutManager();
+                if (layoutManager != null) {
+                    layoutManager.scrollToPosition(0);
+                }
+            }
+        } else if (NoteEditActivity.REQUEST_CODE == requestCode && NoteEditActivity.RESULT_EDIT_CODE == resultCode && data != null) {
+            NoteEntity noteEntity = data.getParcelableExtra(ActivityConstant.DATA);
+            if (noteEntity != null) {
+                mAdapter.changeNote(noteEntity);
             }
         }
     }

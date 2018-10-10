@@ -35,7 +35,7 @@ public class NotePresenter extends BasePresenter<NoteContract.View> implements N
             @Override
             public void onNext(Boolean aBoolean) {
                 if (aBoolean) {
-                    mView.deleteSuccess();
+                    mView.deleteSuccess(id);
                 }
             }
         });

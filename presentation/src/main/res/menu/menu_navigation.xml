@@ -6,8 +6,8 @@
         android:title="@string/text_conatct" />
 
     <item
-        android:id="@+id/navigation_live"
-        android:icon="@mipmap/ic_live"
+        android:id="@+id/navigation_note"
+        android:icon="@mipmap/ic_edit"
         android:title="@string/text_live" />
 
     <item

@@ -1,17 +1,14 @@
 package com.crazysunj.crazydaily.ui.adapter;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PagerSnapHelper;
+import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.crazysunj.cardslideview.CardHandler;
-import com.crazysunj.cardslideview.CardViewPager;
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseAdapter;
 import com.crazysunj.crazydaily.base.BaseViewHolder;
@@ -45,7 +42,7 @@ public class NoteAdapter extends BaseAdapter<NoteEntity, BaseViewHolder> {
     protected void convert(BaseViewHolder holder, NoteEntity item) {
         TextView date = holder.getTextView(R.id.item_note_date);
         ImageView menu = holder.getImageView(R.id.item_note_menu);
-        CardViewPager images = holder.getView(R.id.item_note_images, CardViewPager.class);
+        RecyclerView images = holder.getView(R.id.item_note_images, RecyclerView.class);
         TextView indicator = holder.getTextView(R.id.item_note_images_indicator);
         TextView content = holder.getTextView(R.id.item_note_content);
         GradientDrawable drawable = new GradientDrawable();
@@ -54,30 +51,45 @@ public class NoteAdapter extends BaseAdapter<NoteEntity, BaseViewHolder> {
         indicator.setBackground(drawable);
         date.setText(DateUtil.formatDate(item.getId(), DateUtil.PATTERN_ONE));
         menu.setColorFilter(Color.parseColor("#333333"));
-        images.bind(((FragmentActivity) mContext).getSupportFragmentManager(), new NoteHandler(), item.getImages());
         content.setText(item.getText());
-        images.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
+        images.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+        images.setAdapter(new ImageAdapter(item.getImages()));
+        pagerSnapHelper.attachToRecyclerView(images);
+        images.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onPageScrolled(int i, float v, int i1) {
-
-            }
-
-            @Override
-            public void onPageSelected(int i) {
-                holder.getTextView(R.id.item_note_images_indicator)
-                        .setText(String.format(Locale.getDefault(), "%d/%d", i + 1, mData.get(holder.getLayoutPosition()).getImages().size()));
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                //noinspection ConstantConditions
+                final int i = layoutManager.getPosition(pagerSnapHelper.findSnapView(layoutManager));
+                scrollImage(i, holder);
             }
         });
+        scrollImage(0, holder);
         menu.setOnClickListener(v -> {
             if (mOnMenuClickListener != null) {
                 mOnMenuClickListener.onClick(mData.get(holder.getLayoutPosition()));
             }
         });
+    }
+
+    private void scrollImage(int i, BaseViewHolder holder) {
+        final int position = holder.getAdapterPosition();
+        holder.getTextView(R.id.item_note_images_indicator)
+                .setText(String.format(Locale.getDefault(), "%d/%d", i + 1, mData.get(position).getImages().size()));
+    }
+
+    private static class ImageAdapter extends BaseAdapter<String, BaseViewHolder> {
+
+        private ImageAdapter(List<String> data) {
+            super(data, R.layout.layout_image);
+        }
+
+        @Override
+        protected void convert(BaseViewHolder holder, String item) {
+            ImageView imageView = holder.getImageView(R.id.view_image);
+            ImageLoader.load(mContext, item, imageView);
+        }
     }
 
     public void appendNote(@NotNull List<NoteEntity> notes) {
@@ -91,23 +103,34 @@ public class NoteAdapter extends BaseAdapter<NoteEntity, BaseViewHolder> {
         notifyItemInserted(0);
     }
 
+    public void changeNote(@NotNull NoteEntity note) {
+        final int postion = mData.indexOf(note);
+        mData.set(postion, note);
+        notifyItemChanged(postion);
+    }
+
+    public void removeNote(@NotNull Long id) {
+        final int postion = getRemovePosition(id);
+        mData.remove(postion);
+        notifyItemRemoved(postion);
+        notifyItemRangeChanged(postion, mData.size() - postion);
+    }
+
+    private int getRemovePosition(Long id) {
+        final int size = mData.size();
+        for (int i = 0; i < size; i++) {
+            if (mData.get(i).getId().equals(id)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public void setOnMenuClickListener(OnMenuClickListener listener) {
         mOnMenuClickListener = listener;
     }
 
     public interface OnMenuClickListener {
         void onClick(NoteEntity item);
-    }
-
-    private static class NoteHandler implements CardHandler<String> {
-
-        @Override
-        public View onBind(Context context, String data, int position, int mode) {
-            ImageView imageView = new ImageView(context);
-            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            imageView.setLayoutParams(params);
-            ImageLoader.load(context, data, imageView);
-            return imageView;
-        }
     }
 }

@@ -80,6 +80,11 @@ public class NoteEditAdapter extends BaseAdapter<String, BaseViewHolder> {
         notifyItemChanged(position);
     }
 
+    public boolean isMinImageSize() {
+        final int size = mData.size();
+        return size == 1 && mData.get(0) == null;
+    }
+
     public boolean isMaxAddImageSize(int maxLength) {
         final int size = mData.size();
         return maxLength == size;

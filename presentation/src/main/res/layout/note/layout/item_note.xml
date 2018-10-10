@@ -34,15 +34,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.crazysunj.cardslideview.CardViewPager
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/item_note_images"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:card_loop="true"
-            app:card_margin="0dp"
-            app:card_max_offset="0dp"
-            app:card_padding="0dp"
-            app:card_scale_rate="0" />
+            android:layout_height="match_parent" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/item_note_images_indicator"
