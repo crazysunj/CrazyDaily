@@ -5,8 +5,8 @@ ext {
 //            buildToolsVersion: '27.0.3',
             minSdkVersion    : 21,
             targetSdkVersion : 28,
-            versionCode      : 10,
-            versionName      : "1.7.2"
+            versionCode      : 11,
+            versionName      : "1.8.0"
     ]
 
     dependVersion = [
@@ -48,6 +48,10 @@ ext {
             zxing                 : "3.6.0",
             pgyer                 : "3.0.0",
             itemDecoration        : "0.3.0",
+            roundedimageview      : "2.3.0",
+            longImage             : "3.10.0",
+            switchButton          : "0.0.3@aar",
+            constraintLayout      : "2.0.0-alpha2",
     ]
 
     dataDependencies = [
@@ -99,6 +103,10 @@ ext {
             zxing               : "com.journeyapps:zxing-android-embedded:${dependVersion.zxing}",
             pgyer               : "com.pgyersdk:sdk:${dependVersion.pgyer}",
             itemDecoration      : "com.crazysunj:itemdecoration:${dependVersion.itemDecoration}",
+            roundedimageview    : "com.makeramen:roundedimageview:${dependVersion.roundedimageview}",
+            longImage           : "com.davemorrissey.labs:subsampling-scale-image-view:${dependVersion.longImage}",
+            switchButton        : "com.github.zcweng:switch-button:${dependVersion.switchButton}",
+            constraintLayout    : "com.android.support.constraint:constraint-layout:${dependVersion.constraintLayout}",
     ]
 
     domainDependencies = [

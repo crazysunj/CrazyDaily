@@ -73,6 +73,8 @@ dependencies {
     def libs = rootProject.ext.dependencies
     //依赖库配置
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation libs.constraintLayout
+    //约束布局
     implementation libs.appcompatv7
     implementation libs.recyclerviewv7
     implementation libs.cardviewv7
@@ -110,11 +112,11 @@ dependencies {
     //蒲公英
     implementation libs.itemDecoration
     //recyclerviewItemDecoration
-    implementation 'com.makeramen:roundedimageview:2.3.0'
+    implementation libs.roundedimageview
     // 圆角
-    implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
+    implementation libs.longImage
     // 长图
-    implementation 'com.github.zcweng:switch-button:0.0.3@aar'
+    implementation libs.switchButton
     // 仿ios开关
     debugImplementation libs.debugLeakcanary
     releaseImplementation libs.releaseLeakcanary
@@ -138,5 +140,4 @@ dependencies {
     implementation(libs.sonic) {
         exclude group: "com.android.support"
     }
-    implementation 'com.android.support.constraint:constraint-layout:2.0.0-alpha2'
 }
