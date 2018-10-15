@@ -157,7 +157,6 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     public void onCreate(@Nullable Bundle savedInstanceState) {
         handleTranslucent();
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
