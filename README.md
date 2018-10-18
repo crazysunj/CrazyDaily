@@ -20,6 +20,10 @@
 
 ![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/crazydaily_photo.gif)
 
+### 笔记
+
+![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/gif_note.gif)
+
 ## 简介
 * 知乎日报
 * 干货集中营
