@@ -214,7 +214,8 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     protected void initData() {
         mPresenter.getZhihuNewsList();
         mPresenter.getGankioList(GankioEntity.ResultsEntity.PARAMS_ANDROID);
-        mPresenter.getWeather("CHZJ000000");
+        // 天气功能api有点问题，暂时先停止
+//        mPresenter.getWeather("CHZJ000000");
         mPresenter.getGaoxiaoList(gaoxiaoIndex);
         mPresenter.getMeinvList();
 //        mPresenter.getNeihanList(mNeihanManager.getAmLocTime(), mNeihanManager.getMinTime(), mNeihanManager.getSceenWidth(),
