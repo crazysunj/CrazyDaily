@@ -106,6 +106,7 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
     @Override
     protected void initView() {
         mDragDelete.setTranslationY(getResources().getDimensionPixelSize(R.dimen.space_50));
+        mDragDeleteIcon.setColorFilter(Color.WHITE);
         List<String> images = new ArrayList<>();
         images.add(null);
         mImages.setLayoutManager(new GridLayoutManager(this, 3));

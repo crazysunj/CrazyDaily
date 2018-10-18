@@ -370,7 +370,7 @@ public class ItemTouchHelperExtension extends RecyclerView.ItemDecoration
                     // fall through
                 case MotionEvent.ACTION_UP:
                     handleTouch(event);
-                    if (mClick) {
+                    if (mActionState != ACTION_STATE_DRAG) {
                         doChildClickEvent(event.getRawX(), event.getRawY());
                     }
                     mClick = false;

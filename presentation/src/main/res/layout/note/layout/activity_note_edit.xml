@@ -78,7 +78,7 @@
                 android:paddingEnd="@dimen/space_15"
                 android:paddingStart="@dimen/space_15"
                 android:paddingTop="@dimen/space_20"
-                app:note_hint_text="发表点什么吧，写得越好就越有机会被推送给更多用户，还能解锁分享技能哦..."
+                app:note_hint_text="每天写一点点，就多积累一点点"
                 app:note_text_size="@dimen/text_16" />
 
             <View
@@ -115,24 +115,30 @@
         </LinearLayout>
     </ScrollView>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/note_edit_drag_delete"
         android:layout_width="match_parent"
         android:layout_height="@dimen/space_50"
         android:layout_alignParentBottom="true"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/note_edit_drag_delete_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        android:paddingBottom="@dimen/space_5">
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/note_edit_drag_delete_text"
             style="@style/text_12_white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             tools:text="拖拽到此处删除" />
-    </LinearLayout>
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/note_edit_drag_delete_icon"
+            android:layout_width="@dimen/space_16"
+            android:layout_height="@dimen/space_20"
+            android:layout_above="@id/note_edit_drag_delete_text"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/space_6"
+            android:scaleType="fitEnd"
+            android:src="@mipmap/ic_delete_unopen" />
+    </RelativeLayout>
 </RelativeLayout>

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Bundle;
@@ -69,6 +70,11 @@ public class NotePreviewActivity extends BaseActivity {
             //noinspection ResultOfMethodCallIgnored
             mSaveFile.delete();
         }
+    }
+
+    @Override
+    protected void initView() {
+        mDelete.setColorFilter(Color.WHITE);
     }
 
     @Override
