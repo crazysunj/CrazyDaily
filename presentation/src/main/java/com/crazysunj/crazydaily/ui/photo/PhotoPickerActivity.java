@@ -1,5 +1,6 @@
 package com.crazysunj.crazydaily.ui.photo;
 
+import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
@@ -15,6 +16,8 @@ import android.widget.Toast;
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
 import com.crazysunj.crazydaily.constant.ActivityConstant;
+import com.crazysunj.crazydaily.module.permission.PermissionHelper;
+import com.crazysunj.crazydaily.module.permission.PermissionStorage;
 import com.crazysunj.crazydaily.presenter.PhotoPickerPresenter;
 import com.crazysunj.crazydaily.presenter.contract.PhotoPickerContract;
 import com.crazysunj.crazydaily.ui.adapter.PhotoPickerAdapter;
@@ -30,13 +33,20 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 
 /**
  * author: sunjian
  * created on: 2018/9/17 下午2:26
  * description: 选择相册视频
  */
-public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> implements PhotoPickerContract.View {
+@RuntimePermissions
+public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> implements PhotoPickerContract.View, PermissionStorage {
 
     public static final int REQUEST_CODE = 1;
     public static final int RESULT_CODE = 1;
@@ -88,6 +98,7 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
         showBack(mToolbar);
         mComplete.setEnabled(false);
         mPickerList.setLayoutManager(new GridLayoutManager(this, 4));
+        //noinspection ConstantConditions
         mPickerList.getItemAnimator().setChangeDuration(0);
         mPickerList.setAdapter(mAdapter);
     }
@@ -96,7 +107,7 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
     protected void initData() {
         mComplete.setText("完成");
         diffCount = getIntent().getIntExtra(ActivityConstant.SELECT_COUNT, 0);
-        mPresenter.getBucketList();
+        PhotoPickerActivityPermissionsDispatcher.pickerMediaWithPermissionCheck(this);
     }
 
     @Override
@@ -116,6 +127,7 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                //noinspection ConstantConditions
                 int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
                 handleTimeInfo(firstVisibleItemPosition);
                 final int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
@@ -283,5 +295,36 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
     @Override
     protected int getContentResId() {
         return R.layout.activity_photo_picker;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        PhotoPickerActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
+    @NeedsPermission({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void pickerMedia() {
+        mPresenter.getBucketList();
+    }
+
+    @OnShowRationale({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    @Override
+    public void showRationaleForStorage(PermissionRequest request) {
+        PermissionHelper.storageShowRationale(this, request);
+    }
+
+    @OnPermissionDenied({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    @Override
+    public void showDeniedForStorage() {
+        PermissionHelper.storagePermissionDenied(this, PermissionHelper.TYPE_TOAST);
+        finish();
+    }
+
+    @OnNeverAskAgain({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    @Override
+    public void showNeverAskForStorage() {
+        PermissionHelper.storageNeverAskAgain(this, PermissionHelper.TYPE_TOAST);
+        finish();
     }
 }

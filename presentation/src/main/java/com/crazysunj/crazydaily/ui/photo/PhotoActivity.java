@@ -358,7 +358,7 @@ public class PhotoActivity extends BaseActivity implements PermissionStorage {
                 startCrop(Uri.parse(mUrl));
                 break;
             case R.id.menu_photo_save:
-                PhotoActivityPermissionsDispatcher.saveImgageWithPermissionCheck(this);
+                PhotoActivityPermissionsDispatcher.saveImageWithPermissionCheck(this);
                 break;
             default:
                 break;
@@ -373,7 +373,7 @@ public class PhotoActivity extends BaseActivity implements PermissionStorage {
     }
 
     @NeedsPermission({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
-    void saveImgage() {
+    void saveImage() {
         if (TextUtils.isEmpty(mUrl)) {
             SnackbarUtil.show(this, "好可怜，保存失败！");
             return;

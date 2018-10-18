@@ -18,6 +18,7 @@ package com.crazysunj.crazydaily.module.permission;
 import android.app.Activity;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
+import android.widget.Toast;
 
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.util.SnackbarUtil;
@@ -31,6 +32,9 @@ import permissions.dispatcher.PermissionRequest;
  */
 public class PermissionHelper {
 
+    public static final int TYPE_SNACKBAR = 0;
+    public static final int TYPE_TOAST = 1;
+
     private PermissionHelper() {
     }
 
@@ -39,11 +43,19 @@ public class PermissionHelper {
     }
 
     public static void storagePermissionDenied(Activity activity) {
-        permissionDenied(activity, R.string.permission_storage_denied);
+        permissionDenied(activity, R.string.permission_storage_denied, TYPE_SNACKBAR);
+    }
+
+    public static void storagePermissionDenied(Activity activity, int type) {
+        permissionDenied(activity, R.string.permission_storage_denied, type);
     }
 
     public static void storageNeverAskAgain(Activity activity) {
-        neverAskAgain(activity, R.string.permission_storage_neverask);
+        neverAskAgain(activity, R.string.permission_storage_neverask, TYPE_SNACKBAR);
+    }
+
+    public static void storageNeverAskAgain(Activity activity, int type) {
+        neverAskAgain(activity, R.string.permission_storage_neverask, type);
     }
 
     public static void cameraShowRationale(Activity activity, PermissionRequest request) {
@@ -51,11 +63,19 @@ public class PermissionHelper {
     }
 
     public static void cameraPermissionDenied(Activity activity) {
-        permissionDenied(activity, R.string.permission_camera_denied);
+        permissionDenied(activity, R.string.permission_camera_denied, TYPE_SNACKBAR);
+    }
+
+    public static void cameraPermissionDenied(Activity activity, int type) {
+        permissionDenied(activity, R.string.permission_camera_denied, type);
     }
 
     public static void cameraNeverAskAgain(Activity activity) {
-        neverAskAgain(activity, R.string.permission_camera_neverask);
+        neverAskAgain(activity, R.string.permission_camera_neverask, TYPE_SNACKBAR);
+    }
+
+    public static void cameraNeverAskAgain(Activity activity, int type) {
+        neverAskAgain(activity, R.string.permission_camera_neverask, type);
     }
 
     public static void showRationale(Activity activity, PermissionRequest request, @StringRes int message) {
@@ -66,11 +86,19 @@ public class PermissionHelper {
                 .show();
     }
 
-    public static void permissionDenied(Activity activity, @StringRes int message) {
-        SnackbarUtil.show(activity, message);
+    public static void permissionDenied(Activity activity, @StringRes int message, int type) {
+        if (type == TYPE_SNACKBAR) {
+            SnackbarUtil.show(activity, message);
+        } else if (type == TYPE_TOAST) {
+            Toast.makeText(activity.getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        }
     }
 
-    public static void neverAskAgain(Activity activity, @StringRes int message) {
-        SnackbarUtil.show(activity, message);
+    public static void neverAskAgain(Activity activity, @StringRes int message, int type) {
+        if (type == TYPE_SNACKBAR) {
+            SnackbarUtil.show(activity, message);
+        } else if (type == TYPE_TOAST) {
+            Toast.makeText(activity.getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        }
     }
 }
