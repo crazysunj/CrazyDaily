@@ -16,6 +16,7 @@ import com.crazysunj.crazydaily.presenter.NotePresenter;
 import com.crazysunj.crazydaily.presenter.contract.NoteContract;
 import com.crazysunj.crazydaily.ui.adapter.NoteAdapter;
 import com.crazysunj.crazydaily.ui.note.dialog.NoteEditDialog;
+import com.crazysunj.crazydaily.view.dialog.CrazyDailyAlertDialog;
 import com.crazysunj.domain.entity.note.NoteEntity;
 
 import java.util.List;
@@ -42,6 +43,7 @@ public class NoteActivity extends BaseActivity<NotePresenter> implements NoteCon
     @BindView(R.id.note_toolbar)
     Toolbar mToolbar;
     private NoteEditDialog mNoteEditDialog;
+    private CrazyDailyAlertDialog mDeleteDialog;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, NoteActivity.class);
@@ -78,7 +80,7 @@ public class NoteActivity extends BaseActivity<NotePresenter> implements NoteCon
 
                 @Override
                 public void onDelete() {
-                    mPresenter.deleteNote(item.getId());
+                    showDeleteDialog(item.getId());
                 }
 
                 @Override
@@ -104,7 +106,12 @@ public class NoteActivity extends BaseActivity<NotePresenter> implements NoteCon
     public void deleteSuccess(Long id) {
         Toast.makeText(this, "删除成功", Toast.LENGTH_SHORT).show();
         mAdapter.removeNote(id);
-        mNoteEditDialog.dismiss();
+        if (mDeleteDialog != null) {
+            mDeleteDialog.dismiss();
+        }
+        if (mNoteEditDialog != null) {
+            mNoteEditDialog.dismiss();
+        }
     }
 
     @Override
@@ -130,5 +137,18 @@ public class NoteActivity extends BaseActivity<NotePresenter> implements NoteCon
     @Override
     protected void initInject() {
         getActivityComponent().inject(this);
+    }
+
+    private void showDeleteDialog(Long id) {
+        if (mDeleteDialog == null) {
+            mDeleteDialog = new CrazyDailyAlertDialog.Builder()
+                    .setMessgae("确认删除这条笔记么？")
+                    .setNegative("确定")
+                    .setPositive("取消")
+                    .setOnPositiveClickListener(v -> mDeleteDialog.dismiss())
+                    .build();
+        }
+        mDeleteDialog.setOnNegativeClickListener(v -> mPresenter.deleteNote(id));
+        mDeleteDialog.show(this);
     }
 }

@@ -55,6 +55,8 @@ public class NoteAdapter extends BaseAdapter<NoteEntity, BaseViewHolder> {
         PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
         images.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
         images.setAdapter(new ImageAdapter(item.getImages()));
+        // 重置
+        images.setOnFlingListener(null);
         pagerSnapHelper.attachToRecyclerView(images);
         images.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
