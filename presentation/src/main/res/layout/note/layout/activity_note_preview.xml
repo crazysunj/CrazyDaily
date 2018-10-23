@@ -3,11 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-        android:id="@+id/note_preview_image"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/note_preview_image_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:transitionName="@string/transition_note_preview_image" />
+        android:layout_height="match_parent" />
 
     <RelativeLayout
         android:id="@+id/note_preview_bar"
@@ -25,6 +24,13 @@
             android:background="@drawable/shape_circle_black_3"
             android:scaleType="centerInside"
             android:src="@mipmap/ic_back" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/note_preview_title"
+            style="@style/text_20_white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/note_preview_delete"

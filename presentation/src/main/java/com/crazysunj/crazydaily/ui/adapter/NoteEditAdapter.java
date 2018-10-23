@@ -52,7 +52,12 @@ public class NoteEditAdapter extends BaseAdapter<String, BaseViewHolder> {
             holder.itemView.setOnClickListener(v -> {
                 if (mOnItemClickListener != null) {
                     final int layoutPosition = holder.getLayoutPosition();
-                    mOnItemClickListener.onItemClick(layoutPosition, mData.get(layoutPosition), holder.getImageView(R.id.item_note_edit_image));
+                    ArrayList<String> data = new ArrayList<>();
+                    final int size = mData.size() - 1;
+                    for (int i = 0; i < size; i++) {
+                        data.add(mData.get(i));
+                    }
+                    mOnItemClickListener.onItemClick(layoutPosition, data, holder.getImageView(R.id.item_note_edit_image));
                 }
             });
         }
@@ -131,7 +136,7 @@ public class NoteEditAdapter extends BaseAdapter<String, BaseViewHolder> {
     }
 
     public interface OnItemClickListener {
-        void onItemClick(int position, String data, View view);
+        void onItemClick(int position, ArrayList<String> data, View view);
     }
 
     public interface OnItemSelectListener {
