@@ -100,6 +100,16 @@ public class NoteEditAdapter extends BaseAdapter<String, BaseViewHolder> {
         return maxLength == size && mData.get(size - 1) != null;
     }
 
+    public void resetData(@NonNull List<String> images, int maxLength) {
+        int resetSize = images.size();
+        mData.clear();
+        mData.addAll(images);
+        if (resetSize < maxLength) {
+            mData.add(null);
+        }
+        notifyDataSetChanged();
+    }
+
     public void appendImage(List<String> images) {
         mData.addAll(0, images);
         final int size = images.size();

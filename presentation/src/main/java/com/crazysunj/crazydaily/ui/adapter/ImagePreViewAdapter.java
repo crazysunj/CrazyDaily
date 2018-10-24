@@ -1,15 +1,8 @@
 package com.crazysunj.crazydaily.ui.adapter;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.PointF;
-import android.net.Uri;
-import android.util.DisplayMetrics;
-
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseAdapter;
 import com.crazysunj.crazydaily.base.BaseViewHolder;
-import com.crazysunj.crazydaily.module.image.ImageLoader;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.ImageViewState;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
@@ -23,31 +16,41 @@ import java.util.List;
  * created on: 2018/10/23 下午5:09
  * description:
  */
-public class ImagePreViewAdapter extends BaseAdapter<String, BaseViewHolder> {
+public class ImagePreViewAdapter extends BaseAdapter<ImagePreViewAdapter.ImagePreViewEntity, BaseViewHolder> {
 
-    private List<String> mFilePaths;
+    public static class ImagePreViewEntity {
+        private String original;
+        private String path;
+        private float maxScale;
+        private ImageSource source;
+        private ImageViewState state;
 
-    public ImagePreViewAdapter(List<String> data) {
+        public ImagePreViewEntity(String original, String path, float maxScale, ImageSource source, ImageViewState state) {
+            this.original = original;
+            this.path = path;
+            this.maxScale = maxScale;
+            this.source = source;
+            this.state = state;
+        }
+    }
+
+    public ImagePreViewAdapter(List<ImagePreViewAdapter.ImagePreViewEntity> data) {
         super(data, R.layout.layout_item_image_preview);
-        mFilePaths = new ArrayList<>();
     }
 
     @Override
-    protected void convert(BaseViewHolder holder, String data) {
+    protected void convert(BaseViewHolder holder, ImagePreViewAdapter.ImagePreViewEntity data) {
         SubsamplingScaleImageView imageView = holder.getView(R.id.item_image_preview, SubsamplingScaleImageView.class);
-        ImageLoader.download(mContext, data, file -> {
-            final String path = file.getAbsolutePath();
-            if (!mFilePaths.contains(path)) {
-                mFilePaths.add(path);
-            }
-            float initImageScale = getImageScale(path);
-            imageView.setMaxScale(initImageScale + 3.0f);
-            imageView.setImage(ImageSource.uri(Uri.fromFile(file)), new ImageViewState(initImageScale, new PointF(0, 0), 0));
-        });
+        imageView.setMaxScale(data.maxScale);
+        imageView.setImage(data.source, data.state);
     }
 
-    public List<String> getData() {
-        return mData;
+    public ArrayList<String> getData() {
+        ArrayList<String> data = new ArrayList<>();
+        for (ImagePreViewEntity entity : mData) {
+            data.add(entity.original);
+        }
+        return data;
     }
 
     public void removeImage(int position) {
@@ -55,44 +58,14 @@ public class ImagePreViewAdapter extends BaseAdapter<String, BaseViewHolder> {
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, mData.size() - position);
     }
-    
+
     public void deleteTemFile() {
-        if (mFilePaths != null && !mFilePaths.isEmpty()) {
-            for (String path : mFilePaths) {
-                File file = new File(path);
-                if (file.exists()) {
-                    //noinspection ResultOfMethodCallIgnored
-                    file.delete();
-                }
+        for (ImagePreViewEntity entity : mData) {
+            File file = new File(entity.path);
+            if (file.exists()) {
+                //noinspection ResultOfMethodCallIgnored
+                file.delete();
             }
         }
-    }
-
-    private float getImageScale(String path) {
-        Bitmap bitmap = BitmapFactory.decodeFile(path);
-        DisplayMetrics displayMetrics = mContext.getResources().getDisplayMetrics();
-        int width = displayMetrics.widthPixels;
-        int height = displayMetrics.heightPixels;
-        // 拿到图片的宽和高
-        int dw = bitmap.getWidth();
-        int dh = bitmap.getHeight();
-        float scale = 1.0f;
-        //图片宽度大于屏幕，但高度小于屏幕，则缩小图片至填满屏幕宽
-        if (dw > width && dh <= height) {
-            scale = width * 1.0f / dw;
-        }
-        //图片宽度小于屏幕，但高度大于屏幕，则放大图片至填满屏幕宽
-        if (dw <= width && dh > height) {
-            scale = width * 1.0f / dw;
-        }
-        //图片高度和宽度都小于屏幕，则放大图片至填满屏幕宽
-        if (dw < width && dh < height) {
-            scale = width * 1.0f / dw;
-        }
-        //图片高度和宽度都大于屏幕，则缩小图片至填满屏幕宽
-        if (dw > width && dh > height) {
-            scale = width * 1.0f / dw;
-        }
-        return scale;
     }
 }

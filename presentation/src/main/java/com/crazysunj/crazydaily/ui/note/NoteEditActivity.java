@@ -219,7 +219,15 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
             String[] images = data.getStringArrayExtra(ActivityConstant.IMAGES);
             appendImages(Arrays.asList(images));
         } else if (NotePreviewActivity.REQUEST_CODE == requestCode && NotePreviewActivity.RESULT_CODE == resultCode && data != null) {
-            removeImage(data.getIntExtra(ActivityConstant.POSITION, 0));
+            List<String> images = data.getStringArrayListExtra(ActivityConstant.DATA);
+            handleRemoveResult(images);
+        }
+    }
+
+    private void handleRemoveResult(List<String> images) {
+        mAdapter.resetData(images, PhotoPickerActivity.MAX_SELECT_NUMBER);
+        if (mAdapter.isMinImageSize()) {
+            mSubmitBtn.setEnabled(false);
         }
     }
 
