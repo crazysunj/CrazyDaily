@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * author: sunjian
  * created on: 2018/9/27 下午4:00
- * description:
+ * description: https://github.com/crazysunj/CrazyDaily
  */
 @Entity(nameInDb = "Note")
 public class NoteEntity implements Parcelable {

@@ -43,7 +43,7 @@ import permissions.dispatcher.RuntimePermissions;
 /**
  * author: sunjian
  * created on: 2018/9/17 下午2:26
- * description: 选择相册视频
+ * description: 选择相册视频 https://github.com/crazysunj/CrazyDaily
  */
 @RuntimePermissions
 public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> implements PhotoPickerContract.View, PermissionStorage {

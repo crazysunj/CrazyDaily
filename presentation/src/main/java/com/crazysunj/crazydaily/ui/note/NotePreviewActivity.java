@@ -38,7 +38,7 @@ import butterknife.BindView;
 /**
  * author: sunjian
  * created on: 2018/10/3 上午11:29
- * description:
+ * description: https://github.com/crazysunj/CrazyDaily
  */
 public class NotePreviewActivity extends BaseActivity {
 

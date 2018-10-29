@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * author: sunjian
  * created on: 2018/9/30 下午2:17
- * description:
+ * description: https://github.com/crazysunj/CrazyDaily
  */
 public class NoteEditAdapter extends BaseAdapter<String, BaseViewHolder> {
 

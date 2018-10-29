@@ -28,7 +28,7 @@ import butterknife.BindView;
 /**
  * author: sunjian
  * created on: 2018/10/8 下午4:25
- * description:
+ * description: https://github.com/crazysunj/CrazyDaily
  */
 public class NoteActivity extends BaseActivity<NotePresenter> implements NoteContract.View {
 

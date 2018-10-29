@@ -27,7 +27,7 @@ import javax.inject.Inject;
 /**
  * author: sunjian
  * created on: 2018/10/8 下午4:37
- * description:
+ * description: https://github.com/crazysunj/CrazyDaily
  */
 public class NoteAdapter extends BaseAdapter<NoteEntity, BaseViewHolder> {
 

@@ -19,7 +19,7 @@ import javax.inject.Inject;
 /**
  * author: sunjian
  * created on: 2018/9/21 下午1:51
- * description:
+ * description: https://github.com/crazysunj/CrazyDaily
  */
 public class PhotoPickerAdapter extends BaseHelperAdapter<MediaEntity, BaseViewHolder, PhotoPickerAdapterHelper> {
 

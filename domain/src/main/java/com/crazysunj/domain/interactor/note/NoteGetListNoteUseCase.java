@@ -13,7 +13,7 @@ import io.reactivex.Flowable;
 /**
  * author: sunjian
  * created on: 2018/10/3 下午6:42
- * description:
+ * description: https://github.com/crazysunj/CrazyDaily
  */
 public class NoteGetListNoteUseCase extends UseCase<List<NoteEntity>, Void> {
     private final NoteRepository mNoteRepository;

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * author: sunjian
  * created on: 2018/9/17 下午2:53
- * description:
+ * description: https://github.com/crazysunj/CrazyDaily
  */
 public class MediaEntity implements Comparable<MediaEntity>, MultiTypeEntity {
     public static class MediaResponseData {

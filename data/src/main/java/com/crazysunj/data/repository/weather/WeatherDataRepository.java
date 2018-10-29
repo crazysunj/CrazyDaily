@@ -18,12 +18,13 @@ package com.crazysunj.data.repository.weather;
 import com.crazysunj.data.api.HttpHelper;
 import com.crazysunj.data.service.WeatherService;
 import com.crazysunj.data.util.RxTransformerUtil;
-import com.crazysunj.domain.entity.weather.WeatherRemoteEntity;
 import com.crazysunj.domain.repository.weather.WeatherRepository;
+import com.google.gson.JsonObject;
 
 import javax.inject.Inject;
 
 import io.reactivex.Flowable;
+import retrofit2.Response;
 
 /**
  * author: sunjian
@@ -41,8 +42,9 @@ public class WeatherDataRepository implements WeatherRepository {
     }
 
     @Override
-    public Flowable<WeatherRemoteEntity> getWeatherList(String city, String language) {
-        return mWeatherService.getWeatherList(city, language)
+    public Flowable<JsonObject> getWeatherList(String key, String location, String language, String unit) {
+        return mWeatherService.getWeatherList(key, location, language, unit)
+                .map(Response::body)
                 .compose(RxTransformerUtil.normalTransformer());
     }
 }

@@ -27,7 +27,7 @@ import butterknife.Unbinder;
 /**
  * author: sunjian
  * created on: 2018/10/4 上午11:11
- * description:
+ * description: https://github.com/crazysunj/CrazyDaily
  */
 public class CrazyDailyAlertDialog extends DialogFragment {
     private static final String TAG = "CrazyDailyAlertDialog";

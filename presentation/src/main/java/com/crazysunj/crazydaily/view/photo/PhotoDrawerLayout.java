@@ -27,7 +27,7 @@ import java.lang.reflect.Field;
 /**
  * author: sunjian
  * created on: 2018/5/28 下午2:10
- * description:https://github.com/crazysunj/CrazyDaily
+ * description: https://github.com/crazysunj/CrazyDaily
  */
 public class PhotoDrawerLayout extends DrawerLayout {
 

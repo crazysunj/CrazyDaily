@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 /**
  * author: sunjian
  * created on: 2018/9/17 下午3:03
- * description:
+ * description: https://github.com/crazysunj/CrazyDaily
  */
 public class BucketEntity implements Comparable<BucketEntity>, Parcelable {
     public static final long DEFAULT_DATE_MODIFIED = -1;

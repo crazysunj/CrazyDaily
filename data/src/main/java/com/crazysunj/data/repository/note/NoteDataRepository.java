@@ -18,7 +18,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * author: sunjian
  * created on: 2018/10/3 下午6:11
- * description:
+ * description: https://github.com/crazysunj/CrazyDaily
  */
 public class NoteDataRepository implements NoteRepository {
 

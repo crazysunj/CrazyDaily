@@ -76,7 +76,7 @@ import permissions.dispatcher.RuntimePermissions;
 /**
  * author: sunjian
  * created on: 2018/4/28 下午1:41
- * description:https://github.com/crazysunj/CrazyDaily
+ * description: https://github.com/crazysunj/CrazyDaily
  */
 @RuntimePermissions
 public class PhotoActivity extends BaseActivity implements PermissionStorage {

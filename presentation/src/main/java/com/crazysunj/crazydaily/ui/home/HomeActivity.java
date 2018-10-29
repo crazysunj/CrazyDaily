@@ -70,13 +70,13 @@ import com.crazysunj.crazydaily.view.banner.BannerCardHandler;
 import com.crazysunj.crazydaily.view.banner.WrapBannerView;
 import com.crazysunj.crazydaily.view.threed.CubeReversalView;
 import com.crazysunj.crazydaily.weex.WeexActivity;
-import com.crazysunj.data.util.JsonUtil;
 import com.crazysunj.data.util.LoggerUtil;
 import com.crazysunj.domain.entity.gankio.GankioEntity;
 import com.crazysunj.domain.entity.gaoxiao.GaoxiaoItemEntity;
 import com.crazysunj.domain.entity.neihan.NeihanItemEntity;
-import com.crazysunj.domain.entity.weather.WeatherRemoteEntity;
+import com.crazysunj.domain.entity.weather.WeatherXinZhiEntity;
 import com.crazysunj.domain.entity.zhihu.ZhihuNewsEntity;
+import com.crazysunj.domain.util.JsonUtil;
 import com.crazysunj.domain.util.NeihanManager;
 import com.crazysunj.domain.util.ThreadManager;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -216,6 +216,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         mPresenter.getGankioList(GankioEntity.ResultsEntity.PARAMS_ANDROID);
         // 天气功能api有点问题，暂时先停止
 //        mPresenter.getWeather("CHZJ000000");
+        mPresenter.getWeather("杭州");
         mPresenter.getGaoxiaoList(gaoxiaoIndex);
         mPresenter.getMeinvList();
 //        mPresenter.getNeihanList(mNeihanManager.getAmLocTime(), mNeihanManager.getMinTime(), mNeihanManager.getSceenWidth(),
@@ -250,9 +251,9 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     }
 
     @Override
-    public void showWeather(List<WeatherRemoteEntity.WeatherEntity> weatherList) {
+    public void showWeather(WeatherXinZhiEntity.FinalEntity weatherEntity) {
         stopRefresh();
-        mAdapter.notifyWeatherList(weatherList);
+        mAdapter.notifyWeatherEntity(weatherEntity);
     }
 
     @Override
@@ -482,7 +483,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
                     bundle.putBoolean(BaseOptionsPickerDialog.CYCLIC_FIRST, true);
                     mWeatherDialog = PhoneOptionsPickerDialog.newInstance(bundle, mCityList);
                     mWeatherDialog.setOnoptionsSelectListener((options1, option2, options3) -> {
-                        final String selectOption = mCityList.get(options1).getTownID();
+                        final String selectOption = mCityList.get(options1).getCityName();
                         if (selectOption.equals(options)) {
                             return;
                         }

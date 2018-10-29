@@ -15,7 +15,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 /**
  * author: sunjian
  * created on: 2018/9/17 下午3:38
- * description:
+ * description: https://github.com/crazysunj/CrazyDaily
  */
 public class PhotoPickerMediaUseCase extends UseCase<MediaEntity.MediaResponseData, PhotoPickerMediaUseCase.Params> {
     private final PhotoPickerRepository mPhotoPickerRepository;

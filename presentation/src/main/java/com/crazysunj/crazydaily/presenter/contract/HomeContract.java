@@ -21,7 +21,7 @@ import com.crazysunj.crazydaily.base.IView;
 import com.crazysunj.domain.entity.gankio.GankioEntity;
 import com.crazysunj.domain.entity.gaoxiao.GaoxiaoItemEntity;
 import com.crazysunj.domain.entity.neihan.NeihanItemEntity;
-import com.crazysunj.domain.entity.weather.WeatherRemoteEntity;
+import com.crazysunj.domain.entity.weather.WeatherXinZhiEntity;
 import com.crazysunj.domain.entity.zhihu.ZhihuNewsEntity;
 
 import java.util.List;
@@ -38,7 +38,7 @@ public interface HomeContract {
 
         void showGankio(List<GankioEntity.ResultsEntity> gankioList);
 
-        void showWeather(List<WeatherRemoteEntity.WeatherEntity> weatherList);
+        void showWeather(WeatherXinZhiEntity.FinalEntity weatherEntity);
 
         void showNeihan(List<NeihanItemEntity> neihanList);
 
@@ -56,7 +56,7 @@ public interface HomeContract {
 
         void getGankioList(String type);
 
-        void getWeather(String city);
+        void getWeather(String location);
 
         void getNeihanList(long am_loc_time, long min_time, int screen_width, String iid, String device_id, String ac, String version_code, String version_name,
                            String device_type, String device_brand, int os_api, String os_version, String uuid, String openudid, String manifest_version_code, String resolution,

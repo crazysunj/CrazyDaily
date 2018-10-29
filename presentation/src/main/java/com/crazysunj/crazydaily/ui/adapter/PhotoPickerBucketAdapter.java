@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * author: sunjian
  * created on: 2018/9/25 上午11:06
- * description:
+ * description: https://github.com/crazysunj/CrazyDaily
  */
 public class PhotoPickerBucketAdapter extends BaseAdapter<BucketEntity, BaseViewHolder> {
 

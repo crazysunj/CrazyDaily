@@ -70,6 +70,9 @@ public class WeatherUtil {
     private static final String HURRICANE = "34";// 飓风
     private static final String TROPICALSTORM = "35";// 热带风暴
     private static final String TORNADO = "36";// 龙卷风
+    private static final String COLD = "37";// 冷
+    private static final String HOT = "38";// 热
+    private static final String UNKNOWN = "99";// 未知
 
     private WeatherUtil() {
     }
@@ -80,6 +83,7 @@ public class WeatherUtil {
             case CLEAR:
             case FAIR1:
             case FAIR2:
+            case HOT:
                 return R.mipmap.ic_sunny;
             case CLOUDY:
             case PARTLYCLOUDY1:
@@ -109,6 +113,7 @@ public class WeatherUtil {
                 return R.mipmap.ic_snow;
             case HEAVYSNOW:
             case SNOWSTORM:
+            case COLD:
                 return R.mipmap.ic_snow_storm;
             case DUST:
             case SAND:

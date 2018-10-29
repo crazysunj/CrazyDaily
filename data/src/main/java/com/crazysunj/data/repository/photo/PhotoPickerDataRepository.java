@@ -26,7 +26,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * author: sunjian
  * created on: 2018/9/17 下午3:06
- * description:
+ * description: https://github.com/crazysunj/CrazyDaily
  */
 public class PhotoPickerDataRepository implements PhotoPickerRepository {
 

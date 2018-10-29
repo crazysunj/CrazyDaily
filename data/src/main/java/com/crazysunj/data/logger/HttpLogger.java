@@ -15,8 +15,8 @@
  */
 package com.crazysunj.data.logger;
 
-import com.crazysunj.data.util.JsonUtil;
 import com.crazysunj.data.util.LoggerUtil;
+import com.crazysunj.domain.util.JsonUtil;
 
 import okhttp3.logging.HttpLoggingInterceptor;
 

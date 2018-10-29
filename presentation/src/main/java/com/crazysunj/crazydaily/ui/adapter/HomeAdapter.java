@@ -18,7 +18,6 @@ package com.crazysunj.crazydaily.ui.adapter;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatImageView;
-import android.text.format.DateFormat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -44,11 +43,11 @@ import com.crazysunj.domain.entity.gankio.GankioEntity;
 import com.crazysunj.domain.entity.gaoxiao.GaoxiaoItemEntity;
 import com.crazysunj.domain.entity.neihan.NeihanItemEntity;
 import com.crazysunj.domain.entity.weather.WeatherRemoteEntity;
+import com.crazysunj.domain.entity.weather.WeatherXinZhiEntity;
 import com.crazysunj.domain.entity.zhihu.ZhihuNewsEntity;
 import com.crazysunj.multitypeadapter.helper.RecyclerViewAdapterHelper;
 import com.xiao.nicevideoplayer.NiceVideoPlayer;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -107,7 +106,7 @@ public class HomeAdapter extends BaseHelperAdapter<MultiTypeIdEntity, BaseViewHo
                 renderGaoxiao(holder, (GaoxiaoItemEntity) item);
                 break;
             case WeatherRemoteEntity.WeatherEntity.TYPE_WEATHER:
-                renderWeather(holder, (WeatherRemoteEntity.WeatherEntity) item);
+                renderWeather(holder, (WeatherXinZhiEntity.FinalEntity) item);
                 break;
             case GankioEntity.ResultsEntity.TYPE_GANK_IO:
                 renderGankio(holder, (GankioEntity.ResultsEntity) item);
@@ -279,24 +278,23 @@ public class HomeAdapter extends BaseHelperAdapter<MultiTypeIdEntity, BaseViewHo
 
     // *********************** Weather ***********************
 
-    private void renderWeather(BaseViewHolder holder, WeatherRemoteEntity.WeatherEntity item) {
-        WeatherRemoteEntity.WeatherEntity.NowEntity nowEntity = item.getNow();
-        holder.setText(R.id.item_weather_temperature, String.format("%s ℃", nowEntity.getTemperature()));
-        final String cityName = item.getCity_name();
-        holder.setText(R.id.item_weather_location, cityName);
-        holder.setText(R.id.item_weather_text, nowEntity.getText());
-        holder.setText(R.id.item_weather_time, DateFormat.format("HH:mm", new Date()));
-        holder.setImageResource(R.id.item_weather_icon, WeatherUtil.getWeatherIcon(nowEntity.getCode()));
+    private void renderWeather(BaseViewHolder holder, WeatherXinZhiEntity.FinalEntity item) {
+        holder.setText(R.id.item_weather_temperature, item.getTemperature());
+        String location = item.getLocation();
+        holder.setText(R.id.item_weather_location, location);
+        holder.setText(R.id.item_weather_text, item.getText());
+        holder.setText(R.id.item_weather_time, item.getLastUpdate());
+        holder.setImageResource(R.id.item_weather_icon, WeatherUtil.getWeatherIcon(item.getCode()));
         holder.itemView.setOnClickListener(v -> {
             if (mOnHeaderClickListener != null) {
-                mOnHeaderClickListener.onHeaderClick(mHelper.getLevel(item.getItemType()), cityName);
+                mOnHeaderClickListener.onHeaderClick(mHelper.getLevel(item.getItemType()), location);
             }
         });
     }
 
-    public void notifyWeatherList(List<WeatherRemoteEntity.WeatherEntity> data) {
+    public void notifyWeatherEntity(WeatherXinZhiEntity.FinalEntity weatherEntity) {
         final int level = HomeAdapterHelper.LEVEL_WEATHER;
-        mHelper.notifyModuleDataChanged(data, level);
+        mHelper.notifyModuleDataChanged(weatherEntity, level);
     }
 
     // *********************** Gankio ***********************

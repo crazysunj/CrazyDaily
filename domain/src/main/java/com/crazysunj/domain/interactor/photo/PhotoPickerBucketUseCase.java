@@ -15,7 +15,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * author: sunjian
  * created on: 2018/9/17 下午3:38
- * description:
+ * description: https://github.com/crazysunj/CrazyDaily
  */
 public class PhotoPickerBucketUseCase extends UseCase<List<BucketEntity>, Void> {
     private final PhotoPickerRepository mPhotoPickerRepository;

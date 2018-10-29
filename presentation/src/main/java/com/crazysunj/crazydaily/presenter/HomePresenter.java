@@ -22,7 +22,7 @@ import com.crazysunj.crazydaily.presenter.contract.HomeContract;
 import com.crazysunj.domain.entity.gankio.GankioEntity;
 import com.crazysunj.domain.entity.gaoxiao.GaoxiaoItemEntity;
 import com.crazysunj.domain.entity.neihan.NeihanItemEntity;
-import com.crazysunj.domain.entity.weather.WeatherRemoteEntity;
+import com.crazysunj.domain.entity.weather.WeatherXinZhiEntity;
 import com.crazysunj.domain.entity.zhihu.ZhihuNewsEntity;
 import com.crazysunj.domain.interactor.gankio.GankioUseCase;
 import com.crazysunj.domain.interactor.gaoxiao.GaoxiaoUseCase;
@@ -98,11 +98,11 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
     }
 
     @Override
-    public void getWeather(String city) {
-        mWeatherUseCase.execute(WeatherUseCase.Params.get(city), new BaseSubscriber<List<WeatherRemoteEntity.WeatherEntity>>() {
+    public void getWeather(String location) {
+        mWeatherUseCase.execute(WeatherUseCase.Params.get(location), new BaseSubscriber<WeatherXinZhiEntity.FinalEntity>() {
             @Override
-            public void onNext(List<WeatherRemoteEntity.WeatherEntity> weatherEntities) {
-                mView.showWeather(weatherEntities);
+            public void onNext(WeatherXinZhiEntity.FinalEntity weatherEntity) {
+                mView.showWeather(weatherEntity);
             }
 
             @Override

@@ -51,7 +51,7 @@ import butterknife.BindView;
 /**
  * author: sunjian
  * created on: 2018/9/27 下午3:56
- * description:
+ * description: https://github.com/crazysunj/CrazyDaily
  */
 public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements NoteEditContract.View {
 

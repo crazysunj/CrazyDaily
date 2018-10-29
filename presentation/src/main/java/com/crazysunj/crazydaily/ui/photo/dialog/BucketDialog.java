@@ -34,7 +34,7 @@ import butterknife.Unbinder;
 /**
  * author: sunjian
  * created on: 2018/9/25 上午10:30
- * description:
+ * description: https://github.com/crazysunj/CrazyDaily
  */
 public class BucketDialog extends DialogFragment {
 

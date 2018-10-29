@@ -15,7 +15,7 @@
  */
 package com.crazysunj.domain.repository.weather;
 
-import com.crazysunj.domain.entity.weather.WeatherRemoteEntity;
+import com.google.gson.JsonObject;
 
 import io.reactivex.Flowable;
 
@@ -26,5 +26,5 @@ import io.reactivex.Flowable;
  */
 
 public interface WeatherRepository {
-    Flowable<WeatherRemoteEntity> getWeatherList(String city, String language);
+    Flowable<JsonObject> getWeatherList(String key, String location, String language, String unit);
 }

@@ -12,7 +12,7 @@ import javax.inject.Singleton;
 /**
  * author: sunjian
  * created on: 2018/10/3 下午6:14
- * description:
+ * description: https://github.com/crazysunj/CrazyDaily
  */
 @Singleton
 public class DBHelper {

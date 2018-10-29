@@ -7,7 +7,7 @@ import android.widget.RelativeLayout;
 /**
  * author: sunjian
  * created on: 2018/9/21 下午3:54
- * description: 自身高度与自身宽度保持一致
+ * description: 自身高度与自身宽度保持一致 https://github.com/crazysunj/CrazyDaily
  */
 public class PhotoPickerWrapLayout extends RelativeLayout {
 

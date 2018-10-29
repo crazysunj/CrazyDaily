@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * author: sunjian
  * created on: 2018/10/23 下午5:09
- * description:
+ * description: https://github.com/crazysunj/CrazyDaily
  */
 public class ImagePreViewAdapter extends BaseAdapter<ImagePreViewAdapter.ImagePreViewEntity, BaseViewHolder> {
 
