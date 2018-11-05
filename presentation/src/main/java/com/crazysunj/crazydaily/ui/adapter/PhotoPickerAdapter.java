@@ -1,7 +1,7 @@
 package com.crazysunj.crazydaily.ui.adapter;
 
-import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.AppCompatTextView;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
 import android.view.View;
 
 import com.crazysunj.crazydaily.R;

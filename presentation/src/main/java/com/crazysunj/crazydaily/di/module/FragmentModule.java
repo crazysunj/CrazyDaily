@@ -16,10 +16,10 @@
 package com.crazysunj.crazydaily.di.module;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
 
 import com.crazysunj.crazydaily.di.scope.FragmentScope;
 
+import androidx.fragment.app.Fragment;
 import dagger.Module;
 import dagger.Provides;
 

@@ -17,8 +17,8 @@ package com.crazysunj.crazydaily.weex;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.AppCompatTextView;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatTextView;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.widget.TextView;

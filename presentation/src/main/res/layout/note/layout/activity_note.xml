@@ -5,14 +5,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/note_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:background="@color/color_white"
         app:contentInsetStart="0dp">
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/note_back"
             style="@style/text_18_333333"
             android:layout_width="@dimen/space_60"
@@ -30,7 +30,7 @@
             android:gravity="center"
             android:text="@string/note" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/note_edit"
             style="@style/text_20_333333"
             android:layout_width="@dimen/space_60"
@@ -39,9 +39,9 @@
             android:fontFamily="@font/crazydailyicon"
             android:gravity="center"
             android:text="@string/ic_edit" />
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/note_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

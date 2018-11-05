@@ -25,9 +25,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.SparseArray;
 import android.widget.Toast;
@@ -47,6 +44,10 @@ import java.util.Locale;
 import java.util.UUID;
 
 import javax.inject.Inject;
+
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.FileProvider;
 
 /**
  * author: sunjian

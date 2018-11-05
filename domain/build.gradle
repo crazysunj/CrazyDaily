@@ -20,7 +20,7 @@ android {
 greendao {
     schemaVersion 1
     daoPackage 'com.crazysunj.domain.db'
-    targetGenDir   'src/main/java'
+    targetGenDir 'src/main/java'
 }
 
 dependencies {
@@ -33,7 +33,7 @@ dependencies {
     compileOnly domainDependencies.gson
     compileOnly domainDependencies.niceVieoPlayer
 
-    api 'org.greenrobot:greendao:3.2.2'
+    api domainDependencies.greendao
     api domainDependencies.javaxInject
     api domainDependencies.rxjava
     api domainDependencies.rxandroid

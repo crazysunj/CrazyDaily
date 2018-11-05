@@ -1,10 +1,10 @@
 package com.crazysunj.domain.entity.photo;
 
-import android.support.annotation.NonNull;
-
 import com.crazysunj.multitypeadapter.entity.MultiTypeEntity;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 /**
  * author: sunjian

@@ -20,13 +20,14 @@ import android.animation.ObjectAnimator;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.Rect;
-import android.support.annotation.NonNull;
 import android.transition.PathMotion;
 import android.transition.Transition;
 import android.transition.TransitionValues;
 import android.util.Property;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
 
 /**
  * author: sunjian

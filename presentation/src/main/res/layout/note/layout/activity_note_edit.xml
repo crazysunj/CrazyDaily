@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/color_white">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/note_edit_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
@@ -46,7 +46,7 @@
                 android:gravity="center"
                 android:text="@string/publish" />
         </FrameLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -62,7 +62,7 @@
             android:clipToPadding="false"
             android:orientation="vertical">
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/note_edit_images"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -122,7 +122,7 @@
         android:layout_alignParentBottom="true"
         android:paddingBottom="@dimen/space_5">
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/note_edit_drag_delete_text"
             style="@style/text_12_white"
             android:layout_width="wrap_content"
@@ -131,7 +131,7 @@
             android:layout_centerHorizontal="true"
             tools:text="拖拽到此处删除" />
 
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/note_edit_drag_delete_icon"
             android:layout_width="@dimen/space_16"
             android:layout_height="@dimen/space_20"

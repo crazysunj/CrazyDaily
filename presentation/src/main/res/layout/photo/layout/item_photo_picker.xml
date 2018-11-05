@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/item_photo_picker_data"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,13 +22,13 @@
         android:paddingBottom="@dimen/space_10"
         android:paddingTop="@dimen/space_10">
 
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/space_10"
             android:src="@mipmap/ic_video" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/item_photo_picker_duration"
             style="@style/text_12_white"
             android:layout_width="wrap_content"
@@ -43,7 +43,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true">
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/item_photo_picker_select"
             style="@style/text_12_white"
             android:layout_width="@dimen/space_20"

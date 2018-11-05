@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/note_preview_image_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -15,7 +15,7 @@
         android:paddingEnd="@dimen/space_10"
         android:paddingStart="@dimen/space_10">
 
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/note_preview_back"
             android:layout_width="@dimen/space_32"
             android:layout_height="@dimen/space_32"
@@ -25,14 +25,14 @@
             android:scaleType="centerInside"
             android:src="@mipmap/ic_back" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/note_preview_title"
             style="@style/text_20_white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true" />
 
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/note_preview_delete"
             android:layout_width="@dimen/space_32"
             android:layout_height="@dimen/space_32"

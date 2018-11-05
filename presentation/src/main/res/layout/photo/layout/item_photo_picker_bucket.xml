@@ -11,12 +11,12 @@
         android:layout_width="@dimen/space_70"
         android:layout_height="@dimen/space_70">
 
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/item_bucket_icon"
             android:layout_width="@dimen/space_70"
             android:layout_height="@dimen/space_70" />
 
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/item_bucket_video_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
             tools:visibility="visible" />
     </FrameLayout>
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/item_bucket_info"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
         android:layout_weight="1"
         android:lineSpacingExtra="@dimen/space_10" />
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/item_bucket_select_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

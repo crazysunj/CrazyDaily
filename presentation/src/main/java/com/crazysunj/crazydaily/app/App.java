@@ -18,7 +18,6 @@ package com.crazysunj.crazydaily.app;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.support.multidex.MultiDex;
 
 import com.bumptech.glide.request.target.ViewTarget;
 import com.crazysunj.crazydaily.BuildConfig;
@@ -49,6 +48,8 @@ import com.tencent.sonic.sdk.SonicEngine;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import androidx.multidex.MultiDex;
 
 /**
  * author: sunjian

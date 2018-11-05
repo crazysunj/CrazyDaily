@@ -16,7 +16,7 @@
 package com.crazysunj.crazydaily.ui.adapter.helper;
 
 import android.graphics.Color;
-import android.support.v7.util.DiffUtil;
+import androidx.recyclerview.widget.DiffUtil;
 
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.ui.adapter.helper.callback.StringDiffCallBack;

@@ -72,16 +72,15 @@ dependencies {
     def libs = rootProject.ext.dependencies
     //依赖库配置
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation libs.constraintLayout
+    implementation libs.constraintlayout
     //约束布局
-    implementation libs.appcompatv7
-    implementation libs.recyclerviewv7
-    implementation libs.cardviewv7
-    implementation libs.design
+    implementation libs.appcompat
+    implementation libs.recyclerview
+    implementation libs.cardview
+    implementation libs.material
     implementation libs.gpuimage
     //图像处理
     implementation libs.multidex
-    implementation libs.butterknife
     implementation libs.MTRVA
     //recyclerview数据处理
     implementation libs.statusbarutil
@@ -119,24 +118,18 @@ dependencies {
     // 仿ios开关
     debugImplementation libs.debugLeakcanary
     releaseImplementation libs.releaseLeakcanary
+    implementation libs.butterknife
     annotationProcessor libs.butterknifeCompiler
     implementation project(':data')
-    implementation(libs.materialsearchview) {
-        exclude group: 'com.android.support', module: 'appcompat-v7'
-        exclude group: 'com.android.support', module: 'design'
-    }
-    implementation(libs.glide) {
-        exclude group: "com.android.support"
-    }
+    implementation libs.materialsearchview
+    implementation libs.glide
     implementation(libs.glideTransformations) {
         exclude group: 'com.github.bumptech.glide', module: 'glide'
     }
     annotationProcessor libs.glideCompiler
-    implementation(libs.permission) { //权限
-        exclude module: "support-v13"
-    }
+    implementation libs.permission
+    //权限
     annotationProcessor libs.permissionCompiler
-    implementation(libs.sonic) {
-        exclude group: "com.android.support"
-    }
+    implementation libs.sonic
+    annotationProcessor libs.daggerCompiler
 }

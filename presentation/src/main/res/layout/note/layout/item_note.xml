@@ -13,7 +13,7 @@
         android:paddingEnd="@dimen/space_10"
         android:paddingStart="@dimen/space_10">
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/item_note_date"
             style="@style/text_14_333333"
             android:layout_width="wrap_content"
@@ -21,7 +21,7 @@
             android:layout_centerVertical="true"
             tools:text="2018年8月1日" />
 
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/item_note_menu"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -34,12 +34,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/item_note_images"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/item_note_images_indicator"
             style="@style/text_12_white"
             android:layout_width="@dimen/space_30"
@@ -52,7 +52,7 @@
             tools:text="1/2" />
     </com.crazysunj.crazydaily.view.photo.PhotoPickerWrapLayout>
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/item_note_content"
         style="@style/text_12_333333"
         android:layout_width="match_parent"

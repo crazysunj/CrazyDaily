@@ -38,6 +38,6 @@ dependencies {
     api dataDependencies.okhttp
     api dataDependencies.okhttpLoggingInterceptor
     api dataDependencies.dagger
-    api dataDependencies.daggerCompiler
+    annotationProcessor dataDependencies.daggerCompiler
     api dataDependencies.logger
 }

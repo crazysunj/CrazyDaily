@@ -15,7 +15,6 @@
  */
 package com.crazysunj.domain.interactor.contact;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.crazysunj.domain.constant.CodeConstant;
@@ -34,6 +33,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;

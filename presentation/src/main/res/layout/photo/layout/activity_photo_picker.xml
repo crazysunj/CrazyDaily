@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/photo_picker_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
@@ -14,7 +14,7 @@
         app:title="@string/image_video"
         app:titleTextColor="@color/color_white">
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/photo_picker_complete"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -26,19 +26,19 @@
             android:textColor="@drawable/text_photo_picker_selector"
             android:textSize="@dimen/text_14"
             tools:text="完成" />
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/photo_picker_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/photo_picker_time_info"
             style="@style/text_12_white"
             android:layout_width="match_parent"
@@ -57,7 +57,7 @@
         android:paddingEnd="@dimen/space_10"
         android:paddingStart="@dimen/space_10">
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/photo_picker_select"
             style="@style/text_16_white"
             android:layout_width="wrap_content"
@@ -65,7 +65,7 @@
             android:layout_centerVertical="true"
             android:text="@string/image_video" />
 
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="@dimen/space_20"
             android:layout_height="@dimen/space_20"
             android:layout_alignBottom="@id/photo_picker_select"

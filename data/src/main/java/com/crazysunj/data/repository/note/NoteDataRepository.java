@@ -1,7 +1,5 @@
 package com.crazysunj.data.repository.note;
 
-import android.support.annotation.Nullable;
-
 import com.crazysunj.data.api.DBHelper;
 import com.crazysunj.data.util.RxTransformerUtil;
 import com.crazysunj.domain.db.NoteEntityDao;
@@ -12,6 +10,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.annotation.Nullable;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
 

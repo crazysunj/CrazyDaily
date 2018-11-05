@@ -12,7 +12,7 @@
         android:scaleType="centerCrop"
         app:riv_corner_radius="@dimen/space_5" />
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/item_note_edit_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

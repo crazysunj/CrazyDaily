@@ -15,12 +15,12 @@
  */
 package com.crazysunj.data.util;
 
-import android.support.annotation.Nullable;
-
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.PrettyFormatStrategy;
+
+import androidx.annotation.Nullable;
 
 /**
  * author: sunjian

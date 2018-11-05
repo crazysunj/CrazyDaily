@@ -15,7 +15,7 @@
  */
 package com.crazysunj.crazydaily.view.contact;
 
-import android.support.annotation.ColorInt;
+import androidx.annotation.ColorInt;
 
 /**
  * author: sunjian
