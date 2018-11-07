@@ -46,6 +46,7 @@ import com.crazysunj.crazydaily.module.permission.PermissionStorage;
 import com.crazysunj.crazydaily.presenter.HomePresenter;
 import com.crazysunj.crazydaily.presenter.contract.HomeContract;
 import com.crazysunj.crazydaily.service.DownloadService;
+import com.crazysunj.crazydaily.ui.MainActivity;
 import com.crazysunj.crazydaily.ui.adapter.HomeAdapter;
 import com.crazysunj.crazydaily.ui.adapter.helper.HomeAdapterHelper;
 import com.crazysunj.crazydaily.ui.browser.BrowserActivity;
@@ -241,7 +242,6 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
             mHomeBanner.setVisibility(View.VISIBLE);
             mHomeBanner.bind(getSupportFragmentManager(), new BannerCardHandler(), topStories);
         }
-
     }
 
     @Override
@@ -422,7 +422,8 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
                 MeActivity.start(this);
                 break;
             case R.id.navigation_more:
-                SnackbarUtil.show(this, "更多模块敬请期待!");
+//                SnackbarUtil.show(this, "更多模块敬请期待!");
+                MainActivity.start(this);
 //                PhotoPickerActivity.start(this);
 //                NoteEditActivity.start(this);
                 break;
@@ -522,7 +523,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         HomeActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
@@ -558,18 +559,18 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     @OnShowRationale({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
     @Override
     public void showRationaleForStorage(PermissionRequest request) {
-
+        PermissionHelper.storageShowRationale(this, request);
     }
 
     @OnPermissionDenied({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
     @Override
     public void showDeniedForStorage() {
-
+        PermissionHelper.storagePermissionDenied(this);
     }
 
     @OnNeverAskAgain({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
     @Override
     public void showNeverAskForStorage() {
-
+        PermissionHelper.storageNeverAskAgain(this);
     }
 }

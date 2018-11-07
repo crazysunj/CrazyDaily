@@ -17,8 +17,10 @@ package com.crazysunj.crazydaily.di.component;
 
 import android.app.Activity;
 
+import com.crazysunj.crazydaily.di.module.EntityModule;
 import com.crazysunj.crazydaily.di.module.FragmentModule;
 import com.crazysunj.crazydaily.di.scope.FragmentScope;
+import com.crazysunj.crazydaily.ui.home.HomeFragment;
 
 import dagger.Component;
 
@@ -28,8 +30,10 @@ import dagger.Component;
  * description: https://github.com/crazysunj/CrazyDaily
  */
 @FragmentScope
-@Component(dependencies = AppComponent.class, modules = FragmentModule.class)
+@Component(dependencies = AppComponent.class, modules = {FragmentModule.class, EntityModule.class})
 public interface FragmentComponent {
 
     Activity getActivity();
+
+    void inject(HomeFragment homeFragment);
 }

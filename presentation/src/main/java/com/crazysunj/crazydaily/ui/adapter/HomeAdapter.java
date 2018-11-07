@@ -63,7 +63,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class HomeAdapter extends BaseHelperAdapter<MultiTypeIdEntity, BaseViewHolder, HomeAdapterHelper> {
 
-    //固定不变的或者直接在Adapter中修改数据源的(如footer)可以用这种方法
+    /**
+     * 固定不变的或者直接在Adapter中修改数据源的(如footer)可以用这种方法
+     */
     @Named(EntityModule.NAME_ZHIHU)
     @Inject
     CommonHeaderEntity mZhihuHeaderEntity;

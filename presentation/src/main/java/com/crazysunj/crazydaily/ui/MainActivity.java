@@ -15,9 +15,14 @@
  */
 package com.crazysunj.crazydaily.ui;
 
+import android.content.Context;
+import android.content.Intent;
+
+import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
 import com.crazysunj.crazydaily.presenter.MainPresenter;
 import com.crazysunj.crazydaily.presenter.contract.MainContract;
+import com.crazysunj.crazydaily.ui.home.HomeActivity;
 
 /**
  * @author: sunjian
@@ -25,8 +30,14 @@ import com.crazysunj.crazydaily.presenter.contract.MainContract;
  * description: https://github.com/crazysunj/CrazyDaily
  */
 public class MainActivity extends BaseActivity<MainPresenter> implements MainContract.View {
+
+    public static void start(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        context.startActivity(intent);
+    }
+
     @Override
     protected int getContentResId() {
-        return 0;
+        return R.layout.activity_main;
     }
 }
