@@ -1,17 +1,17 @@
-/**
- * Copyright 2017 Sun Jian
- * <p>
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+/*
+  Copyright 2017 Sun Jian
+  <p>
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  <p>
+  http://www.apache.org/licenses/LICENSE-2.0
+  <p>
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
  */
 package com.crazysunj.crazydaily.ui.contact;
 
@@ -22,8 +22,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.util.Pair;
 import android.transition.AutoTransition;
 import android.transition.TransitionSet;
 import android.view.View;
@@ -32,9 +30,9 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
 import com.crazysunj.crazydaily.R;
+import com.crazysunj.crazydaily.base.BaseActivity;
 import com.crazysunj.crazydaily.module.animation.BezierTransition;
 import com.crazysunj.crazydaily.module.animation.CircularRevealTransition;
-import com.crazysunj.crazydaily.base.BaseActivity;
 import com.crazysunj.crazydaily.module.image.ImageLoader;
 import com.crazysunj.crazydaily.util.SnackbarUtil;
 import com.crazysunj.crazydaily.view.contact.CoolBGView;
@@ -46,13 +44,15 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * author: sunjian
+ * @author: sunjian
  * created on: 2018/4/16 下午6:26
- * description:https://github.com/crazysunj/CrazyDaily
+ * description: https://github.com/crazysunj/CrazyDaily
  */
 public class ContactDetailActivity extends BaseActivity {
 

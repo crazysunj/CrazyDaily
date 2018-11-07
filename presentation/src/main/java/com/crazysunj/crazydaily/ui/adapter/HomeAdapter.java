@@ -1,23 +1,21 @@
-/**
- * Copyright 2017 Sun Jian
- * <p>
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+/*
+  Copyright 2017 Sun Jian
+  <p>
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  <p>
+  http://www.apache.org/licenses/LICENSE-2.0
+  <p>
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
  */
 package com.crazysunj.crazydaily.ui.adapter;
 
 import android.app.Activity;
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatImageView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -54,14 +52,15 @@ import java.util.Locale;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * author: sunjian
+ * @author: sunjian
  * created on: 2017/9/10 下午5:01
  * description: https://github.com/crazysunj/CrazyDaily
  */
-
 public class HomeAdapter extends BaseHelperAdapter<MultiTypeIdEntity, BaseViewHolder, HomeAdapterHelper> {
 
     //固定不变的或者直接在Adapter中修改数据源的(如footer)可以用这种方法

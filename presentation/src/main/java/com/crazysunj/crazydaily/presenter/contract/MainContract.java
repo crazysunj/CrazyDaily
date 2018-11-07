@@ -13,17 +13,20 @@
   See the License for the specific language governing permissions and
   limitations under the License.
  */
-package com.crazysunj.domain.repository.gaoxiao;
+package com.crazysunj.crazydaily.presenter.contract;
 
-import com.crazysunj.domain.entity.gaoxiao.GaoxiaoEntity;
-
-import io.reactivex.Flowable;
+import com.crazysunj.crazydaily.base.IPresenter;
+import com.crazysunj.crazydaily.base.IView;
 
 /**
  * @author: sunjian
- * created on: 2017/9/19 下午6:40
+ * created on: 2018/11/7 下午8:11
  * description: https://github.com/crazysunj/CrazyDaily
  */
-public interface GaoxiaoRepository {
-    Flowable<GaoxiaoEntity> getGaoxiaoList(int type, int page);
+public interface MainContract {
+    interface View extends IView {
+    }
+
+    interface Presenter extends IPresenter<View> {
+    }
 }
