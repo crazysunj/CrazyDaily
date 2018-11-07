@@ -96,6 +96,7 @@ public class DownloadService extends Service implements DownloadContract.View {
             if (channel.getImportance() == NotificationManager.IMPORTANCE_NONE) {
                 // 这里可以设计成与Activity通信，然后Activity去回调
                 Intent intent = new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
                 intent.putExtra(Settings.EXTRA_CHANNEL_ID, channel.getId());
                 startActivity(intent);
