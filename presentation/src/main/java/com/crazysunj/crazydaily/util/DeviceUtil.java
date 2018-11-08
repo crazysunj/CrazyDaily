@@ -33,8 +33,13 @@ public class DeviceUtil {
         return BuildConfig.VERSION_NAME;
     }
 
+    /**
+     * 获得状态栏高度
+     *
+     * @param context Context
+     * @return int
+     */
     public static int getStatusBarHeight(Context context) {
-        // 获得状态栏高度
         final Resources resources = context.getResources();
         return resources.getDimensionPixelSize(resources.getIdentifier("status_bar_height", "dimen", "android"));
     }

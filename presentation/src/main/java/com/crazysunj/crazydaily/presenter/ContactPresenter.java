@@ -17,7 +17,6 @@ package com.crazysunj.crazydaily.presenter;
 
 import com.crazysunj.crazydaily.base.BasePresenter;
 import com.crazysunj.crazydaily.base.BaseSubscriber;
-import com.crazysunj.crazydaily.di.scope.ActivityScope;
 import com.crazysunj.crazydaily.presenter.contract.ContactContract;
 import com.crazysunj.domain.entity.contact.MultiTypeIndexEntity;
 import com.crazysunj.domain.interactor.contact.ContactUseCase;
@@ -31,13 +30,12 @@ import javax.inject.Inject;
  * created on: 2017/9/19 下午5:05
  * description: https://github.com/crazysunj/CrazyDaily
  */
-@ActivityScope
 public class ContactPresenter extends BasePresenter<ContactContract.View> implements ContactContract.Presenter {
 
     private ContactUseCase mContactUseCase;
 
     @Inject
-    public ContactPresenter(ContactUseCase contactUseCase) {
+    ContactPresenter(ContactUseCase contactUseCase) {
         mContactUseCase = contactUseCase;
     }
 

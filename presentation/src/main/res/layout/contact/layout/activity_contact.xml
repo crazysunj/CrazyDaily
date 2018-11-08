@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -37,8 +38,8 @@
             android:id="@+id/side_bar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingEnd="@dimen/space_4"
             android:paddingStart="@dimen/space_4"
+            android:paddingEnd="@dimen/space_4"
             app:sidebar_text_color="@color/color_FF5C8D"
             app:sidebar_text_size="@dimen/text_14" />
 

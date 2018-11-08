@@ -9,4 +9,10 @@
         android:name="com.crazysunj.crazydaily.ui.home.HomeFragment"
         android:label="@string/text_home"
         tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_item_contact"
+        android:name="com.crazysunj.crazydaily.ui.contact.ContactFragment"
+        android:label="@string/text_conatct"
+        tools:layout="@layout/activity_contact" />
 </navigation>

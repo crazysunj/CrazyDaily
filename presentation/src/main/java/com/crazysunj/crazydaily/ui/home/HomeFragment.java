@@ -21,13 +21,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.crazysunj.cardslideview.CardViewPager;
@@ -119,12 +116,6 @@ public class HomeFragment extends BaseFragment<NewHomePresenter> implements NewH
     private Drawable mNavigationIcon;
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        handleTranslucent();
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         mPresenter.startBanner();
@@ -146,6 +137,19 @@ public class HomeFragment extends BaseFragment<NewHomePresenter> implements NewH
     public void onDestroy() {
         ThreadManager.shutdown();
         super.onDestroy();
+        Log.e("MainActivity", "HomeFragment-onDestroy");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.e("MainActivity", "HomeFragment-onDestroyView");
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.e("MainActivity", "HomeFragment-onCreate");
     }
 
     @Override
@@ -173,31 +177,11 @@ public class HomeFragment extends BaseFragment<NewHomePresenter> implements NewH
 
     @Override
     protected void initData() {
+        Log.e("MainActivity", "HomeFragment-initData");
         mPresenter.getZhihuNewsList();
         mPresenter.getGankioList(GankioEntity.ResultsEntity.PARAMS_ANDROID);
         mPresenter.getWeather("杭州");
         mPresenter.getGaoxiaoList(gaoxiaoIndex);
-    }
-
-    private void handleTranslucent() {
-        Window window = mActivity.getWindow();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-            window.setNavigationBarColor(Color.WHITE);
-        } else {
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
-
-        ViewGroup parent = (ViewGroup) mActivity.findViewById(android.R.id.content);
-        for (int i = 0, count = parent.getChildCount(); i < count; i++) {
-            View childView = parent.getChildAt(i);
-            if (childView instanceof ViewGroup) {
-                childView.setFitsSystemWindows(true);
-                ((ViewGroup) childView).setClipToPadding(true);
-            }
-        }
     }
 
     private void handleWrapBanner(boolean isCanSlide) {
@@ -219,9 +203,9 @@ public class HomeFragment extends BaseFragment<NewHomePresenter> implements NewH
         final float percent = Math.abs(verticalOffset * 1.0f / totalScrollRange);
         mRefresh.setEnabled(verticalOffset == 0);
         final int color = ContextCompat.getColor(mActivity, R.color.colorPrimary);
-        mTitle.setTextColor((int) mArgbEvaluator.evaluate(percent, color, Color.BLACK));
+        mTitle.setTextColor((int) mArgbEvaluator.evaluate(percent, color, Color.WHITE));
         if (mNavigationIcon != null) {
-            mNavigationIcon.setColorFilter((int) mArgbEvaluator.evaluate(percent, color, Color.BLACK), PorterDuff.Mode.SRC_IN);
+            mNavigationIcon.setColorFilter((int) mArgbEvaluator.evaluate(percent, color, Color.WHITE), PorterDuff.Mode.SRC_IN);
         }
     }
 

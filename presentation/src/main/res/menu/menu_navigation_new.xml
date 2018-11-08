@@ -2,6 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/navigation_item_home"
-        android:icon="@mipmap/ic_contact"
+        android:icon="@mipmap/ic_home"
         android:title="@string/text_home" />
+    <item
+        android:id="@+id/navigation_item_contact"
+        android:icon="@mipmap/ic_contact"
+        android:title="@string/text_conatct" />
 </menu>

@@ -20,6 +20,7 @@ import android.app.Activity;
 import com.crazysunj.crazydaily.di.module.EntityModule;
 import com.crazysunj.crazydaily.di.module.FragmentModule;
 import com.crazysunj.crazydaily.di.scope.FragmentScope;
+import com.crazysunj.crazydaily.ui.contact.ContactFragment;
 import com.crazysunj.crazydaily.ui.home.HomeFragment;
 
 import dagger.Component;
@@ -36,4 +37,6 @@ public interface FragmentComponent {
     Activity getActivity();
 
     void inject(HomeFragment homeFragment);
+
+    void inject(ContactFragment contactFragment);
 }

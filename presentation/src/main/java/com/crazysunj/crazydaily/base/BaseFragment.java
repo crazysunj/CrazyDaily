@@ -19,19 +19,25 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
+import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.app.App;
 import com.crazysunj.crazydaily.di.component.DaggerFragmentComponent;
 import com.crazysunj.crazydaily.di.component.FragmentComponent;
 import com.crazysunj.crazydaily.di.module.EntityModule;
 import com.crazysunj.crazydaily.di.module.FragmentModule;
+import com.crazysunj.crazydaily.util.DeviceUtil;
 import com.crazysunj.crazydaily.util.SnackbarUtil;
 
 import javax.inject.Inject;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -54,11 +60,11 @@ public abstract class BaseFragment<T extends IPresenter> extends Fragment implem
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mActivity = (AppCompatActivity) getActivity();
         onPrepare();
-        View root = inflater.inflate(getContentResId(), container, false);
-        mUnBinder = ButterKnife.bind(this, root);
+        View rootView = inflater.inflate(getContentResId(), container, false);
+        mUnBinder = ButterKnife.bind(this, rootView);
         initView();
         initListener();
-        return root;
+        return rootView;
     }
 
     @Override
@@ -111,6 +117,33 @@ public abstract class BaseFragment<T extends IPresenter> extends Fragment implem
 
     protected void initView() {
 
+    }
+
+    protected void showBack() {
+        ActionBar actionBar = mActivity.getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.mipmap.ic_back);
+        }
+    }
+
+    protected void showBack(Toolbar toolbar) {
+        toolbar.setNavigationIcon(R.mipmap.ic_back);
+        toolbar.setNavigationOnClickListener(v -> mActivity.finish());
+    }
+
+    /**
+     * 添加一个假的statusbar
+     *
+     * @param color 颜色
+     */
+    protected void addStatusBar(LinearLayout linearLayout, @ColorInt int color) {
+        View statusBarView = new View(mActivity);
+        LinearLayout.LayoutParams params =
+                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DeviceUtil.getStatusBarHeight(mActivity));
+        statusBarView.setLayoutParams(params);
+        statusBarView.setBackgroundColor(color);
+        linearLayout.addView(statusBarView, 0);
     }
 
     /**

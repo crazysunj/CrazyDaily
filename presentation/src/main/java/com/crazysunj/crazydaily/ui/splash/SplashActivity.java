@@ -22,7 +22,7 @@ import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
 import com.crazysunj.crazydaily.presenter.SplashPresenter;
 import com.crazysunj.crazydaily.presenter.contract.SplashContract;
-import com.crazysunj.crazydaily.ui.home.HomeActivity;
+import com.crazysunj.crazydaily.ui.MainActivity;
 
 import butterknife.BindView;
 
@@ -74,7 +74,7 @@ public class SplashActivity extends BaseActivity<SplashPresenter> implements Spl
 
     @Override
     public void enterHome() {
-        HomeActivity.start(this);
+        MainActivity.start(this);
         finish();
     }
 }
