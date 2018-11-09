@@ -57,7 +57,7 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
     private Disposable mBannerDisposable;
 
     @Inject
-    public HomePresenter(ZhihuNewsListUseCase zhihuUseCase, GankioUseCase gankioUseCase, WeatherUseCase weatherUseCase, NeihanUseCase neihanUseCase, GaoxiaoUseCase gaoxiaoUseCase) {
+    HomePresenter(ZhihuNewsListUseCase zhihuUseCase, GankioUseCase gankioUseCase, WeatherUseCase weatherUseCase, NeihanUseCase neihanUseCase, GaoxiaoUseCase gaoxiaoUseCase) {
         mZhihuUseCase = zhihuUseCase;
         mGankioUseCase = gankioUseCase;
         mWeatherUseCase = weatherUseCase;

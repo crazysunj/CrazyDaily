@@ -18,6 +18,8 @@ package com.crazysunj.crazydaily.presenter.contract;
 import com.crazysunj.crazydaily.base.IPresenter;
 import com.crazysunj.crazydaily.base.IView;
 
+import java.util.List;
+
 /**
  * @author: sunjian
  * created on: 2018/11/7 下午8:11
@@ -25,8 +27,12 @@ import com.crazysunj.crazydaily.base.IView;
  */
 public interface MainContract {
     interface View extends IView {
+        void showMeinv(List<String> meinvList);
+
+        void errorMeinv();
     }
 
     interface Presenter extends IPresenter<View> {
+        void getMeinvList();
     }
 }

@@ -17,11 +17,13 @@ package com.crazysunj.crazydaily.ui.note;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
@@ -59,6 +61,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.util.Pair;
 import androidx.core.view.MotionEventCompat;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
@@ -102,8 +105,18 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
     private Long mSaveId = null;
     private NoteEntity mEditNote;
 
+    public static void start(Fragment fragment) {
+        start(fragment, null);
+    }
+
     public static void start(Activity activity) {
         start(activity, null);
+    }
+
+    public static void start(Fragment fragment, NoteEntity note) {
+        Intent intent = new Intent(fragment.getContext(), NoteEditActivity.class);
+        intent.putExtra(ActivityConstant.DATA, note);
+        fragment.startActivityForResult(intent, REQUEST_CODE);
     }
 
     public static void start(Activity activity, NoteEntity note) {
@@ -162,8 +175,18 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
                 Rect r = new Rect();
                 final View decorView = getWindow().getDecorView();
                 decorView.getWindowVisibleDisplayFrame(r);
-                int screenHeight = decorView.getRootView().getHeight();
-                int heightDifference = screenHeight - r.bottom;
+                int heightPixels = getResources().getDisplayMetrics().heightPixels;
+                int decorViewHeight = decorView.getHeight();
+                final int bottom = r.bottom;
+                boolean isFullScreen = Settings.Global.getInt(getContentResolver(), "force_fsg_nav_bar", 0) != 0;
+                int heightDifference;
+                if (!isFullScreen && bottom == heightPixels) {
+                    heightDifference = 0;
+                } else if (isFullScreen && bottom == decorViewHeight) {
+                    heightDifference = 0;
+                } else {
+                    heightDifference = decorViewHeight - bottom;
+                }
                 showSoftKeyBoard(heightDifference);
             }
 
@@ -311,6 +334,7 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
         mDragDeleteText.setText("拖拽到此处删除");
     }
 
+    @SuppressLint("SetTextI18n")
     private void showSoftKeyBoard(int heightDifference) {
         if (heightDifference > 0) {
             if (mSoftKeyBoardView == null) {
@@ -319,6 +343,13 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
                 params.gravity = Gravity.BOTTOM;
                 params.bottomMargin = heightDifference;
                 ((FrameLayout) getWindow().getDecorView()).addView(mSoftKeyBoardView, params);
+                int length = mEdit.getText().length();
+                mSoftKeyBoardView.setText(length + "/200");
+            }
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mSoftKeyBoardView.getLayoutParams();
+            if (params.bottomMargin != heightDifference) {
+                params.bottomMargin = heightDifference;
+                mSoftKeyBoardView.setLayoutParams(params);
             }
             mSoftKeyBoardView.setVisibility(View.VISIBLE);
         } else {

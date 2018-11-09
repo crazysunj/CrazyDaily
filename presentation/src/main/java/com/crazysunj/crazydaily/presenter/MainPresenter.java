@@ -16,13 +16,58 @@
 package com.crazysunj.crazydaily.presenter;
 
 import com.crazysunj.crazydaily.base.BasePresenter;
+import com.crazysunj.crazydaily.base.BaseSubscriber;
+import com.crazysunj.crazydaily.di.scope.ActivityScope;
 import com.crazysunj.crazydaily.presenter.contract.MainContract;
+import com.crazysunj.domain.entity.gankio.GankioEntity;
+import com.crazysunj.domain.interactor.gankio.GankioUseCase;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import javax.inject.Inject;
 
 /**
  * @author: sunjian
  * created on: 2018/11/7 下午8:10
  * description: https://github.com/crazysunj/CrazyDaily
  */
-public class MainPresenter extends BasePresenter<MainContract.View> {
+@ActivityScope
+public class MainPresenter extends BasePresenter<MainContract.View> implements MainContract.Presenter {
 
+    private GankioUseCase mGankioUseCase;
+
+    @Inject
+    MainPresenter(GankioUseCase gankioUseCase) {
+        mGankioUseCase = gankioUseCase;
+    }
+
+    @Override
+    public void getMeinvList() {
+        mGankioUseCase.execute(GankioUseCase.Params.get(GankioEntity.ResultsEntity.PARAMS_FULI, 10), new BaseSubscriber<List<GankioEntity.ResultsEntity>>() {
+            @Override
+            public void onNext(List<GankioEntity.ResultsEntity> resultsEntities) {
+                List<String> urls = new ArrayList<>();
+                Random random = new Random();
+                for (int i = 0; i < 6; i++) {
+                    urls.add(resultsEntities.remove(random.nextInt(resultsEntities.size())).getUrl());
+                }
+                mView.showMeinv(urls);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                mView.errorMeinv();
+                mView.showError(e.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void detachView() {
+        super.detachView();
+        mGankioUseCase.dispose();
+    }
 }

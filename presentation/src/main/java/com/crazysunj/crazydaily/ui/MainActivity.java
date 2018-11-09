@@ -20,19 +20,26 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import com.crazysunj.crazydaily.R;
+import com.crazysunj.crazydaily.app.App;
 import com.crazysunj.crazydaily.base.BaseActivity;
+import com.crazysunj.crazydaily.module.image.ImageLoader;
 import com.crazysunj.crazydaily.presenter.MainPresenter;
 import com.crazysunj.crazydaily.presenter.contract.MainContract;
+import com.crazysunj.crazydaily.ui.photo.PhotoActivity;
+import com.crazysunj.crazydaily.view.threed.CubeReversalView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.List;
+
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 import butterknife.BindView;
@@ -47,6 +54,18 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     @BindView(R.id.main_navigition)
     BottomNavigationView mNavigation;
 
+    @BindView(R.id.cube_anchor)
+    CubeReversalView mCubeAnchor;
+    @BindView(R.id.cube_first)
+    CubeReversalView mCubeFirst;
+    @BindView(R.id.cube_second)
+    CubeReversalView mCubeSecond;
+    @BindView(R.id.bottom_shadow)
+    ImageView mShadow;
+
+    private boolean isTop = true;
+    private List<String> mMeinvList;
+
     public static void start(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
         context.startActivity(intent);
@@ -54,7 +73,6 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.e("MainActivity", "onCreate");
         handleTranslucent();
         super.onCreate(savedInstanceState);
     }
@@ -89,7 +107,101 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     }
 
     @Override
+    protected void initListener() {
+        mCubeAnchor.setOnClickListener(v -> clickCubeAnchor());
+        mCubeFirst.setOnClickListener(v -> clickCubeFirst());
+        mCubeSecond.setOnClickListener(v -> clickCubeSecond());
+    }
+
+    @Override
+    protected void initData() {
+        mPresenter.getMeinvList();
+    }
+
+    private void clickCubeAnchor() {
+        isTop = !isTop;
+        mCubeSecond.start(isTop, 2);
+        mCubeFirst.start(isTop, 1);
+        mCubeAnchor.start(isTop);
+    }
+
+    private void clickCubeSecond() {
+        if (mMeinvList == null) {
+            return;
+        }
+        String url;
+        View view;
+        if (isTop) {
+            url = mMeinvList.get(4);
+            view = mCubeSecond.getForegroundView();
+        } else {
+            url = mMeinvList.get(5);
+            view = mCubeSecond.getBackgroundView();
+        }
+        PhotoActivity.start(this, url, view);
+    }
+
+    private void clickCubeFirst() {
+        if (mMeinvList == null) {
+            return;
+        }
+        String url;
+        View view;
+        if (isTop) {
+            url = mMeinvList.get(2);
+            view = mCubeFirst.getForegroundView();
+        } else {
+            url = mMeinvList.get(3);
+            view = mCubeFirst.getBackgroundView();
+        }
+        PhotoActivity.start(this, url, view);
+    }
+
+    @Override
+    public void showMeinv(List<String> meinvList) {
+        ImageLoader.loadWithVignette(this, meinvList.get(0), R.drawable.img_default, mCubeAnchor.getForegroundView());
+        ImageLoader.loadWithVignette(this, meinvList.get(1), R.drawable.img_default, mCubeAnchor.getBackgroundView());
+        ImageLoader.loadWithVignette(this, meinvList.get(2), R.drawable.img_default, mCubeFirst.getForegroundView());
+        ImageLoader.loadWithVignette(this, meinvList.get(3), R.drawable.img_default, mCubeFirst.getBackgroundView());
+        ImageLoader.loadWithVignette(this, meinvList.get(4), R.drawable.img_default, mCubeSecond.getForegroundView());
+        ImageLoader.loadWithVignette(this, meinvList.get(5), R.drawable.img_default, mCubeSecond.getBackgroundView());
+        mShadow.setVisibility(View.VISIBLE);
+        mMeinvList = meinvList;
+    }
+
+    @Override
+    public void errorMeinv() {
+        mShadow.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onBackPressed() {
+//        if (NiceVideoPlayerManager.instance().onBackPressd()) {
+//            return;
+//        }
+        if (!isTop) {
+            clickCubeAnchor();
+            return;
+        }
+        showExitDialog();
+    }
+
+    private void showExitDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("提示");
+        builder.setMessage("确定退出CrazyDaily吗");
+        builder.setNegativeButton("再玩玩", null);
+        builder.setPositiveButton("忍住泪水离开", (dialogInterface, i) -> App.getInstance().exitApp());
+        builder.show();
+    }
+
+    @Override
     protected int getContentResId() {
         return R.layout.activity_main;
+    }
+
+    @Override
+    protected void initInject() {
+        getActivityComponent().inject(this);
     }
 }

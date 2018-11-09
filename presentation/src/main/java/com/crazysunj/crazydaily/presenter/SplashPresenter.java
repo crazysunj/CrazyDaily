@@ -36,7 +36,7 @@ public class SplashPresenter extends BasePresenter<SplashContract.View> implemen
     private SplashUseCase mSplashUseCase;
 
     @Inject
-    public SplashPresenter(SplashUseCase splashUseCase) {
+    SplashPresenter(SplashUseCase splashUseCase) {
         mSplashUseCase = splashUseCase;
     }
 

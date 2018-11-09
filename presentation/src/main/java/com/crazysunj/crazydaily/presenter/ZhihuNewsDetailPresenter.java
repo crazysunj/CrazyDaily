@@ -35,7 +35,7 @@ public class ZhihuNewsDetailPresenter extends BasePresenter<ZhihuNewsDetailContr
     private ZhihuNewsDetailUseCase mZhihuNewsDetailUseCase;
 
     @Inject
-    public ZhihuNewsDetailPresenter(ZhihuNewsDetailUseCase useCase) {
+    ZhihuNewsDetailPresenter(ZhihuNewsDetailUseCase useCase) {
         mZhihuNewsDetailUseCase = useCase;
     }
 

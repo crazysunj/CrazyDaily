@@ -23,7 +23,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -67,10 +66,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -137,24 +134,11 @@ public class HomeFragment extends BaseFragment<NewHomePresenter> implements NewH
     public void onDestroy() {
         ThreadManager.shutdown();
         super.onDestroy();
-        Log.e("MainActivity", "HomeFragment-onDestroy");
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.e("MainActivity", "HomeFragment-onDestroyView");
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.e("MainActivity", "HomeFragment-onCreate");
     }
 
     @Override
     protected void initView() {
-        mActivity.setSupportActionBar(mToolbar);
+        setSupportActionBar(mToolbar);
         ActionBar actionBar = mActivity.getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
@@ -177,7 +161,6 @@ public class HomeFragment extends BaseFragment<NewHomePresenter> implements NewH
 
     @Override
     protected void initData() {
-        Log.e("MainActivity", "HomeFragment-initData");
         mPresenter.getZhihuNewsList();
         mPresenter.getGankioList(GankioEntity.ResultsEntity.PARAMS_ANDROID);
         mPresenter.getWeather("杭州");
@@ -202,7 +185,7 @@ public class HomeFragment extends BaseFragment<NewHomePresenter> implements NewH
         final int totalScrollRange = appBarLayout.getTotalScrollRange();
         final float percent = Math.abs(verticalOffset * 1.0f / totalScrollRange);
         mRefresh.setEnabled(verticalOffset == 0);
-        final int color = ContextCompat.getColor(mActivity, R.color.colorPrimary);
+        final int color = getColor(R.color.colorPrimary);
         mTitle.setTextColor((int) mArgbEvaluator.evaluate(percent, color, Color.WHITE));
         if (mNavigationIcon != null) {
             mNavigationIcon.setColorFilter((int) mArgbEvaluator.evaluate(percent, color, Color.WHITE), PorterDuff.Mode.SRC_IN);

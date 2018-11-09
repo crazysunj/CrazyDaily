@@ -52,7 +52,7 @@ public class NewHomePresenter extends BasePresenter<NewHomeContract.View> implem
     private Disposable mBannerDisposable;
 
     @Inject
-    public NewHomePresenter(ZhihuNewsListUseCase zhihuUseCase, GankioUseCase gankioUseCase, WeatherUseCase weatherUseCase, GaoxiaoUseCase gaoxiaoUseCase) {
+    NewHomePresenter(ZhihuNewsListUseCase zhihuUseCase, GankioUseCase gankioUseCase, WeatherUseCase weatherUseCase, GaoxiaoUseCase gaoxiaoUseCase) {
         mZhihuUseCase = zhihuUseCase;
         mGankioUseCase = gankioUseCase;
         mWeatherUseCase = weatherUseCase;

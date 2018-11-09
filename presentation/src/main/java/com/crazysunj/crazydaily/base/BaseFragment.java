@@ -33,11 +33,13 @@ import com.crazysunj.crazydaily.util.SnackbarUtil;
 import javax.inject.Inject;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -117,6 +119,18 @@ public abstract class BaseFragment<T extends IPresenter> extends Fragment implem
 
     protected void initView() {
 
+    }
+
+    protected int getColor(@ColorRes int color) {
+        return ContextCompat.getColor(mActivity, color);
+    }
+
+    protected void setSupportActionBar(Toolbar toolbar) {
+        mActivity.setSupportActionBar(toolbar);
+    }
+
+    protected void finish() {
+        mActivity.finish();
     }
 
     protected void showBack() {

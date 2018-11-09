@@ -40,7 +40,7 @@ public class DownloadPresenter implements DownloadContract.Presenter {
     private DownloadContract.View mView;
 
     @Inject
-    public DownloadPresenter(DownloadUseCase downloadUseCase) {
+    DownloadPresenter(DownloadUseCase downloadUseCase) {
         mDownloadUseCase = downloadUseCase;
     }
 

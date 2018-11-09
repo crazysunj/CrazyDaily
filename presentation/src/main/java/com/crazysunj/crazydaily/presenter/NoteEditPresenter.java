@@ -39,7 +39,7 @@ public class NoteEditPresenter extends BasePresenter<NoteEditContract.View> impl
     private final NoteDeleteNoteUseCase mNoteDeleteNoteUseCase;
 
     @Inject
-    public NoteEditPresenter(NoteSaveNoteUseCase noteSaveNoteUseCase, NoteGetNoteUseCase noteGetNoteUseCase, NoteDeleteNoteUseCase noteDeleteNoteUseCase) {
+    NoteEditPresenter(NoteSaveNoteUseCase noteSaveNoteUseCase, NoteGetNoteUseCase noteGetNoteUseCase, NoteDeleteNoteUseCase noteDeleteNoteUseCase) {
         mNoteSaveNoteUseCase = noteSaveNoteUseCase;
         mNoteGetNoteUseCase = noteGetNoteUseCase;
         mNoteDeleteNoteUseCase = noteDeleteNoteUseCase;

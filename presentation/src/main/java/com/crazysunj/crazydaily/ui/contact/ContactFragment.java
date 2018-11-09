@@ -19,9 +19,12 @@ import android.graphics.Canvas;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.crazysunj.crazydaily.R;
@@ -37,9 +40,9 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -81,29 +84,18 @@ public class ContactFragment extends BaseFragment<ContactPresenter> implements C
     private static final String[] LETTER = {"#", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
     private boolean isCanScroll = true;
 
+    @Nullable
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.e("MainActivity", "ContactFragment-onDestroy");
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.e("MainActivity", "ContactFragment-onDestroyView");
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.e("MainActivity", "ContactFragment-onCreate");
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
     protected void initView() {
-        mActivity.setSupportActionBar(mToolbar);
+        setSupportActionBar(mToolbar);
         showBack(mToolbar);
-        addStatusBar(mRoot, ContextCompat.getColor(mActivity, R.color.colorPrimaryDark));
+        addStatusBar(mRoot, getColor(R.color.colorPrimaryDark));
         mContacts.setLayoutManager(new LinearLayoutManager(mActivity) {
             @Override
             public boolean canScrollVertically() {
@@ -150,6 +142,7 @@ public class ContactFragment extends BaseFragment<ContactPresenter> implements C
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        Log.e("ContactFragment", "onCreateOptionsMenu");
         mActivity.getMenuInflater().inflate(R.menu.menu_contact, menu);
         MenuItem item = menu.findItem(R.id.action_search);
         mSearchView.setMenuItem(item);

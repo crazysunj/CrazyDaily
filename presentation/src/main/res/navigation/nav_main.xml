@@ -15,4 +15,16 @@
         android:name="com.crazysunj.crazydaily.ui.contact.ContactFragment"
         android:label="@string/text_conatct"
         tools:layout="@layout/activity_contact" />
+
+    <fragment
+        android:id="@+id/navigation_item_note"
+        android:name="com.crazysunj.crazydaily.ui.note.NoteFragment"
+        android:label="@string/text_note"
+        tools:layout="@layout/activity_note" />
+
+    <fragment
+        android:id="@+id/navigation_item_me"
+        android:name="com.crazysunj.crazydaily.ui.me.MeFragment"
+        android:label="@string/text_me"
+        tools:layout="@layout/activity_me" />
 </navigation>

@@ -17,7 +17,6 @@ package com.crazysunj.crazydaily.presenter;
 
 import com.crazysunj.crazydaily.base.BasePresenter;
 import com.crazysunj.crazydaily.base.BaseSubscriber;
-import com.crazysunj.crazydaily.di.scope.ActivityScope;
 import com.crazysunj.crazydaily.presenter.contract.NoteContract;
 import com.crazysunj.domain.entity.note.NoteEntity;
 import com.crazysunj.domain.interactor.note.NoteDeleteNoteUseCase;
@@ -32,14 +31,13 @@ import javax.inject.Inject;
  * created on: 2018/10/8 下午4:31
  * description: https://github.com/crazysunj/CrazyDaily
  */
-@ActivityScope
 public class NotePresenter extends BasePresenter<NoteContract.View> implements NoteContract.Presenter {
 
     private final NoteGetListNoteUseCase mNoteGetListNoteUseCase;
     private final NoteDeleteNoteUseCase mNoteDeleteNoteUseCase;
 
     @Inject
-    public NotePresenter(NoteGetListNoteUseCase noteGetListNoteUseCase, NoteDeleteNoteUseCase noteDeleteNoteUseCase) {
+    NotePresenter(NoteGetListNoteUseCase noteGetListNoteUseCase, NoteDeleteNoteUseCase noteDeleteNoteUseCase) {
         mNoteGetListNoteUseCase = noteGetListNoteUseCase;
         mNoteDeleteNoteUseCase = noteDeleteNoteUseCase;
     }

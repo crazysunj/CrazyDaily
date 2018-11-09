@@ -20,6 +20,7 @@ import android.app.Activity;
 import com.crazysunj.crazydaily.di.module.ActivityModule;
 import com.crazysunj.crazydaily.di.module.EntityModule;
 import com.crazysunj.crazydaily.di.scope.ActivityScope;
+import com.crazysunj.crazydaily.ui.MainActivity;
 import com.crazysunj.crazydaily.ui.contact.ContactActivity;
 import com.crazysunj.crazydaily.ui.home.HomeActivity;
 import com.crazysunj.crazydaily.ui.note.NoteActivity;
@@ -53,4 +54,6 @@ public interface ActivityComponent {
     void inject(NoteEditActivity noteEditActivity);
 
     void inject(NoteActivity noteActivity);
+
+    void inject(MainActivity mainActivity);
 }

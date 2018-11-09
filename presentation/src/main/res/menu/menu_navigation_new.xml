@@ -8,4 +8,13 @@
         android:id="@+id/navigation_item_contact"
         android:icon="@mipmap/ic_contact"
         android:title="@string/text_conatct" />
+    <item
+        android:id="@+id/navigation_item_note"
+        android:icon="@mipmap/ic_edit"
+        android:title="@string/text_note" />
+
+    <item
+        android:id="@+id/navigation_item_me"
+        android:icon="@mipmap/ic_me"
+        android:title="@string/text_me" />
 </menu>

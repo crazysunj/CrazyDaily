@@ -39,7 +39,7 @@ public class PhotoPickerPresenter extends BasePresenter<PhotoPickerContract.View
     private PhotoPickerMediaUseCase mPhotoPickerMediaUseCase;
 
     @Inject
-    public PhotoPickerPresenter(PhotoPickerBucketUseCase photoPickerBucketUseCase, PhotoPickerMediaUseCase photoPickerMediaUseCase) {
+    PhotoPickerPresenter(PhotoPickerBucketUseCase photoPickerBucketUseCase, PhotoPickerMediaUseCase photoPickerMediaUseCase) {
         mPhotoPickerBucketUseCase = photoPickerBucketUseCase;
         mPhotoPickerMediaUseCase = photoPickerMediaUseCase;
     }
