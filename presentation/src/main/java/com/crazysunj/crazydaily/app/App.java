@@ -15,7 +15,6 @@
  */
 package com.crazysunj.crazydaily.app;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -159,11 +158,12 @@ public class App extends Application {
         }
     }
 
-    @SuppressLint("NewApi")
     public void exitApp() {
         if (mActivities != null) {
             synchronized (this) {
-                mActivities.forEach(Activity::finish);
+                for (Activity activity : mActivities) {
+                    activity.finish();
+                }
             }
         }
         android.os.Process.killProcess(android.os.Process.myPid());
