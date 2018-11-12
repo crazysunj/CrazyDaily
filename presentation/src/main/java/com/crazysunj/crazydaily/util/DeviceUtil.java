@@ -17,9 +17,11 @@ package com.crazysunj.crazydaily.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Build;
+import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.DisplayCutout;
@@ -73,7 +75,10 @@ public class DeviceUtil {
                     DisplayCutout displayCutout = windowInsets.getDisplayCutout();
                     if (displayCutout != null) {
                         List<Rect> rects = displayCutout.getBoundingRects();
-                        return rects != null && rects.size() > 0;
+                        // 一般为刘海屏即为全面屏
+                        if (rects != null && rects.size() > 0) {
+                            return true;
+                        }
                     }
                 }
             }
@@ -101,5 +106,15 @@ public class DeviceUtil {
      */
     public static boolean isSupportP() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.P;
+    }
+
+    /**
+     * 判断是否含有虚拟按键，此方法可能只适用于小米
+     *
+     * @param contextWrapper ContextWrapper
+     * @return boolean
+     */
+    public static boolean isNoVirtualNavigation(@NonNull ContextWrapper contextWrapper) {
+        return Settings.Global.getInt(contextWrapper.getContentResolver(), "force_fsg_nav_bar", 0) != 0;
     }
 }

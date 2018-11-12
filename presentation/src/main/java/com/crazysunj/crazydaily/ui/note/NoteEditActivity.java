@@ -23,7 +23,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
@@ -46,6 +45,7 @@ import com.crazysunj.crazydaily.presenter.NoteEditPresenter;
 import com.crazysunj.crazydaily.presenter.contract.NoteEditContract;
 import com.crazysunj.crazydaily.ui.adapter.NoteEditAdapter;
 import com.crazysunj.crazydaily.ui.photo.PhotoPickerActivity;
+import com.crazysunj.crazydaily.util.DeviceUtil;
 import com.crazysunj.crazydaily.util.ScreenUtil;
 import com.crazysunj.crazydaily.view.dialog.CrazyDailyAlertDialog;
 import com.crazysunj.crazydaily.view.note.NoteEditText;
@@ -178,11 +178,11 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
                 int heightPixels = getResources().getDisplayMetrics().heightPixels;
                 int decorViewHeight = decorView.getHeight();
                 final int bottom = r.bottom;
-                boolean isFullScreen = Settings.Global.getInt(getContentResolver(), "force_fsg_nav_bar", 0) != 0;
+                boolean isNoVirtualNavigation = DeviceUtil.isNoVirtualNavigation(NoteEditActivity.this);
                 int heightDifference;
-                if (!isFullScreen && bottom == heightPixels) {
+                if (!isNoVirtualNavigation && bottom == heightPixels) {
                     heightDifference = 0;
-                } else if (isFullScreen && bottom == decorViewHeight) {
+                } else if (isNoVirtualNavigation && bottom == decorViewHeight) {
                     heightDifference = 0;
                 } else {
                     heightDifference = decorViewHeight - bottom;
