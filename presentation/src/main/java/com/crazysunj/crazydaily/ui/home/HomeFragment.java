@@ -321,7 +321,7 @@ public class HomeFragment extends BaseFragment<NewHomePresenter> implements NewH
 
     @NeedsPermission({Manifest.permission.CAMERA})
     void openQRCode() {
-        new IntentIntegrator(mActivity)
+        IntentIntegrator.forSupportFragment(this)
                 .setCaptureActivity(ScannerActivity.class).initiateScan();
     }
 
