@@ -17,6 +17,7 @@ package com.crazysunj.crazydaily.util;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.os.MessageQueue;
 
 /**
  * @author: sunjian
@@ -33,5 +34,32 @@ public class HandlerHelper {
 
     private static class Holder {
         private static Handler sHandler = new Handler(Looper.getMainLooper());
+    }
+
+    public static void post(Runnable r) {
+        Holder.sHandler.post(r);
+    }
+
+    public static void post(Runnable r, long delayMillis) {
+        Holder.sHandler.postDelayed(r, delayMillis);
+    }
+
+    /**
+     * 一般用于主线程消息执行完成之后，初始化一些耗时的数据
+     * 默认用的是主线程MessageQueue
+     *
+     * @param handler MessageQueue.IdleHandler
+     */
+    public static void addIdleHandler(MessageQueue.IdleHandler handler) {
+        Looper.myQueue().addIdleHandler(handler);
+    }
+
+    /**
+     * 成对出现，记得remove
+     *
+     * @param handler MessageQueue.IdleHandler
+     */
+    public static void removeIdleHandler(MessageQueue.IdleHandler handler) {
+        Looper.myQueue().removeIdleHandler(handler);
     }
 }
