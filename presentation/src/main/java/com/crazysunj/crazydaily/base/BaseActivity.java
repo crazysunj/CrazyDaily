@@ -62,10 +62,10 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
     @Override
     protected void onDestroy() {
         App.getInstance().removeActivity(this);
+        super.onDestroy();
         if (mPresenter != null) {
             mPresenter.detachView();
         }
-        super.onDestroy();
         mUnBinder.unbind();
     }
 

@@ -9,7 +9,6 @@
         android:id="@+id/zhihu_news_detail_appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay"
         android:transitionName="shareView"
         app:layout_behavior="@string/appbar_behavior">
@@ -59,6 +58,7 @@
         android:layout_marginEnd="20dp"
         android:src="@mipmap/ic_star_selected"
         app:backgroundTint="@color/colorAccent"
+        app:fabCustomSize="@dimen/space_50"
         app:fabSize="normal"
         app:layout_anchor="@id/zhihu_news_detail_appbar"
         app:layout_anchorGravity="bottom|end" />
