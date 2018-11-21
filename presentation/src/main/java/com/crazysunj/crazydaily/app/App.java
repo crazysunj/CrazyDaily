@@ -26,6 +26,8 @@ import com.crazysunj.crazydaily.di.component.AppComponent;
 import com.crazysunj.crazydaily.di.component.DaggerAppComponent;
 import com.crazysunj.crazydaily.di.module.AppModule;
 import com.crazysunj.crazydaily.module.web.CrazyDailySonicRuntime;
+import com.crazysunj.crazydaily.util.ScreenAdapterManager;
+import com.crazysunj.crazydaily.util.ScreenUtil;
 import com.crazysunj.crazydaily.weex.CrazyDailyModule;
 import com.crazysunj.crazydaily.weex.LogModule;
 import com.crazysunj.crazydaily.weex.WXCustomTextDomObject;
@@ -70,6 +72,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         getAppComponent();
+        initScreenAdapter();
         ViewTarget.setTagId(R.id.glide_tag);
         LoggerUtil.init(BuildConfig.DEBUG);
         initWeex();
@@ -77,6 +80,16 @@ public class App extends Application {
         initSonic();
         initPgyer();
         initLeakCanary();
+    }
+
+    /**
+     * 初始化屏幕适配
+     */
+    private void initScreenAdapter() {
+        // 设置适配的那台手机分辨率，宽度是dp转换，高度是pt转换
+        int width = ScreenUtil.px2dp(this, 1080);
+        int height = ScreenUtil.px2pt(this, 2160);
+        ScreenAdapterManager.register(this, ScreenAdapterManager.ADAPTER_TYPE_WIDTH, width, height);
     }
 
     private void initPgyer() {

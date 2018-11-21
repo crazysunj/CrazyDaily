@@ -25,6 +25,16 @@ import android.content.Context;
 public class ScreenUtil {
     private ScreenUtil() {
     }
+    
+    public static int px2pt(Context context, int px) {
+        float scale = context.getResources().getDisplayMetrics().xdpi;
+        return (int) (px * 72f / scale + 0.5f);
+    }
+
+    public static int px2dp(Context context, int px) {
+        float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (px / scale + 0.5f);
+    }
 
     public static int dp2px(Context context, int dp) {
         final float scale = context.getResources().getDisplayMetrics().density;

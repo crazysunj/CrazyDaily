@@ -38,6 +38,7 @@
 * UI风格采用Material Design，清新、简洁和直观
 * 跨端采用Weex，涉及weex页面、自定义Module、自定义Component、自定义Adapter、与原生webview同步(支持返回键拦截)
 * RxJava的操作符巧妙运用
+* 支持今日头条适配方案
 * Dagger2与Butterknife实现依赖注解，解耦，方便测试等
 * Retrofit和Okhttp实现网络架构，实现多种扩展，例如常见的日志规范打印，不用抓包以及缓存配置等等
 * Glide实现图片加载，配合GlideTransformations实现多种变换，如圆角、遮罩等
