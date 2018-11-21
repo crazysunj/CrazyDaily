@@ -171,6 +171,9 @@ public class App extends Application {
         }
     }
 
+    /**
+     * 退出app
+     */
     public void exitApp() {
         if (mActivities != null) {
             synchronized (this) {
@@ -179,6 +182,7 @@ public class App extends Application {
                 }
             }
         }
+        ScreenAdapterManager.unregister(this);
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(0);
     }

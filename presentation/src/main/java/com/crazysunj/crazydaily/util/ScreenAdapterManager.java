@@ -127,6 +127,7 @@ public class ScreenAdapterManager {
             application.unregisterActivityLifecycleCallbacks(activityLifecycleCallbacks);
             activityLifecycleCallbacks = null;
         }
+        application.getResources().getDisplayMetrics().setTo(adapterMetrics);
     }
 
     /**
