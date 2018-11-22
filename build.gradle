@@ -23,3 +23,15 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+tasks.whenTaskAdded { task ->
+    // Android 测试相关
+    if (task.name.contains('AndroidTest')
+            || task.name.contains('mockableAndroidJar')
+            || task.name.contains('UnitTest')
+            //关闭NDK和JNI
+            || task.name.contains('Ndk')
+            || task.name.contains('Jni')) {
+        task.enabled = false
+    }
+}

@@ -36,6 +36,12 @@ android {
     dexOptions {
         javaMaxHeapSize "4g"
         preDexLibraries = false
+        maxProcessCount 8
+    }
+
+    aaptOptions {
+        // 禁止构建时压缩png图片
+        cruncherEnabled false
     }
 
     buildTypes {
@@ -136,3 +142,5 @@ dependencies {
     implementation "android.arch.navigation:navigation-fragment:1.0.0-alpha07"
     implementation "android.arch.navigation:navigation-ui:1.0.0-alpha07"
 }
+
+
