@@ -30,14 +30,18 @@ dependencies {
     api project(':domain')
 
     compileOnly dataDependencies.MTRVA
-    compileOnly dataDependencies.niceVieoPlayer
+    compileOnly(dataDependencies.niceVieoPlayer) {
+        exclude group: 'androidx.appcompat'
+    }
 
-    api dataDependencies.retrofit
-    api dataDependencies.retrofitConverterGson
-    api dataDependencies.retrofitAdapterRxjava
+    implementation dataDependencies.retrofit
+    implementation dataDependencies.retrofitConverterGson
+    implementation dataDependencies.retrofitAdapterRxjava
     api dataDependencies.okhttp
-    api dataDependencies.okhttpLoggingInterceptor
+    implementation dataDependencies.okhttpLoggingInterceptor
     api dataDependencies.dagger
     annotationProcessor dataDependencies.daggerCompiler
-    api dataDependencies.logger
+    implementation(dataDependencies.logger) {
+        exclude group: 'androidx.annotation'
+    }
 }

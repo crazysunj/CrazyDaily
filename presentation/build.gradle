@@ -95,7 +95,9 @@ dependencies {
     //选择对话框
     implementation libs.circleimageview
     //圆形imageview
-    implementation libs.niceVieoPlayer
+    implementation(libs.niceVieoPlayer) {
+        exclude group: 'androidx.appcompat'
+    }
     //视频播放
     implementation libs.cardslideview
     //卡片轮播
@@ -139,8 +141,10 @@ dependencies {
     implementation libs.sonic
     annotationProcessor libs.daggerCompiler
 
-    implementation "android.arch.navigation:navigation-fragment:1.0.0-alpha07"
-    implementation "android.arch.navigation:navigation-ui:1.0.0-alpha07"
+    implementation libs.navigationFragment
+    implementation(libs.navigationUi) {
+        exclude group: 'androidx.cardview'
+    }
 }
 
 

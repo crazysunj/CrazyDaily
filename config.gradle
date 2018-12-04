@@ -54,6 +54,7 @@ ext {
             androidx              : "1.0.0",
             multidex              : "2.0.0",
             greendao              : "3.2.2",
+            navigation            : "1.0.0-alpha07",
     ]
 
     dataDependencies = [
@@ -110,6 +111,8 @@ ext {
             longImage           : "com.davemorrissey.labs:subsampling-scale-image-view:${dependVersion.longImage}",
             switchButton        : "com.github.zcweng:switch-button:${dependVersion.switchButton}",
             constraintlayout    : "androidx.constraintlayout:constraintlayout:${dependVersion.constraintlayout}",
+            navigationFragment  : "android.arch.navigation:navigation-fragment:${dependVersion.navigation}",
+            navigationUi        : "android.arch.navigation:navigation-ui:${dependVersion.navigation}",
     ]
 
     domainDependencies = [
