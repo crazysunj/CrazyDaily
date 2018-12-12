@@ -32,6 +32,7 @@ import com.crazysunj.crazydaily.base.BaseFragment;
 import com.crazysunj.crazydaily.constant.WeexConstant;
 import com.crazysunj.crazydaily.di.module.EntityModule;
 import com.crazysunj.crazydaily.entity.CityEntity;
+import com.crazysunj.crazydaily.flutter.CrazyDailyFlutterActivity;
 import com.crazysunj.crazydaily.module.permission.PermissionCamera;
 import com.crazysunj.crazydaily.module.permission.PermissionHelper;
 import com.crazysunj.crazydaily.module.permission.PermissionStorage;
@@ -41,7 +42,6 @@ import com.crazysunj.crazydaily.service.DownloadService;
 import com.crazysunj.crazydaily.ui.adapter.HomeAdapter;
 import com.crazysunj.crazydaily.ui.adapter.helper.HomeAdapterHelper;
 import com.crazysunj.crazydaily.ui.browser.BrowserActivity;
-import com.crazysunj.crazydaily.ui.scan.ScannerActivity;
 import com.crazysunj.crazydaily.util.SnackbarUtil;
 import com.crazysunj.crazydaily.view.banner.BannerCardHandler;
 import com.crazysunj.crazydaily.view.banner.WrapBannerView;
@@ -321,8 +321,9 @@ public class HomeFragment extends BaseFragment<NewHomePresenter> implements NewH
 
     @NeedsPermission({Manifest.permission.CAMERA})
     void openQRCode() {
-        IntentIntegrator.forSupportFragment(this)
-                .setCaptureActivity(ScannerActivity.class).initiateScan();
+        CrazyDailyFlutterActivity.start(mActivity);
+//        IntentIntegrator.forSupportFragment(this)
+//                .setCaptureActivity(ScannerActivity.class).initiateScan();
     }
 
     @OnShowRationale({Manifest.permission.CAMERA})

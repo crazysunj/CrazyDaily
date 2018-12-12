@@ -4,8 +4,8 @@ ext {
             compileSdkVersion: 28,
             minSdkVersion    : 21,
             targetSdkVersion : 28,
-            versionCode      : 14,
-            versionName      : "1.9.2"
+            versionCode      : 15,
+            versionName      : "1.9.3"
     ]
 
     dependVersion = [
@@ -67,7 +67,8 @@ ext {
             dagger                  : "com.google.dagger:dagger:${dependVersion.dagger2}",
             daggerCompiler          : "com.google.dagger:dagger-compiler:${dependVersion.dagger2}",
             logger                  : "com.orhanobut:logger:${dependVersion.logger}",
-            niceVieoPlayer          : "com.github.xiaoyanger0825:NiceVieoPlayer:${dependVersion.niceVieoPlayer}"
+            niceVieoPlayer          : "com.github.xiaoyanger0825:NiceVieoPlayer:${dependVersion.niceVieoPlayer}",
+            annotation              : "androidx.annotation:annotation:${dependVersion.androidx}",
     ]
 
     dependencies = [
@@ -127,5 +128,6 @@ ext {
             gson           : "com.google.code.gson:gson:${dependVersion.gson}",
             tinypinyin     : "com.github.promeg:tinypinyin:${dependVersion.tinypinyin}",
             greendao       : "org.greenrobot:greendao:${dependVersion.greendao}",
+            annotation     : "androidx.annotation:annotation:${dependVersion.androidx}",
     ]
 }

@@ -31,15 +31,16 @@ dependencies {
 
     compileOnly domainDependencies.MTRVA
     compileOnly domainDependencies.gson
+    compileOnly domainDependencies.annotation
     compileOnly(domainDependencies.niceVieoPlayer) {
         exclude group: 'androidx.appcompat'
     }
 
-    implementation domainDependencies.greendao
+    api domainDependencies.greendao
     api domainDependencies.javaxInject
     api domainDependencies.rxjava
     api domainDependencies.rxandroid
-    implementation(domainDependencies.tray) {
+    api(domainDependencies.tray) {
         exclude group: 'androidx.annotation'
     }
 

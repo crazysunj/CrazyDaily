@@ -145,6 +145,8 @@ dependencies {
     implementation(libs.navigationUi) {
         exclude group: 'androidx.cardview'
     }
+    implementation project(':flutter')
+    // 依赖flutter
 }
 
 
