@@ -347,5 +347,7 @@
 -keep class io.flutter.view.**  { *; }
 -keep class io.flutter.**  { *; }
 -keep class io.flutter.plugins.**  { *; }
+# androidx
+-keep class androidx.core.app.CoreComponentFactory { *; }
 
 
