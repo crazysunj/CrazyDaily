@@ -16,6 +16,7 @@
 package com.crazysunj.crazydaily.base;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.crazysunj.crazydaily.R;
@@ -52,7 +53,6 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
         super.onCreate(savedInstanceState);
         setContentView(getContentResId());
         mUnBinder = ButterKnife.bind(this);
-        App.getInstance().addActivity(this);
         onPrepare();
         initView();
         initListener();
@@ -61,7 +61,7 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
 
     @Override
     protected void onDestroy() {
-        App.getInstance().removeActivity(this);
+        Log.e("AppLifecycleCallbacks", "onDestroy");
         super.onDestroy();
         if (mPresenter != null) {
             mPresenter.detachView();

@@ -73,6 +73,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         getAppComponent();
+        registerActivityLifecycleCallbacks(new CrazyDailyActivityLifecycleCallbacks());
         initScreenAdapter();
         ViewTarget.setTagId(R.id.glide_tag);
         LoggerUtil.init(BuildConfig.DEBUG);
