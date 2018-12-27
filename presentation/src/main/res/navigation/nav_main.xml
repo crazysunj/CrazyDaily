@@ -14,7 +14,7 @@
         android:id="@+id/navigation_item_contact"
         android:name="com.crazysunj.crazydaily.ui.contact.ContactFragment"
         android:label="@string/text_conatct"
-        tools:layout="@layout/activity_contact" />
+        tools:layout="@layout/fragment_contact" />
 
     <fragment
         android:id="@+id/navigation_item_note"

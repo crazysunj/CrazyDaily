@@ -47,7 +47,7 @@ public class NotePresenter extends BasePresenter<NoteContract.View> implements N
         mNoteDeleteNoteUseCase.execute(NoteDeleteNoteUseCase.Params.get(id), new BaseSubscriber<Boolean>() {
             @Override
             public void onNext(Boolean aBoolean) {
-                if (aBoolean) {
+                if (aBoolean && mView != null) {
                     mView.deleteSuccess(id);
                 }
             }
@@ -59,7 +59,9 @@ public class NotePresenter extends BasePresenter<NoteContract.View> implements N
         mNoteGetListNoteUseCase.execute(new BaseSubscriber<List<NoteEntity>>() {
             @Override
             public void onNext(List<NoteEntity> noteEntities) {
-                mView.showNote(noteEntities);
+                if (mView != null) {
+                    mView.showNote(noteEntities);
+                }
             }
         });
     }

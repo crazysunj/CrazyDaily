@@ -64,13 +64,17 @@ public class NewHomePresenter extends BasePresenter<NewHomeContract.View> implem
         mZhihuUseCase.execute(new BaseSubscriber<ZhihuNewsEntity>() {
             @Override
             public void onNext(ZhihuNewsEntity zhihuNewsEntity) {
-                mView.showZhihu(zhihuNewsEntity);
+                if (mView != null) {
+                    mView.showZhihu(zhihuNewsEntity);
+                }
             }
 
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
-                mView.showError(e.getMessage());
+                if (mView != null) {
+                    mView.showError(e.getMessage());
+                }
             }
         });
     }
@@ -80,13 +84,17 @@ public class NewHomePresenter extends BasePresenter<NewHomeContract.View> implem
         mGankioUseCase.execute(GankioUseCase.Params.get(type, 10), new BaseSubscriber<List<GankioEntity.ResultsEntity>>() {
             @Override
             public void onNext(List<GankioEntity.ResultsEntity> resultsEntities) {
-                mView.showGankio(resultsEntities);
+                if (mView != null) {
+                    mView.showGankio(resultsEntities);
+                }
             }
 
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
-                mView.showError(e.getMessage());
+                if (mView != null) {
+                    mView.showError(e.getMessage());
+                }
             }
         });
     }
@@ -96,13 +104,17 @@ public class NewHomePresenter extends BasePresenter<NewHomeContract.View> implem
         mWeatherUseCase.execute(WeatherUseCase.Params.get(location), new BaseSubscriber<WeatherXinZhiEntity.FinalEntity>() {
             @Override
             public void onNext(WeatherXinZhiEntity.FinalEntity weatherEntity) {
-                mView.showWeather(weatherEntity);
+                if (mView != null) {
+                    mView.showWeather(weatherEntity);
+                }
             }
 
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
-                mView.showError(e.getMessage());
+                if (mView != null) {
+                    mView.showError(e.getMessage());
+                }
             }
         });
     }
@@ -112,13 +124,17 @@ public class NewHomePresenter extends BasePresenter<NewHomeContract.View> implem
         mGaoxiaoUseCase.execute(GaoxiaoUseCase.Params.get(page), new BaseSubscriber<List<GaoxiaoItemEntity>>() {
             @Override
             public void onNext(List<GaoxiaoItemEntity> gaoxiaoItemEntities) {
-                mView.showGaoxiao(gaoxiaoItemEntities);
+                if (mView != null) {
+                    mView.showGaoxiao(gaoxiaoItemEntities);
+                }
             }
 
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
-                mView.showError(e.getMessage());
+                if (mView != null) {
+                    mView.showError(e.getMessage());
+                }
             }
         });
     }
@@ -130,7 +146,9 @@ public class NewHomePresenter extends BasePresenter<NewHomeContract.View> implem
                     .subscribeWith(new BaseSubscriber<Long>() {
                         @Override
                         public void onNext(Long aLong) {
-                            mView.switchBanner();
+                            if (mView != null) {
+                                mView.switchBanner();
+                            }
                         }
                     });
         }

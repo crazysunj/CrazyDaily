@@ -113,7 +113,7 @@ public class NoteFragment extends BaseFragment<NotePresenter> implements NoteCon
 
     @Override
     protected int getContentResId() {
-        return R.layout.activity_note;
+        return R.layout.fragment_note;
     }
 
     @Override

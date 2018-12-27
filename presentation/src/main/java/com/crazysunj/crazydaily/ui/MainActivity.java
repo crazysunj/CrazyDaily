@@ -165,7 +165,9 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         ImageLoader.loadWithVignette(this, meinvList.get(3), R.drawable.img_default, mCubeFirst.getBackgroundView());
         ImageLoader.loadWithVignette(this, meinvList.get(4), R.drawable.img_default, mCubeSecond.getForegroundView());
         ImageLoader.loadWithVignette(this, meinvList.get(5), R.drawable.img_default, mCubeSecond.getBackgroundView());
-        mShadow.setVisibility(View.VISIBLE);
+        if (mShadow != null) {
+            mShadow.setVisibility(View.VISIBLE);
+        }
         mMeinvList = meinvList;
     }
 

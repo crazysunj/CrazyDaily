@@ -52,7 +52,9 @@ public class SplashPresenter extends BasePresenter<SplashContract.View> implemen
         mSplashUseCase.execute(SplashUseCase.Params.get(1, TimeUnit.SECONDS), new BaseSubscriber<Long>() {
             @Override
             public void onNext(Long aLong) {
-                mView.enterHome();
+                if (mView != null) {
+                    mView.enterHome();
+                }
             }
         });
     }

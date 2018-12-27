@@ -49,7 +49,9 @@ public class PhotoPickerPresenter extends BasePresenter<PhotoPickerContract.View
         mPhotoPickerMediaUseCase.execute(PhotoPickerMediaUseCase.Params.get(imageOffset, videoOffset, bucketId), new BaseSubscriber<MediaEntity.MediaResponseData>() {
             @Override
             public void onNext(MediaEntity.MediaResponseData data) {
-                mView.showMediaList(data.imageOffset, data.videoOffset, data.mediaList);
+                if (mView != null) {
+                    mView.showMediaList(data.imageOffset, data.videoOffset, data.mediaList);
+                }
             }
         });
     }
@@ -59,7 +61,9 @@ public class PhotoPickerPresenter extends BasePresenter<PhotoPickerContract.View
         mPhotoPickerBucketUseCase.execute(new BaseSubscriber<List<BucketEntity>>() {
             @Override
             public void onNext(List<BucketEntity> bucketEntityList) {
-                mView.showBucketList(bucketEntityList);
+                if (mView != null) {
+                    mView.showBucketList(bucketEntityList);
+                }
             }
         });
     }

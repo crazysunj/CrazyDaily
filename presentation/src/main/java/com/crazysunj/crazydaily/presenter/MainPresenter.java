@@ -48,19 +48,23 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
         mGankioUseCase.execute(GankioUseCase.Params.get(GankioEntity.ResultsEntity.PARAMS_FULI, 10), new BaseSubscriber<List<GankioEntity.ResultsEntity>>() {
             @Override
             public void onNext(List<GankioEntity.ResultsEntity> resultsEntities) {
-                List<String> urls = new ArrayList<>();
-                Random random = new Random();
-                for (int i = 0; i < 6; i++) {
-                    urls.add(resultsEntities.remove(random.nextInt(resultsEntities.size())).getUrl());
+                if (mView != null) {
+                    List<String> urls = new ArrayList<>();
+                    Random random = new Random();
+                    for (int i = 0; i < 6; i++) {
+                        urls.add(resultsEntities.remove(random.nextInt(resultsEntities.size())).getUrl());
+                    }
+                    mView.showMeinv(urls);
                 }
-                mView.showMeinv(urls);
             }
 
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
-                mView.errorMeinv();
-                mView.showError(e.getMessage());
+                if (mView != null) {
+                    mView.errorMeinv();
+                    mView.showError(e.getMessage());
+                }
             }
         });
     }

@@ -44,7 +44,9 @@ public class ZhihuNewsDetailPresenter extends BasePresenter<ZhihuNewsDetailContr
         mZhihuNewsDetailUseCase.execute(ZhihuNewsDetailUseCase.Params.get(id), new BaseSubscriber<ZhihuNewsDetailEntity>() {
             @Override
             public void onNext(ZhihuNewsDetailEntity zhihuNewsDetailEntity) {
-                mView.showContent(zhihuNewsDetailEntity);
+                if (mView != null) {
+                    mView.showContent(zhihuNewsDetailEntity);
+                }
             }
         });
     }

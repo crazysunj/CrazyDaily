@@ -50,7 +50,7 @@ public class NoteEditPresenter extends BasePresenter<NoteEditContract.View> impl
         mNoteDeleteNoteUseCase.execute(NoteDeleteNoteUseCase.Params.get(id), new BaseSubscriber<Boolean>() {
             @Override
             public void onNext(Boolean aBoolean) {
-                if (aBoolean) {
+                if (aBoolean && mView != null) {
                     mView.cancelSuccess();
                 }
             }
@@ -62,7 +62,7 @@ public class NoteEditPresenter extends BasePresenter<NoteEditContract.View> impl
         mNoteSaveNoteUseCase.execute(NoteSaveNoteUseCase.Params.get(noteEntity), new BaseSubscriber<Boolean>() {
             @Override
             public void onNext(Boolean aBoolean) {
-                if (aBoolean) {
+                if (aBoolean && mView != null) {
                     mView.saveSuccess();
                 }
             }
@@ -74,7 +74,9 @@ public class NoteEditPresenter extends BasePresenter<NoteEditContract.View> impl
         mNoteGetNoteUseCase.execute(new BaseSubscriber<NoteEntity>() {
             @Override
             public void onNext(NoteEntity noteEntity) {
-                mView.showNote(noteEntity);
+                if (mView != null) {
+                    mView.showNote(noteEntity);
+                }
             }
         });
     }
@@ -84,7 +86,7 @@ public class NoteEditPresenter extends BasePresenter<NoteEditContract.View> impl
         mNoteSaveNoteUseCase.execute(NoteSaveNoteUseCase.Params.get(noteEntity), new BaseSubscriber<Boolean>() {
             @Override
             public void onNext(Boolean aBoolean) {
-                if (aBoolean) {
+                if (aBoolean && mView != null) {
                     mView.submitSuccess(noteEntity);
                 }
             }

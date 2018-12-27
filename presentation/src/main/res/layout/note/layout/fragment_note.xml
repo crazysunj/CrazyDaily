@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/note_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        app:contentInsetStart="0dp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/note_back"
+            style="@style/text_18_white"
+            android:layout_width="@dimen/space_60"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:fontFamily="@font/crazydailyicon"
+            android:gravity="center"
+            android:text="@string/ic_back" />
+
+        <TextView
+            style="@style/text_20_white"
+            android:layout_width="@dimen/space_120"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/note" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/note_edit"
+            style="@style/text_20_white"
+            android:layout_width="@dimen/space_60"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:fontFamily="@font/crazydailyicon"
+            android:gravity="center"
+            android:text="@string/ic_edit" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/note_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

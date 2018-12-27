@@ -45,12 +45,16 @@ public class ContactPresenter extends BasePresenter<ContactContract.View> implem
             @Override
             protected void onStart() {
                 super.onStart();
-                mView.showLoading();
+                if (mView != null) {
+                    mView.showLoading();
+                }
             }
 
             @Override
             public void onNext(List<MultiTypeIndexEntity> data) {
-                mView.showContent(data);
+                if (mView != null) {
+                    mView.showContent(data);
+                }
             }
         });
     }

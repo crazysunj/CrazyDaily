@@ -72,7 +72,7 @@ public class ContactFragment extends BaseFragment<ContactPresenter> implements C
 
     @Override
     protected int getContentResId() {
-        return R.layout.activity_contact;
+        return R.layout.fragment_contact;
     }
 
     @Override

@@ -52,7 +52,7 @@ public class DownloadPresenter implements DownloadContract.Presenter {
             @Override
             public void onNext(DownloadEvent downloadEvent) {
                 final int progress = (int) (downloadEvent.loaded * 100f / downloadEvent.total + 0.5f);
-                if (preProgress != progress) {
+                if (preProgress != progress && mView != null) {
                     preProgress = progress;
                     mView.onProgress(downloadEvent.taskId, progress);
                 }
@@ -75,18 +75,24 @@ public class DownloadPresenter implements DownloadContract.Presenter {
         mDownloadUseCase.execute(DownloadUseCase.Params.get(taskId, url, saveFile), new BaseSubscriber<File>() {
             @Override
             public void onNext(File file) {
-                mView.onSuccess(taskId, file);
+                if (mView != null) {
+                    mView.onSuccess(taskId, file);
+                }
             }
 
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
-                mView.onFailed(taskId, e);
+                if (mView != null) {
+                    mView.onFailed(taskId, e);
+                }
             }
 
             @Override
             public void onComplete() {
-                mView.onComplete(taskId);
+                if (mView != null) {
+                    mView.onComplete(taskId);
+                }
             }
         });
     }

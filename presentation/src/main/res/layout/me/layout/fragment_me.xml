@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/me_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:layout_behavior="@string/appbar_behavior">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/me_ctl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:contentScrim="@color/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <ImageView
+                android:id="@+id/me_icon"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/space_200"
+                android:fitsSystemWindows="true"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_launcher"
+                android:tag="overScroll"
+                app:layout_collapseMode="parallax" />
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/me_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:navigationIcon="@mipmap/ic_back"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:title="@string/text_me" />
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never"
+        android:scrollbars="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.crazysunj.crazydaily.view.item.CommonItem
+                android:id="@+id/me_handle_img"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/space_50"
+                android:layout_marginTop="@dimen/space_10"
+                app:common_item_icon="@mipmap/ic_photo_blue"
+                app:common_item_text="@string/handle_img" />
+
+            <com.crazysunj.crazydaily.view.item.CommonItem
+                android:id="@+id/me_clear_cache"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/space_50"
+                app:common_item_bottom_line="false"
+                app:common_item_icon="@mipmap/ic_clean_cache_green"
+                app:common_item_text="@string/clear_cache" />
+
+            <com.crazysunj.crazydaily.view.item.CommonItem
+                android:id="@+id/me_update"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/space_50"
+                android:layout_marginTop="@dimen/space_10"
+                app:common_item_icon="@mipmap/ic_update"
+                app:common_item_text="@string/update" />
+
+            <com.crazysunj.crazydaily.view.item.CommonItem
+                android:id="@+id/me_feedback"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/space_50"
+                app:common_item_icon="@mipmap/ic_feedback"
+                app:common_item_text="@string/feedback" />
+
+            <com.crazysunj.crazydaily.view.item.CommonItem
+                android:id="@+id/me_about_app"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/space_50"
+                android:layout_marginTop="@dimen/space_10"
+                app:common_item_icon="@mipmap/ic_about_app"
+                app:common_item_text="@string/about_app" />
+
+            <com.crazysunj.crazydaily.view.item.CommonItem
+                android:id="@+id/me_about_me"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/space_50"
+                app:common_item_bottom_line="false"
+                app:common_item_icon="@mipmap/ic_about_me"
+                app:common_item_text="@string/about_me" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

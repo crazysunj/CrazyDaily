@@ -207,6 +207,6 @@ public class MeFragment extends BaseFragment implements PermissionStorage {
 
     @Override
     protected int getContentResId() {
-        return R.layout.activity_me;
+        return R.layout.fragment_me;
     }
 }
