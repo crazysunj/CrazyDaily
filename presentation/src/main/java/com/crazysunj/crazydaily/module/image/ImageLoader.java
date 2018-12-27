@@ -15,6 +15,7 @@
  */
 package com.crazysunj.crazydaily.module.image;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PointF;
@@ -65,6 +66,12 @@ public class ImageLoader {
 
 
     public static void load(Context context, String url, ImageView imageView) {
+        if (context == null) {
+            return;
+        }
+        if (context instanceof Activity && ((Activity) context).isDestroyed()) {
+            return;
+        }
         GlideApp.with(context)
                 .load(url)
                 .centerCrop()
@@ -72,12 +79,24 @@ public class ImageLoader {
     }
 
     public static void loadNoCrop(Context context, String url, ImageView imageView) {
+        if (context == null) {
+            return;
+        }
+        if (context instanceof Activity && ((Activity) context).isDestroyed()) {
+            return;
+        }
         GlideApp.with(context)
                 .load(url)
                 .into(imageView);
     }
 
     public static void load(Context context, String url, @DrawableRes int placeholderId, ImageView imageView) {
+        if (context == null) {
+            return;
+        }
+        if (context instanceof Activity && ((Activity) context).isDestroyed()) {
+            return;
+        }
         GlideApp.with(context)
                 .load(url)
                 .centerCrop()
@@ -86,6 +105,18 @@ public class ImageLoader {
     }
 
     public static void download(Context context, String url, OnDownloadCallback callback) {
+        if (context == null) {
+            if (callback != null) {
+                callback.download(null);
+            }
+            return;
+        }
+        if (context instanceof Activity && ((Activity) context).isDestroyed()) {
+            if (callback != null) {
+                callback.download(null);
+            }
+            return;
+        }
         GlideApp.with(context).downloadOnly().load(url).into(new SimpleTarget<File>() {
             @Override
             public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
@@ -97,6 +128,18 @@ public class ImageLoader {
     }
 
     public static void downloadFile(Context context, String url, File saveFile, OnFileCallback callback) {
+        if (context == null) {
+            if (callback != null) {
+                callback.onFile(false);
+            }
+            return;
+        }
+        if (context instanceof Activity && ((Activity) context).isDestroyed()) {
+            if (callback != null) {
+                callback.onFile(false);
+            }
+            return;
+        }
         Glide.with(context).asFile().load(url)
                 .listener(new FileRequestListener())
                 .into(new SimpleTarget<File>() {
@@ -141,6 +184,12 @@ public class ImageLoader {
 
     @SuppressWarnings("all")
     public static void loadWithVignette(Context context, String url, @DrawableRes int placeholderId, ImageView imageView) {
+        if (context == null) {
+            return;
+        }
+        if (context instanceof Activity && ((Activity) context).isDestroyed()) {
+            return;
+        }
         Single.just(placeholderId)
                 .observeOn(Schedulers.io())
                 .map(id -> {

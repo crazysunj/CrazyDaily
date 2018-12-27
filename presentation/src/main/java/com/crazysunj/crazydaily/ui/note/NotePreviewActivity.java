@@ -152,6 +152,9 @@ public class NotePreviewActivity extends BaseActivity {
         int position = intent.getIntExtra(ActivityConstant.POSITION, 0);
         mTitle.setText(String.format("%s/%s", String.valueOf(position + 1), data.size()));
         handlePreViewImageData(data, imageData -> {
+            if (imageData == null) {
+                return;
+            }
             mAdapter = new ImagePreViewAdapter(imageData);
             mImageList.setAdapter(mAdapter);
             //noinspection ConstantConditions
@@ -167,6 +170,10 @@ public class NotePreviewActivity extends BaseActivity {
     private void handlePreViewImageItem(int index, List<String> data, List<ImagePreViewAdapter.ImagePreViewEntity> imageData, OnCompleteListener listener) {
         String original = data.get(index);
         ImageLoader.download(this, original, file -> {
+            if (file == null) {
+                listener.onComplete(null);
+                return;
+            }
             String absolutePath = file.getAbsolutePath();
             float imageScale = getImageScale(absolutePath);
             imageData.add(new ImagePreViewAdapter.ImagePreViewEntity(original, absolutePath, imageScale + 3.0f,
@@ -184,7 +191,7 @@ public class NotePreviewActivity extends BaseActivity {
         /**
          * 监听地址地址结束
          */
-        void onComplete(List<ImagePreViewAdapter.ImagePreViewEntity> imageData);
+        void onComplete(@Nullable List<ImagePreViewAdapter.ImagePreViewEntity> imageData);
     }
 
     @Override

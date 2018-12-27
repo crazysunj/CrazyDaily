@@ -16,7 +16,6 @@
 package com.crazysunj.crazydaily.base;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.crazysunj.crazydaily.R;
@@ -61,7 +60,6 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
 
     @Override
     protected void onDestroy() {
-        Log.e("AppLifecycleCallbacks", "onDestroy");
         super.onDestroy();
         if (mPresenter != null) {
             mPresenter.detachView();
