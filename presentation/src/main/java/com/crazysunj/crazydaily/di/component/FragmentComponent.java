@@ -21,6 +21,7 @@ import com.crazysunj.crazydaily.di.module.EntityModule;
 import com.crazysunj.crazydaily.di.module.FragmentModule;
 import com.crazysunj.crazydaily.di.scope.FragmentScope;
 import com.crazysunj.crazydaily.ui.contact.ContactFragment;
+import com.crazysunj.crazydaily.ui.gankio.GankioTabFragment;
 import com.crazysunj.crazydaily.ui.home.HomeFragment;
 import com.crazysunj.crazydaily.ui.note.NoteFragment;
 
@@ -42,4 +43,6 @@ public interface FragmentComponent {
     void inject(ContactFragment contactFragment);
 
     void inject(NoteFragment noteFragment);
+
+    void inject(GankioTabFragment gankioTabFragment);
 }

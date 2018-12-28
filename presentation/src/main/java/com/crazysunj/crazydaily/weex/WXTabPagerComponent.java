@@ -23,7 +23,7 @@ import com.crazysunj.crazydaily.R;
 import com.crazysunj.data.util.LoggerUtil;
 import com.google.android.material.tabs.TabLayout;
 import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.ui.action.BasicComponentData;
 import com.taobao.weex.ui.component.WXComponentProp;
 import com.taobao.weex.ui.component.WXVContainer;
 
@@ -48,8 +48,8 @@ public class WXTabPagerComponent extends WXVContainer<LinearLayout> {
     private ViewPager mViewPager;
     private TabPagerAdapter mTabPagerAdapter;
 
-    public WXTabPagerComponent(WXSDKInstance instance, WXDomObject node, WXVContainer parent) {
-        super(instance, node, parent);
+    public WXTabPagerComponent(WXSDKInstance instance, WXVContainer parent, BasicComponentData basicComponentData) {
+        super(instance, parent, basicComponentData);
     }
 
     @Override

@@ -27,9 +27,9 @@ import com.crazysunj.data.util.LoggerUtil;
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXRenderStrategy;
-import com.taobao.weex.dom.ImmutableDomObject;
 import com.taobao.weex.dom.WXAttr;
 import com.taobao.weex.dom.WXEvent;
+import com.taobao.weex.ui.action.BasicComponentData;
 import com.taobao.weex.utils.WXFileUtils;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,6 +40,7 @@ import androidx.appcompat.app.AppCompatActivity;
  * description: https://github.com/crazysunj/CrazyDaily
  */
 public class WeexActivity extends AppCompatActivity implements IWXRenderListener {
+    private static final String TAG = WeexActivity.class.getSimpleName();
 
     private WXSDKInstance mWXSDKInstance;
 
@@ -89,18 +90,21 @@ public class WeexActivity extends AppCompatActivity implements IWXRenderListener
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        final ImmutableDomObject domObject = mWXSDKInstance.getRootComponent().getDomObject();
-        final WXAttr attrs = domObject.getAttrs();
+        BasicComponentData basicComponentData = mWXSDKInstance.getRootComponent().getBasicComponentData();
+        final WXAttr attrs = basicComponentData.getAttrs();
         boolean isHasInterceptBack = attrs.containsKey(WeexConstant.ATTR_INTERCEPT_BACK);
         if ((keyCode == KeyEvent.KEYCODE_BACK) && isHasInterceptBack) {
             Object interceptBackObj = attrs.get(WeexConstant.ATTR_INTERCEPT_BACK);
             try {
-                boolean interceptBack = Boolean.parseBoolean(interceptBackObj.toString());
+                boolean interceptBack = false;
+                if (interceptBackObj != null) {
+                    interceptBack = Boolean.parseBoolean(interceptBackObj.toString());
+                }
                 if (interceptBack) {
-                    WXEvent events = domObject.getEvents();
+                    WXEvent events = basicComponentData.getEvents();
                     boolean hasBack = events.contains(WeexConstant.EVENT_BACK);
                     if (hasBack) {
-                        mWXSDKInstance.fireEvent(domObject.getRef(), WeexConstant.EVENT_BACK);
+                        mWXSDKInstance.fireEvent(basicComponentData.mRef, WeexConstant.EVENT_BACK);
                     }
                     return true;
                 }
@@ -125,16 +129,16 @@ public class WeexActivity extends AppCompatActivity implements IWXRenderListener
 
     @Override
     public void onRenderSuccess(WXSDKInstance instance, int width, int height) {
-        LoggerUtil.d("onRenderSuccess ------ width:" + width + " height:" + height);
+        LoggerUtil.d(TAG, "onRenderSuccess ------ width:" + width + " height:" + height);
     }
 
     @Override
     public void onRefreshSuccess(WXSDKInstance instance, int width, int height) {
-        LoggerUtil.d("onRefreshSuccess ------ width:" + width + " height:" + height);
+        LoggerUtil.d(TAG, "onRefreshSuccess ------ width:" + width + " height:" + height);
     }
 
     @Override
     public void onException(WXSDKInstance instance, String errCode, String msg) {
-        LoggerUtil.d(msg);
+        LoggerUtil.e(TAG, msg);
     }
 }

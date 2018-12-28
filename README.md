@@ -36,7 +36,7 @@
 ## 技术点
 * 架构采用MVP-Clean，项目简洁、易维护、易测试、高内聚、低耦合
 * UI风格采用Material Design，清新、简洁和直观
-* 跨端采用Weex和Flutter，支持其扩展运用
+* 跨端采用Weex和Flutter，支持Kotlin，同时支持其扩展运用
 * 支持今日头条适配方案
 * Dagger2与Butterknife实现依赖注解，解耦，方便测试等
 * Retrofit和Okhttp实现网络架构，实现多种扩展，例如常见的日志规范打印以及缓存配置等等

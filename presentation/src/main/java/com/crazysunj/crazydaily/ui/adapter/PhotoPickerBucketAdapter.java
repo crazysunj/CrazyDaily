@@ -32,6 +32,8 @@ import com.crazysunj.domain.entity.photo.BucketEntity;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+
 /**
  * @author: sunjian
  * created on: 2018/9/25 上午11:06
@@ -46,7 +48,7 @@ public class PhotoPickerBucketAdapter extends BaseAdapter<BucketEntity, BaseView
     }
 
     @Override
-    protected void convert(BaseViewHolder holder, BucketEntity item) {
+    protected void convert(@NonNull BaseViewHolder holder, BucketEntity item) {
         ImageView icon = holder.getImageView(R.id.item_bucket_icon);
         TextView info = holder.getTextView(R.id.item_bucket_info);
         View selectIcon = holder.getView(R.id.item_bucket_select_icon);

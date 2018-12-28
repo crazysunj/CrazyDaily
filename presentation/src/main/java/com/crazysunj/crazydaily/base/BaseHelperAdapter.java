@@ -64,7 +64,7 @@ public abstract class BaseHelperAdapter<T extends MultiTypeEntity, VH extends Ba
         convert(holder, mData.get(position));
     }
 
-    protected abstract void convert(VH holder, T item);
+    protected abstract void convert(@NonNull VH holder, @NonNull T item);
 
     @NonNull
     @Override

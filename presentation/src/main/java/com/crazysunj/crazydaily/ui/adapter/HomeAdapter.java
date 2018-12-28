@@ -98,7 +98,7 @@ public class HomeAdapter extends BaseHelperAdapter<MultiTypeIdEntity, BaseViewHo
     }
 
     @Override
-    protected void convert(BaseViewHolder holder, MultiTypeIdEntity item) {
+    protected void convert(@NonNull BaseViewHolder holder, MultiTypeIdEntity item) {
         switch (item.getItemType()) {
 //            case NeihanItemEntity.TYPE_NEIHAN:
 //                renderNeihan(holder, (NeihanItemEntity) item);

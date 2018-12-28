@@ -92,7 +92,7 @@ public class ContactsAdapter extends BaseHelperAdapter<MultiTypeIndexEntity, Con
     }
 
     @Override
-    protected void convert(ContactViewHolder holder, MultiTypeIndexEntity item) {
+    protected void convert(@NonNull ContactViewHolder holder, MultiTypeIndexEntity item) {
         switch (item.getItemType()) {
             case Contact.TYPE:
                 renderContact(holder, (Contact) item);

@@ -55,7 +55,7 @@ public class NoteAdapter extends BaseAdapter<NoteEntity, BaseViewHolder> {
     }
 
     @Override
-    protected void convert(BaseViewHolder holder, NoteEntity item) {
+    protected void convert(@NonNull BaseViewHolder holder, NoteEntity item) {
         TextView date = holder.getTextView(R.id.item_note_date);
         ImageView menu = holder.getImageView(R.id.item_note_menu);
         RecyclerView images = holder.getView(R.id.item_note_images, RecyclerView.class);
@@ -104,7 +104,7 @@ public class NoteAdapter extends BaseAdapter<NoteEntity, BaseViewHolder> {
         }
 
         @Override
-        protected void convert(BaseViewHolder holder, String item) {
+        protected void convert(@NonNull BaseViewHolder holder, String item) {
             ImageView imageView = holder.getImageView(R.id.view_image);
             ImageLoader.load(mContext, item, imageView);
         }

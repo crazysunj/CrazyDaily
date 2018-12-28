@@ -30,10 +30,8 @@ import com.crazysunj.crazydaily.util.ScreenAdapterManager;
 import com.crazysunj.crazydaily.util.ScreenUtil;
 import com.crazysunj.crazydaily.weex.CrazyDailyModule;
 import com.crazysunj.crazydaily.weex.LogModule;
-import com.crazysunj.crazydaily.weex.WXCustomTextDomObject;
 import com.crazysunj.crazydaily.weex.WXHttpAdapter;
 import com.crazysunj.crazydaily.weex.WXImageAdapter;
-import com.crazysunj.crazydaily.weex.WXRichTextComponent;
 import com.crazysunj.crazydaily.weex.WXTabPagerComponent;
 import com.crazysunj.crazydaily.weex.WXWebComponent;
 import com.crazysunj.crazydaily.weex.WXWebViewModule;
@@ -130,9 +128,7 @@ public class App extends Application {
         WXSDKEngine.initialize(this, config);
         try {
             WXSDKEngine.registerComponent("tabPager", WXTabPagerComponent.class);
-            WXSDKEngine.registerComponent("richText", WXRichTextComponent.class);
             WXSDKEngine.registerComponent(WXBasicComponentType.WEB, WXWebComponent.class);
-            WXSDKEngine.registerDomObject("richText", WXCustomTextDomObject.class);
             WXSDKEngine.registerModule("crazyDaily", CrazyDailyModule.class);
             WXSDKEngine.registerModule("webview", WXWebViewModule.class, true);
             WXSDKEngine.registerModule("log", LogModule.class);

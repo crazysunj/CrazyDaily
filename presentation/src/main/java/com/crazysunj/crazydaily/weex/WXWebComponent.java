@@ -21,10 +21,12 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.adapter.URIAdapter;
 import com.taobao.weex.annotation.Component;
+import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.common.Constants;
-import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.ui.action.BasicComponentData;
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXComponentProp;
 import com.taobao.weex.ui.component.WXVContainer;
@@ -47,15 +49,33 @@ public class WXWebComponent extends WXComponent {
     public static final String GO_BACK = "goBack";
     public static final String GO_FORWARD = "goForward";
     public static final String RELOAD = "reload";
+    public static final String POST_MESSAGE = "postMessage";
     protected WXWebView mWebView;
 
-    public WXWebComponent(WXSDKInstance instance, WXDomObject dom, WXVContainer parent) {
-        super(instance, dom, parent);
+    @Deprecated
+    public WXWebComponent(WXSDKInstance instance, WXVContainer parent, String instanceId, boolean isLazy, BasicComponentData basicComponentData) {
+        this(instance, parent, isLazy, basicComponentData);
+    }
+
+    public WXWebComponent(WXSDKInstance instance, WXVContainer parent, boolean isLazy, BasicComponentData basicComponentData) {
+        super(instance, parent, isLazy, basicComponentData);
         createWebView();
     }
 
     protected void createWebView() {
-        mWebView = new WXWebView(getContext());
+        String origin = null;
+        try {
+            String bundleUrl = WXSDKManager.getInstance().getSDKInstance(getInstanceId()).getBundleUrl();
+            Uri uri = Uri.parse(bundleUrl);
+            String scheme = uri.getScheme();
+            String authority = uri.getAuthority();
+            if (!TextUtils.isEmpty(scheme) && !TextUtils.isEmpty(authority)) {
+                origin = scheme + "://" + authority;
+            }
+        } catch (Exception e) {
+            // do noting
+        }
+        mWebView = new WXWebView(getContext(), origin);
     }
 
     @Override
@@ -64,7 +84,7 @@ public class WXWebComponent extends WXComponent {
         mWebView.setOnPageListener(new IWebView.OnPageListener() {
             @Override
             public void onReceivedTitle(String title) {
-                if (getDomObject().getEvents().contains(Constants.Event.RECEIVEDTITLE)) {
+                if (getEvents().contains(Constants.Event.RECEIVEDTITLE)) {
                     Map<String, Object> params = new HashMap<>();
                     params.put("title", title);
                     fireEvent(Constants.Event.RECEIVEDTITLE, params);
@@ -73,7 +93,7 @@ public class WXWebComponent extends WXComponent {
 
             @Override
             public void onPageStart(String url) {
-                if (getDomObject().getEvents().contains(Constants.Event.PAGESTART)) {
+                if (getEvents().contains(Constants.Event.PAGESTART)) {
                     Map<String, Object> params = new HashMap<>();
                     params.put("url", url);
                     fireEvent(Constants.Event.PAGESTART, params);
@@ -82,7 +102,7 @@ public class WXWebComponent extends WXComponent {
 
             @Override
             public void onPageFinish(String url, boolean canGoBack, boolean canGoForward) {
-                if (getDomObject().getEvents().contains(Constants.Event.PAGEFINISH)) {
+                if (getEvents().contains(Constants.Event.PAGEFINISH)) {
                     Map<String, Object> params = new HashMap<>();
                     params.put("url", url);
                     params.put("canGoBack", canGoBack);
@@ -91,6 +111,7 @@ public class WXWebComponent extends WXComponent {
                 }
             }
         });
+        mWebView.setOnMessageListener(params -> fireEvent(Constants.Event.ONMESSAGE, params));
         return mWebView.getView();
     }
 
@@ -115,6 +136,12 @@ public class WXWebComponent extends WXComponent {
                     setUrl(src);
                 }
                 return true;
+            case Constants.Name.SOURCE:
+                String source = WXUtils.getString(param, null);
+                if (source != null) {
+                    setSource(source);
+                }
+                return true;
             default:
                 return super.setProperty(key, param);
         }
@@ -135,7 +162,14 @@ public class WXWebComponent extends WXComponent {
         }
     }
 
-    public void setAction(String action) {
+    @WXComponentProp(name = Constants.Name.SOURCE)
+    public void setSource(String source) {
+        if (!TextUtils.isEmpty(source) && getHostView() != null) {
+            loadDataWithBaseURL(source);
+        }
+    }
+
+    public void setAction(String action, Object data) {
         if (!TextUtils.isEmpty(action)) {
             if (action.equals(GO_BACK)) {
                 goBack();
@@ -143,12 +177,14 @@ public class WXWebComponent extends WXComponent {
                 goForward();
             } else if (action.equals(RELOAD)) {
                 reload();
+            } else if (action.equals(POST_MESSAGE)) {
+                postMessage(data);
             }
         }
     }
 
     private void fireEvent(String type, Object message) {
-        if (getDomObject().getEvents().contains(Constants.Event.ERROR)) {
+        if (getEvents().contains(Constants.Event.ERROR)) {
             Map<String, Object> params = new HashMap<>();
             params.put("type", type);
             params.put("errorMsg", message);
@@ -160,16 +196,28 @@ public class WXWebComponent extends WXComponent {
         getWebView().loadUrl(url);
     }
 
-    private void reload() {
+    private void loadDataWithBaseURL(String source) {
+        getWebView().loadDataWithBaseURL(source);
+    }
+
+    @JSMethod
+    public void reload() {
         getWebView().reload();
     }
 
-    private void goForward() {
+    @JSMethod
+    public void goForward() {
         getWebView().goForward();
     }
 
-    private void goBack() {
+    @JSMethod
+    public void goBack() {
         getWebView().goBack();
+    }
+
+    @JSMethod
+    public void postMessage(Object msg) {
+        getWebView().postMessage(msg);
     }
 
     private IWebView getWebView() {

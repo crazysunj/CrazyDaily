@@ -132,6 +132,7 @@
         <activity
             android:name=".flutter.CrazyDailyFlutterActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ui.gankio.GankioActivity" />
     </application>
 
 </manifest>

@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
+apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'kotlin-kapt'
 def configs = rootProject.ext.android //android配置
 android {
     compileSdkVersion configs.compileSdkVersion
@@ -108,8 +112,6 @@ dependencies {
     implementation libs.shimmer
     implementation libs.lottie
     implementation libs.photoview
-    implementation libs.richtext
-    //富文本
     implementation libs.ucrop
     //裁剪
     implementation libs.zxing
@@ -127,26 +129,30 @@ dependencies {
     debugImplementation libs.debugLeakcanary
     releaseImplementation libs.releaseLeakcanary
     implementation libs.butterknife
-    annotationProcessor libs.butterknifeCompiler
+    kapt libs.butterknifeCompiler
     implementation project(':data')
     implementation libs.materialsearchview
     implementation libs.glide
     implementation(libs.glideTransformations) {
         exclude group: 'com.github.bumptech.glide', module: 'glide'
     }
-    annotationProcessor libs.glideCompiler
+    kapt libs.glideCompiler
     implementation libs.permission
     //权限
-    annotationProcessor libs.permissionCompiler
+    kapt libs.permissionCompiler
     implementation libs.sonic
-    annotationProcessor libs.daggerCompiler
+    kapt libs.daggerCompiler
 
     implementation libs.navigationFragment
     implementation(libs.navigationUi) {
         exclude group: 'androidx.cardview'
     }
     implementation project(':flutter')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     // 依赖flutter
+}
+repositories {
+    mavenCentral()
 }
 
 

@@ -26,6 +26,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+
 /**
  * @author: sunjian
  * created on: 2018/10/23 下午5:09
@@ -54,7 +56,7 @@ public class ImagePreViewAdapter extends BaseAdapter<ImagePreViewAdapter.ImagePr
     }
 
     @Override
-    protected void convert(BaseViewHolder holder, ImagePreViewAdapter.ImagePreViewEntity data) {
+    protected void convert(@NonNull BaseViewHolder holder, ImagePreViewAdapter.ImagePreViewEntity data) {
         SubsamplingScaleImageView imageView = holder.getView(R.id.item_image_preview, SubsamplingScaleImageView.class);
         imageView.setMaxScale(data.maxScale);
         imageView.setImage(data.source, data.state);

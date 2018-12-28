@@ -29,6 +29,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 
@@ -48,7 +49,7 @@ public class PhotoPickerAdapter extends BaseHelperAdapter<MediaEntity, BaseViewH
     }
 
     @Override
-    protected void convert(BaseViewHolder holder, MediaEntity item) {
+    protected void convert(@NonNull BaseViewHolder holder, MediaEntity item) {
         AppCompatImageView data = holder.getView(R.id.item_photo_picker_data, AppCompatImageView.class);
         ImageLoader.load(mContext, item.getData(), R.mipmap.ic_launcher, data);
         // 选中

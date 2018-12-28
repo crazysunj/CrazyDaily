@@ -63,7 +63,7 @@ public abstract class BaseAdapter<T extends Object, VH extends BaseViewHolder> e
         convert(holder, mData.get(position));
     }
 
-    protected void convert(VH holder, T item) {
+    protected void convert(@NonNull VH holder, @NonNull T item) {
 
     }
 

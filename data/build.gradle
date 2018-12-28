@@ -1,5 +1,9 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
+apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'kotlin-kapt'
 def configs = rootProject.ext.android //android配置
 android {
     compileSdkVersion configs.compileSdkVersion
@@ -41,7 +45,7 @@ dependencies {
     api dataDependencies.okhttp
     implementation dataDependencies.okhttpLoggingInterceptor
     api dataDependencies.dagger
-    annotationProcessor dataDependencies.daggerCompiler
+    kapt dataDependencies.daggerCompiler
     implementation(dataDependencies.logger) {
         exclude group: 'androidx.annotation'
     }
