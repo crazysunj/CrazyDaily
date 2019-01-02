@@ -50,7 +50,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import androidx.multidex.MultiDex;
-import io.flutter.view.FlutterMain;
 
 /**
  * @author: sunjian
@@ -75,19 +74,11 @@ public class App extends Application {
         initScreenAdapter();
         ViewTarget.setTagId(R.id.glide_tag);
         LoggerUtil.init(BuildConfig.DEBUG);
-        initFlutter();
         initWeex();
         initX5WebView();
         initSonic();
         initPgyer();
         initLeakCanary();
-    }
-
-    /**
-     * 初始化flutter
-     */
-    private void initFlutter() {
-        FlutterMain.startInitialization(this);
     }
 
     /**

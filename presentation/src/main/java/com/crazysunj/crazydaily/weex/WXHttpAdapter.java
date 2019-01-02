@@ -15,7 +15,7 @@
  */
 package com.crazysunj.crazydaily.weex;
 
-import android.annotation.TargetApi;
+import android.text.TextUtils;
 
 import com.crazysunj.crazydaily.constant.Constant;
 import com.crazysunj.data.util.LoggerUtil;
@@ -73,7 +73,7 @@ public class WXHttpAdapter implements IWXHttpAdapter {
                     .post(RequestBody.create(MediaType.parse(request.body), request.body))
                     .build();
         } else {
-            okHttpRequest = (new okhttp3.Request.Builder()).url(request.url).build();
+            okHttpRequest = (new Request.Builder()).url(request.url).build();
         }
 
         mOkHttpClient.newCall(okHttpRequest)
@@ -114,12 +114,16 @@ public class WXHttpAdapter implements IWXHttpAdapter {
                 });
     }
 
-    @TargetApi(24)
     private Headers getHeaders(WXRequest request) {
-        okhttp3.Headers.Builder builder = new okhttp3.Headers.Builder();
+        Headers.Builder builder = new Headers.Builder();
         if (request.paramMap != null) {
             Set<String> keySet = request.paramMap.keySet();
-            keySet.forEach(key -> builder.add(key, request.paramMap.get(key)));
+            for (String key : keySet) {
+                String value = request.paramMap.get(key);
+                if (!TextUtils.isEmpty(value)) {
+                    builder.add(key, value);
+                }
+            }
         }
         return builder.build();
     }

@@ -64,14 +64,14 @@ public abstract class BaseFragment<T extends IPresenter> extends Fragment implem
         onPrepare();
         View rootView = inflater.inflate(getContentResId(), container, false);
         mUnBinder = ButterKnife.bind(this, rootView);
-        initView();
-        initListener();
         return rootView;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        initView();
+        initListener();
         initData();
     }
 

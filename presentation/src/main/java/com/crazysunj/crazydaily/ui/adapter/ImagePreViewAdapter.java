@@ -51,12 +51,12 @@ public class ImagePreViewAdapter extends BaseAdapter<ImagePreViewAdapter.ImagePr
         }
     }
 
-    public ImagePreViewAdapter(List<ImagePreViewAdapter.ImagePreViewEntity> data) {
+    public ImagePreViewAdapter(List<ImagePreViewEntity> data) {
         super(data, R.layout.layout_item_image_preview);
     }
 
     @Override
-    protected void convert(@NonNull BaseViewHolder holder, ImagePreViewAdapter.ImagePreViewEntity data) {
+    protected void convert(@NonNull BaseViewHolder holder, @NonNull ImagePreViewEntity data) {
         SubsamplingScaleImageView imageView = holder.getView(R.id.item_image_preview, SubsamplingScaleImageView.class);
         imageView.setMaxScale(data.maxScale);
         imageView.setImage(data.source, data.state);

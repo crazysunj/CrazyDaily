@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -10,7 +10,8 @@
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/gank_io_tab"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/space_50" />
+        android:layout_height="@dimen/space_50"
+        app:tabBackground="@color/color_white" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/gank_io_pager"

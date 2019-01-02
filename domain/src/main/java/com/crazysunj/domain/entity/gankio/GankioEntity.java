@@ -57,7 +57,9 @@ public class GankioEntity {
         public static final String PARAMS_IOS = "iOS";
         public static final String PARAMS_H5 = "前端";
         public static final String PARAMS_FULI = "福利";
-        public static final String PARAMS_ALL = "全部";
+        public static final String PARAMS_ALL_WEEX = "全部(weex版)";
+        public static final String PARAMS_ALL_KOTLIN = "全部(kotlin版)";
+        public static final String PARAMS_ALL_FLUTTER = "全部(flutter版)";
 
         public static final int TYPE_GANK_IO = 1;
         public static final String HEADER_TITLE = "Gankio";
