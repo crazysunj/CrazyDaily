@@ -18,7 +18,7 @@ ext {
             butterknife           : "9.0.0-rc3",
             glide                 : "4.8.0",
             glideTransformations  : "3.3.0",
-            MTRVA                 : "2.3.2-x",
+            MTRVA                 : "2.4.0",
             arrowVersion          : "1.0.0",
             javaxAnnotationVersion: "1.0",
             javaxInjectVersion    : "1",

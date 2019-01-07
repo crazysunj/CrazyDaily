@@ -35,6 +35,7 @@ import com.crazysunj.domain.entity.contact.Contact;
 import com.crazysunj.domain.entity.contact.ContactHeader;
 import com.crazysunj.domain.entity.contact.MultiTypeIndexEntity;
 import com.crazysunj.multitypeadapter.adapter.LoadingEntityAdapter;
+import com.crazysunj.multitypeadapter.helper.AdapterHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +79,11 @@ public class ContactsAdapter extends BaseHelperAdapter<MultiTypeIndexEntity, Con
     }
 
     public void showLoading() {
-        mHelper.notifyLoadingDataAndHeaderChanged(ContactAdapterHelper.CONTACT_LEVEL, 10);
+        AdapterHelper.with(ContactAdapterHelper.CONTACT_LEVEL)
+                .loading()
+                .header()
+                .data(10)
+                .into(mHelper);
     }
 
     @Override
