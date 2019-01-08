@@ -74,11 +74,11 @@
         <activity
             android:name=".ui.splash.SplashActivity"
             android:theme="@style/SplashTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <!--<intent-filter>-->
+            <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
 
         <!-- 小米全面屏适配 -->
@@ -129,7 +129,13 @@
         <activity
             android:name=".ui.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".flutter.CrazyDailyFlutterActivity" />
+        <activity android:name=".flutter.CrazyDailyFlutterActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".ui.gankio.GankioActivity" />
     </application>
 

@@ -1,3 +1,6 @@
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:crazydaily_flutter/src/gankio_entity.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class MyFlutterView extends StatelessWidget {
@@ -52,35 +55,23 @@ class TabbedAppBarSample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      theme: new ThemeData(bottomAppBarColor: Colors.white),
       home: new DefaultTabController(
-        length: mGankioTitle.length,
+        length: mGankioType.length,
         child: new Scaffold(
-//          appBar: new AppBar(
-//            bottom: new TabBar(
-//              isScrollable: true,
-//              tabs: choices.map((Choice choice) {
-//                return new Tab(
-//                  text: choice.title,
-//                  icon: new Icon(choice.icon),
-//                );
-//              }).toList(),
-//            ),
-//          ),
-        backgroundColor: Colors.white,
+          backgroundColor: Colors.white,
           appBar: new TabBar(
             unselectedLabelColor: Color(0xFF999999),
-            labelColor: Color(0xFF000000),
+            labelColor: Color(0xFF333333),
             indicatorColor: Color(0xFFFF4081),
-            tabs: mGankioTitle.map((String title) {
+            tabs: mGankioType.map((String type) {
               return new Tab(
-                text: title,
+                text: type,
               );
             }).toList(),
           ),
           body: new TabBarView(
-            children: mGankioTitle.map((String title) {
-              return new ChoiceCard(choice: title);
+            children: mGankioType.map((String type) {
+              return new GankioItemView(type);
             }).toList(),
           ),
         ),
@@ -89,7 +80,78 @@ class TabbedAppBarSample extends StatelessWidget {
   }
 }
 
-const List<String> mGankioTitle = const <String>["Android", "iOS", "前端"];
+const List<String> mGankioType = const <String>["Android", "iOS", "前端"];
+
+class GankioItemView extends StatefulWidget {
+  final String type;
+
+  GankioItemView(this.type);
+
+  @override
+  State<StatefulWidget> createState() {
+    return new GankioItemState(type);
+  }
+}
+
+class GankioItemState extends State<GankioItemView> {
+  final String type;
+  List<ResultsEntity> mGankioList;
+
+  GankioItemState(this.type);
+
+  @override
+  void initState() {
+    getGankioList();
+  }
+
+  getGankioList() async {
+    final String url = "http://gank.io/api/random/data/$type/10";
+    List<ResultsEntity> list;
+    try {
+      var dio = new Dio();
+      Response<Map<String, dynamic>> response = await dio.get(url);
+      list = GankioEntity.fromJson(response.data).results;
+      Fluttertoast.showToast(msg: list.toString());
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    }
+
+    setState(() {
+      mGankioList = list;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new ListView.builder(
+      itemBuilder: (BuildContext context, int index) => new GestureDetector(
+            child: new Padding(
+                padding: new EdgeInsets.all(10.0),
+                child: new Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                  child: new Padding(
+                    padding: new EdgeInsets.fromLTRB(20, 10, 20, 10),
+                    child: new Row(
+                      children: <Widget>[
+                        Text("123"),
+                        Container(
+                          width: 20,
+                          alignment: Alignment.center,
+                          child: new Image.asset("images/ic_go.png"),
+                        )
+                      ],
+                    ),
+                  ),
+                )),
+            onTap: () {
+              Fluttertoast.showToast(msg: "index:$index");
+            },
+          ),
+      itemCount: mGankioList == null ? 0 : mGankioList.length,
+    );
+  }
+}
 
 class ChoiceCard extends StatelessWidget {
   const ChoiceCard({Key key, this.choice}) : super(key: key);
@@ -101,7 +163,6 @@ class ChoiceCard extends StatelessWidget {
     final TextStyle textStyle = Theme.of(context).textTheme.display1;
     return new Card(
       margin: EdgeInsets.all(0),
-      color: Colors.red,
       child: new Center(
         child: new Column(
           mainAxisSize: MainAxisSize.min,
