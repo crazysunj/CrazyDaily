@@ -13,6 +13,7 @@ public final class GeneratedPluginRegistrant {
             return;
         }
         FluttertoastPlugin.registerWith(registry.registrarFor(FluttertoastPlugin.CHANNEL_NAME));
+        FlutterRouterMethodPlugin.registerWith(registry.registrarFor(FlutterRouterMethodPlugin.CHANNEL_NAME));
     }
 
     private static boolean alreadyRegisteredWith(PluginRegistry registry) {

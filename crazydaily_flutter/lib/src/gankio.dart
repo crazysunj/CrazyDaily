@@ -1,60 +1,14 @@
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:crazydaily_flutter/src/gankio_entity.dart';
+import 'package:crazydaily_flutter/src/plugin/flutterrouter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-
-class MyFlutterView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomePage(),
-    );
-  }
-}
-
-class HomePage extends StatefulWidget {
-  @override
-  HomePageState createState() {
-    return new HomePageState();
-  }
-}
-
-class HomePageState extends State<HomePage> {
-  var counter = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Card(
-        color: Colors.deepPurpleAccent,
-        child: Center(
-          child: Text(
-            "My Flutter View: $counter",
-            style: TextStyle(color: Colors.white, fontSize: 25.0),
-          ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.pinkAccent,
-        onPressed: () {
-          setState(() {
-            counter++;
-          });
-        },
-        child: Icon(
-          Icons.add,
-          color: Colors.black,
-        ),
-      ),
-    );
-  }
-}
 
 class TabbedAppBarSample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: new DefaultTabController(
         length: mGankioType.length,
         child: new Scaffold(
@@ -71,7 +25,10 @@ class TabbedAppBarSample extends StatelessWidget {
           ),
           body: new TabBarView(
             children: mGankioType.map((String type) {
-              return new GankioItemView(type);
+              return new Padding(
+                padding: new EdgeInsets.fromLTRB(0, 5, 0, 5),
+                child: new GankioItemView(type),
+              );
             }).toList(),
           ),
         ),
@@ -101,6 +58,7 @@ class GankioItemState extends State<GankioItemView> {
 
   @override
   void initState() {
+    super.initState();
     getGankioList();
   }
 
@@ -111,7 +69,6 @@ class GankioItemState extends State<GankioItemView> {
       var dio = new Dio();
       Response<Map<String, dynamic>> response = await dio.get(url);
       list = GankioEntity.fromJson(response.data).results;
-      Fluttertoast.showToast(msg: list.toString());
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     }
@@ -126,7 +83,7 @@ class GankioItemState extends State<GankioItemView> {
     return new ListView.builder(
       itemBuilder: (BuildContext context, int index) => new GestureDetector(
             child: new Padding(
-                padding: new EdgeInsets.all(10.0),
+                padding: new EdgeInsets.fromLTRB(10, 5, 10, 5),
                 child: new Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(8.0))),
@@ -134,44 +91,74 @@ class GankioItemState extends State<GankioItemView> {
                     padding: new EdgeInsets.fromLTRB(20, 10, 20, 10),
                     child: new Row(
                       children: <Widget>[
-                        Text("123"),
+                        Flexible(
+                          child: new Align(
+                            alignment: Alignment.centerLeft,
+                            child: new Column(
+                              children: <Widget>[
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: new Text(
+                                    "${mGankioList[index].desc ?? "神秘标题"}",
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: Color(0xFF333333),
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: new EdgeInsets.fromLTRB(0, 6, 0, 0),
+                                  child: new Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: new Text(
+                                        "作者：${mGankioList[index].who ?? "神秘大佬"}",
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          color: Color(0xFF666666),
+                                          fontSize: 14,
+                                        )),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: new EdgeInsets.fromLTRB(0, 12, 0, 0),
+                                  child: new Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: new Text(
+                                        "发布时间：${mGankioList[index].publishedAt ?? "未知"}",
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          color: Color(0xFFCCCCCC),
+                                          fontSize: 12,
+                                        )),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
                         Container(
                           width: 20,
-                          alignment: Alignment.center,
-                          child: new Image.asset("images/ic_go.png"),
+                          alignment: Alignment.centerRight,
+                          child: new Image.asset(
+                            "images/ic_go.png",
+                            width: 12,
+                            height: 12,
+                          ),
                         )
                       ],
                     ),
                   ),
                 )),
             onTap: () {
-              Fluttertoast.showToast(msg: "index:$index");
+              FlutterRouter.openUrl(
+                  "crazydaily://crazysunj.com/browser?url=${Uri.encodeComponent(mGankioList[index].url)}");
             },
           ),
       itemCount: mGankioList == null ? 0 : mGankioList.length,
-    );
-  }
-}
-
-class ChoiceCard extends StatelessWidget {
-  const ChoiceCard({Key key, this.choice}) : super(key: key);
-
-  final String choice;
-
-  @override
-  Widget build(BuildContext context) {
-    final TextStyle textStyle = Theme.of(context).textTheme.display1;
-    return new Card(
-      margin: EdgeInsets.all(0),
-      child: new Center(
-        child: new Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            new Text(choice, style: textStyle),
-          ],
-        ),
-      ),
     );
   }
 }

@@ -57,7 +57,16 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/BrowserTheme"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateHidden|adjustResize">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.VIEW" />
+                <data
+                    android:host="${HOST}"
+                    android:path="/browser"
+                    android:scheme="${SCHEME}" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.me.MeActivity"
             android:label="@string/text_me"
@@ -74,11 +83,11 @@
         <activity
             android:name=".ui.splash.SplashActivity"
             android:theme="@style/SplashTheme">
-            <!--<intent-filter>-->
-            <!--<action android:name="android.intent.action.MAIN" />-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-            <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <!-- 小米全面屏适配 -->
@@ -129,13 +138,7 @@
         <activity
             android:name=".ui.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".flutter.CrazyDailyFlutterActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".flutter.CrazyDailyFlutterActivity" />
         <activity android:name=".ui.gankio.GankioActivity" />
     </application>
 

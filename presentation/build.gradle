@@ -25,6 +25,10 @@ android {
                 includeCompileClasspath = true
             }
         }
+        manifestPlaceholders = [
+                SCHEME: "crazydaily",
+                HOST  : "crazysunj.com"
+        ]
     }
 
     compileOptions {
