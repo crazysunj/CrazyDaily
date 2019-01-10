@@ -19,7 +19,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.lang.ref.SoftReference;
 import java.util.Set;
