@@ -14,6 +14,7 @@ public final class GeneratedPluginRegistrant {
         }
         FluttertoastPlugin.registerWith(registry.registrarFor(FluttertoastPlugin.CHANNEL_NAME));
         FlutterRouterMethodPlugin.registerWith(registry.registrarFor(FlutterRouterMethodPlugin.CHANNEL_NAME));
+//        FlutterRefreshEventPlugin.registerWith(registry.registrarFor(FlutterRefreshEventPlugin.CHANNEL_NAME));
     }
 
     private static boolean alreadyRegisteredWith(PluginRegistry registry) {

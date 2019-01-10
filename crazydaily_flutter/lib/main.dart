@@ -6,8 +6,8 @@ void main() => runApp(crazyDailyWidgetRouter(window.defaultRouteName));
 
 Widget crazyDailyWidgetRouter(String url) {
   switch (url) {
-    case 'CrazyDailyFlutter':
-      return TabbedAppBarSample();
+    case 'CrazyDailyGankioFlutter':
+      return GankioFragment();
     default:
       return Center(
         child: Text('Unknown route: $url', textDirection: TextDirection.ltr),

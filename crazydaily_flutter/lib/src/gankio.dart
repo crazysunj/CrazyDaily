@@ -1,10 +1,80 @@
+import 'dart:async';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:crazydaily_flutter/src/gankio_entity.dart';
 import 'package:crazydaily_flutter/src/plugin/flutterrouter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-class TabbedAppBarSample extends StatelessWidget {
+class GankioFragment extends StatefulWidget {
+//  @override
+//  Widget build(BuildContext context) {
+//    return new MaterialApp(
+//      debugShowCheckedModeBanner: false,
+//      home: new DefaultTabController(
+//        length: mGankioType.length,
+//        child: new Scaffold(
+//          backgroundColor: Colors.white,
+//          appBar: new TabBar(
+//            unselectedLabelColor: Color(0xFF999999),
+//            labelColor: Color(0xFF333333),
+//            indicatorColor: Color(0xFFFF4081),
+//            tabs: mGankioType.map((String type) {
+//              return new Tab(
+//                text: type,
+//              );
+//            }).toList(),
+//          ),
+//          body: new TabBarView(
+//            children: mGankioType.map((String type) {
+//              return new Padding(
+//                padding: new EdgeInsets.fromLTRB(0, 5, 0, 5),
+//                child: new GankioItemView(type),
+//              );
+//            }).toList(),
+//          ),
+//        ),
+//      ),
+//    );
+//  }
+
+  @override
+  State<StatefulWidget> createState() {
+    return new GankioFragmentState();
+  }
+}
+
+class GankioFragmentState extends State<GankioFragment>
+    with SingleTickerProviderStateMixin {
+  TabController mTabController;
+  StreamSubscription mRefreshSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    mTabController = TabController(vsync: this, length: mGankioType.length);
+    if (mRefreshSubscription == null) {
+      mRefreshSubscription =
+          mRefreshEvent.receiveBroadcastStream().listen(onRefreshEvent);
+    }
+  }
+
+  void onRefreshEvent(Object event) {
+    setState(() {
+      print(
+          "GankioItemState---onRefreshEvent: $event----${mTabController.index}");
+//      getGankioList();
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (mRefreshSubscription != null) {
+      mRefreshSubscription.cancel();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -24,6 +94,7 @@ class TabbedAppBarSample extends StatelessWidget {
             }).toList(),
           ),
           body: new TabBarView(
+            controller: mTabController,
             children: mGankioType.map((String type) {
               return new Padding(
                 padding: new EdgeInsets.fromLTRB(0, 5, 0, 5),
@@ -38,6 +109,7 @@ class TabbedAppBarSample extends StatelessWidget {
 }
 
 const List<String> mGankioType = const <String>["Android", "iOS", "前端"];
+const mRefreshEvent = const EventChannel('CrazyDaily/flutterRefresh/Gankio');
 
 class GankioItemView extends StatefulWidget {
   final String type;
