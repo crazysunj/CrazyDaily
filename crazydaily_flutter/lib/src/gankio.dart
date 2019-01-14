@@ -7,37 +7,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class GankioFragment extends StatefulWidget {
-//  @override
-//  Widget build(BuildContext context) {
-//    return new MaterialApp(
-//      debugShowCheckedModeBanner: false,
-//      home: new DefaultTabController(
-//        length: mGankioType.length,
-//        child: new Scaffold(
-//          backgroundColor: Colors.white,
-//          appBar: new TabBar(
-//            unselectedLabelColor: Color(0xFF999999),
-//            labelColor: Color(0xFF333333),
-//            indicatorColor: Color(0xFFFF4081),
-//            tabs: mGankioType.map((String type) {
-//              return new Tab(
-//                text: type,
-//              );
-//            }).toList(),
-//          ),
-//          body: new TabBarView(
-//            children: mGankioType.map((String type) {
-//              return new Padding(
-//                padding: new EdgeInsets.fromLTRB(0, 5, 0, 5),
-//                child: new GankioItemView(type),
-//              );
-//            }).toList(),
-//          ),
-//        ),
-//      ),
-//    );
-//  }
-
   @override
   State<StatefulWidget> createState() {
     return new GankioFragmentState();
@@ -46,25 +15,41 @@ class GankioFragment extends StatefulWidget {
 
 class GankioFragmentState extends State<GankioFragment>
     with SingleTickerProviderStateMixin {
+  static const List<String> sGankioType = const <String>[
+    "Android",
+    "iOS",
+    "前端"
+  ];
+  static const sRefreshEvent =
+      const EventChannel('CrazyDaily/flutterRefresh/Gankio');
+  static const sRefreshComplete =
+      const MethodChannel('CrazyDaily/flutterRefreshComplete/Gankio');
   TabController mTabController;
   StreamSubscription mRefreshSubscription;
+  Map<String, GankioItemView> mTabWidgetMap;
 
   @override
   void initState() {
     super.initState();
-    mTabController = TabController(vsync: this, length: mGankioType.length);
+    mTabController = TabController(vsync: this, length: sGankioType.length);
     if (mRefreshSubscription == null) {
       mRefreshSubscription =
-          mRefreshEvent.receiveBroadcastStream().listen(onRefreshEvent);
+          sRefreshEvent.receiveBroadcastStream().listen(onRefreshEvent);
     }
+    mTabWidgetMap = Map.fromIterable(sGankioType,
+        key: (type) => type,
+        value: (type) => new GankioItemView(type, refreshComplete));
   }
 
   void onRefreshEvent(Object event) {
     setState(() {
-      print(
-          "GankioItemState---onRefreshEvent: $event----${mTabController.index}");
-//      getGankioList();
+      mTabWidgetMap[sGankioType[mTabController.index]].refresh();
     });
+  }
+
+  void refreshComplete(String type) async {
+    final Map<String, dynamic> params = <String, dynamic>{'type': type};
+    await sRefreshComplete.invokeMethod('refreshComplete', params);
   }
 
   @override
@@ -73,64 +58,76 @@ class GankioFragmentState extends State<GankioFragment>
     if (mRefreshSubscription != null) {
       mRefreshSubscription.cancel();
     }
+    if (mTabController != null) {
+      mTabController.dispose();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: new DefaultTabController(
-        length: mGankioType.length,
-        child: new Scaffold(
-          backgroundColor: Colors.white,
-          appBar: new TabBar(
-            unselectedLabelColor: Color(0xFF999999),
-            labelColor: Color(0xFF333333),
-            indicatorColor: Color(0xFFFF4081),
-            tabs: mGankioType.map((String type) {
-              return new Tab(
-                text: type,
-              );
-            }).toList(),
-          ),
-          body: new TabBarView(
-            controller: mTabController,
-            children: mGankioType.map((String type) {
-              return new Padding(
-                padding: new EdgeInsets.fromLTRB(0, 5, 0, 5),
-                child: new GankioItemView(type),
-              );
-            }).toList(),
-          ),
+      home: new Scaffold(
+        backgroundColor: Colors.white,
+        appBar: new TabBar(
+          controller: mTabController,
+          unselectedLabelColor: Color(0xFF999999),
+          labelColor: Color(0xFF333333),
+          indicatorColor: Color(0xFFFF4081),
+          tabs: sGankioType.map((String type) {
+            return new Tab(
+              text: type,
+            );
+          }).toList(),
+        ),
+        body: new TabBarView(
+          controller: mTabController,
+          children: sGankioType.map((String type) {
+            return mTabWidgetMap[type];
+          }).toList(),
         ),
       ),
     );
   }
 }
 
-const List<String> mGankioType = const <String>["Android", "iOS", "前端"];
-const mRefreshEvent = const EventChannel('CrazyDaily/flutterRefresh/Gankio');
-
 class GankioItemView extends StatefulWidget {
-  final String type;
+  final GankioItemState state;
 
-  GankioItemView(this.type);
+  GankioItemView(String type, void Function(String type) refreshComplete)
+      : state = new GankioItemState(type, refreshComplete);
+
+  void refresh() {
+    state.getGankioList();
+  }
 
   @override
   State<StatefulWidget> createState() {
-    return new GankioItemState(type);
+    return state;
   }
 }
 
-class GankioItemState extends State<GankioItemView> {
+class GankioItemState extends State<GankioItemView>
+    with AutomaticKeepAliveClientMixin {
   final String type;
   List<ResultsEntity> mGankioList;
 
-  GankioItemState(this.type);
+  var refreshComplete;
+
+  ScrollController controller;
+
+  GankioItemState(this.type, this.refreshComplete);
 
   @override
   void initState() {
     super.initState();
+    controller = new ScrollController();
+    controller.addListener(() {
+        var minScrollExtent = controller.position.minScrollExtent;
+        var maxScrollExtent = controller.position.maxScrollExtent;
+        var pixels = controller.position.pixels;
+        print("minScrollExtent:$minScrollExtent---maxScrollExtent:$maxScrollExtent---pixels:$pixels");
+    });
     getGankioList();
   }
 
@@ -147,12 +144,15 @@ class GankioItemState extends State<GankioItemView> {
 
     setState(() {
       mGankioList = list;
+      refreshComplete(type);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return new ListView.builder(
+      controller: controller,
+      padding: new EdgeInsets.fromLTRB(0, 5, 0, 5),
       itemBuilder: (BuildContext context, int index) => new GestureDetector(
             child: new Padding(
                 padding: new EdgeInsets.fromLTRB(10, 5, 10, 5),
@@ -233,4 +233,7 @@ class GankioItemState extends State<GankioItemView> {
       itemCount: mGankioList == null ? 0 : mGankioList.length,
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

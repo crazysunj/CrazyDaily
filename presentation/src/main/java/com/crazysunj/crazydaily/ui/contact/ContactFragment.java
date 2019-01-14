@@ -18,7 +18,6 @@ package com.crazysunj.crazydaily.ui.contact;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -142,7 +141,6 @@ public class ContactFragment extends BaseFragment<ContactPresenter> implements C
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        Log.e("ContactFragment", "onCreateOptionsMenu");
         mActivity.getMenuInflater().inflate(R.menu.menu_contact, menu);
         MenuItem item = menu.findItem(R.id.action_search);
         mSearchView.setMenuItem(item);
