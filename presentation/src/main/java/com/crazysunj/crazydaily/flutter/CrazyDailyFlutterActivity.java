@@ -15,7 +15,6 @@
  */
 package com.crazysunj.crazydaily.flutter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -24,7 +23,6 @@ import android.widget.FrameLayout;
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
 
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import io.flutter.app.FlutterPluginRegistry;
 import io.flutter.facade.Flutter;
@@ -43,7 +41,7 @@ import io.flutter.view.FlutterView;
 public class CrazyDailyFlutterActivity extends BaseActivity {
 
     @BindView(R.id.flutter_refresh)
-    SwipeRefreshLayout mRefreshView;
+    FlutterGankioRefreshLayout mRefreshView;
 
     @BindView(R.id.flutter_container)
     FrameLayout mContainer;
@@ -61,7 +59,6 @@ public class CrazyDailyFlutterActivity extends BaseActivity {
         return R.layout.activity_flutter;
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void initView() {
         FlutterView gankioFlutterView = Flutter.createView(this, getLifecycle(), "CrazyDailyGankioFlutter");
@@ -72,16 +69,24 @@ public class CrazyDailyFlutterActivity extends BaseActivity {
             public void onListen(Object arguments, EventChannel.EventSink eventSink) {
                 type = arguments == null ? "Android" : arguments.toString();
                 mEventSink = eventSink;
-                Log.e("CrazyDailyFlutter", "onListen---type:" + type);
             }
 
             @Override
             public void onCancel(Object arguments) {
-                Log.e("CrazyDailyFlutter", "onCancel---type:" + type);
             }
         });
 
-        FlutterRefreshCompleteEventPlugin.registerWith(pluginRegistry, type -> mRefreshView.setRefreshing(false));
+        FlutterGankioEventPlugin.registerWith(pluginRegistry, new FlutterGankioEventPlugin.Callback() {
+            @Override
+            public void complete(String type) {
+                mRefreshView.setRefreshing(false);
+            }
+
+            @Override
+            public void scroller(String type, double pixels, double minScrollExtent, double maxScrollExtent) {
+                mRefreshView.setIntercept(pixels <= minScrollExtent);
+            }
+        });
         mContainer.addView(gankioFlutterView);
     }
 
@@ -94,28 +99,53 @@ public class CrazyDailyFlutterActivity extends BaseActivity {
         });
     }
 
-    private static class FlutterRefreshCompleteEventPlugin implements MethodChannel.MethodCallHandler {
+    private static class FlutterGankioEventPlugin implements MethodChannel.MethodCallHandler {
 
-        static final String CHANNEL_NAME = "CrazyDaily/flutterRefreshComplete/Gankio";
-        private static final String METHOD = "refreshComplete";
+        static final String CHANNEL_NAME = "CrazyDaily/flutterGankioEvent";
+        private static final String METHOD_REFRESH_COMPLETE = "refreshComplete";
+        private static final String METHOD_SCROLLER = "scroller";
         private static final String TYPE = "type";
+        /**
+         * 最小滑动距离
+         */
+        private static final String MIN_SCROLL_EXTENT = "minScrollExtent";
+        /**
+         * 最大滑动距离
+         */
+        private static final String MAX_SCROLL_EXTENT = "maxScrollExtent";
+        /**
+         * 滑动距离
+         */
+        private static final String PIXELS = "pixels";
 
         private Callback mCallback;
 
-        private FlutterRefreshCompleteEventPlugin(Callback callback) {
+        private FlutterGankioEventPlugin(Callback callback) {
             mCallback = callback;
         }
 
         private static void registerWith(FlutterPluginRegistry pluginRegistry, Callback callback) {
             final MethodChannel channel = new MethodChannel(pluginRegistry.registrarFor(CHANNEL_NAME).messenger(), CHANNEL_NAME);
-            channel.setMethodCallHandler(new FlutterRefreshCompleteEventPlugin(callback));
+            channel.setMethodCallHandler(new FlutterGankioEventPlugin(callback));
         }
 
         @Override
         public void onMethodCall(MethodCall methodCall, MethodChannel.Result result) {
-            if (METHOD.equals(methodCall.method)) {
+            if (METHOD_REFRESH_COMPLETE.equals(methodCall.method)) {
                 String type = methodCall.argument(TYPE);
                 mCallback.complete(type);
+                return;
+            }
+            if (METHOD_SCROLLER.equals(methodCall.method)) {
+                String type = methodCall.argument(TYPE);
+                Double minScrollExtent = methodCall.argument(MIN_SCROLL_EXTENT);
+                Double maxScrollExtent = methodCall.argument(MAX_SCROLL_EXTENT);
+                Double pixels = methodCall.argument(PIXELS);
+                if (minScrollExtent == null || maxScrollExtent == null || pixels == null) {
+                    result.error("minScrollExtent,maxScrollExtent,pixels不能为空", null, null);
+                    return;
+                }
+                mCallback.scroller(type, pixels, minScrollExtent, maxScrollExtent);
                 return;
             }
             result.notImplemented();
@@ -128,6 +158,16 @@ public class CrazyDailyFlutterActivity extends BaseActivity {
              * @param type String
              */
             void complete(String type);
+
+            /**
+             * listview滚动距离回调
+             *
+             * @param type            String
+             * @param pixels          滚动距离
+             * @param minScrollExtent 滚动最小距离
+             * @param maxScrollExtent 滚动最大距离
+             */
+            void scroller(String type, double pixels, double minScrollExtent, double maxScrollExtent);
         }
     }
 }

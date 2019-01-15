@@ -22,8 +22,8 @@ class GankioFragmentState extends State<GankioFragment>
   ];
   static const sRefreshEvent =
       const EventChannel('CrazyDaily/flutterRefresh/Gankio');
-  static const sRefreshComplete =
-      const MethodChannel('CrazyDaily/flutterRefreshComplete/Gankio');
+  static const sGankioEvent =
+      const MethodChannel('CrazyDaily/flutterGankioEvent');
   TabController mTabController;
   StreamSubscription mRefreshSubscription;
   Map<String, GankioItemView> mTabWidgetMap;
@@ -38,7 +38,7 @@ class GankioFragmentState extends State<GankioFragment>
     }
     mTabWidgetMap = Map.fromIterable(sGankioType,
         key: (type) => type,
-        value: (type) => new GankioItemView(type, refreshComplete));
+        value: (type) => new GankioItemView(type, refreshComplete, scroller));
   }
 
   void onRefreshEvent(Object event) {
@@ -49,7 +49,18 @@ class GankioFragmentState extends State<GankioFragment>
 
   void refreshComplete(String type) async {
     final Map<String, dynamic> params = <String, dynamic>{'type': type};
-    await sRefreshComplete.invokeMethod('refreshComplete', params);
+    await sGankioEvent.invokeMethod('refreshComplete', params);
+  }
+
+  void scroller(String type, double pixels, double minScrollExtent,
+      double maxScrollExtent) async {
+    final Map<String, dynamic> params = <String, dynamic>{
+      'type': type,
+      'pixels': pixels,
+      'minScrollExtent': minScrollExtent,
+      'maxScrollExtent': maxScrollExtent,
+    };
+    await sGankioEvent.invokeMethod('scroller', params);
   }
 
   @override
@@ -94,8 +105,13 @@ class GankioFragmentState extends State<GankioFragment>
 class GankioItemView extends StatefulWidget {
   final GankioItemState state;
 
-  GankioItemView(String type, void Function(String type) refreshComplete)
-      : state = new GankioItemState(type, refreshComplete);
+  GankioItemView(
+      String type,
+      void Function(String type) refreshComplete,
+      void Function(String type, double pixels, double minScrollExtent,
+              double maxScrollExtent)
+          scroller)
+      : state = new GankioItemState(type, refreshComplete, scroller);
 
   void refresh() {
     state.getGankioList();
@@ -113,20 +129,21 @@ class GankioItemState extends State<GankioItemView>
   List<ResultsEntity> mGankioList;
 
   var refreshComplete;
+  var scroller;
 
   ScrollController controller;
 
-  GankioItemState(this.type, this.refreshComplete);
+  GankioItemState(this.type, this.refreshComplete, this.scroller);
 
   @override
   void initState() {
     super.initState();
     controller = new ScrollController();
     controller.addListener(() {
-        var minScrollExtent = controller.position.minScrollExtent;
-        var maxScrollExtent = controller.position.maxScrollExtent;
-        var pixels = controller.position.pixels;
-        print("minScrollExtent:$minScrollExtent---maxScrollExtent:$maxScrollExtent---pixels:$pixels");
+      var minScrollExtent = controller.position.minScrollExtent;
+      var maxScrollExtent = controller.position.maxScrollExtent;
+      var pixels = controller.position.pixels;
+      scroller(type, pixels, minScrollExtent, maxScrollExtent);
     });
     getGankioList();
   }
