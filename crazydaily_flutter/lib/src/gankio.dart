@@ -24,6 +24,7 @@ class GankioFragmentState extends State<GankioFragment>
   /// 用于通知flutter开始刷新
   static const sRefreshEvent =
       const EventChannel('CrazyDaily/flutterRefresh/Gankio');
+
   /// 用于flutter的gankio页与原生通信
   static const sGankioEvent =
       const MethodChannel('CrazyDaily/flutterGankioEvent');
@@ -44,10 +45,8 @@ class GankioFragmentState extends State<GankioFragment>
       scroller(type, scrollPosition.pixels, scrollPosition.minScrollExtent,
           scrollPosition.maxScrollExtent);
     });
-    if (mRefreshSubscription == null) {
-      mRefreshSubscription =
-          sRefreshEvent.receiveBroadcastStream().listen(onRefreshEvent);
-    }
+    mRefreshSubscription ??
+        sRefreshEvent.receiveBroadcastStream().listen(onRefreshEvent);
     mTabWidgetMap = Map.fromIterable(sGankioType,
         key: (type) => type,
         value: (type) => new GankioItemView(type, refreshComplete, scroller));
@@ -81,12 +80,8 @@ class GankioFragmentState extends State<GankioFragment>
   @override
   void dispose() {
     super.dispose();
-    if (mRefreshSubscription != null) {
-      mRefreshSubscription.cancel();
-    }
-    if (mTabController != null) {
-      mTabController.dispose();
-    }
+    mRefreshSubscription?.cancel();
+    mTabController?.dispose();
   }
 
   @override
@@ -128,13 +123,9 @@ class GankioItemView extends StatefulWidget {
           scroller)
       : state = new GankioItemState(type, refreshComplete, scroller);
 
-  void refresh() {
-    state.getGankioList();
-  }
+  void refresh() => state.getGankioList();
 
-  ScrollController getScrollController() {
-    return state.getScrollController();
-  }
+  ScrollController getScrollController() => state.getScrollController();
 
   @override
   State<StatefulWidget> createState() {
@@ -147,37 +138,36 @@ class GankioItemState extends State<GankioItemView>
   final String type;
   List<ResultsEntity> mGankioList;
 
-  var refreshComplete;
-  var scroller;
+  final refreshComplete;
+  final scroller;
 
-  ScrollController controller;
+  ScrollController mScrollController;
 
   GankioItemState(this.type, this.refreshComplete, this.scroller);
 
   @override
   void initState() {
     super.initState();
-    controller = new ScrollController();
+    mScrollController = new ScrollController();
+
     /// 监听滑动事件
-    controller.addListener(() {
-      var minScrollExtent = controller.position.minScrollExtent;
-      var maxScrollExtent = controller.position.maxScrollExtent;
-      var pixels = controller.position.pixels;
+    mScrollController.addListener(() {
+      final minScrollExtent = mScrollController.position.minScrollExtent;
+      final maxScrollExtent = mScrollController.position.maxScrollExtent;
+      final pixels = mScrollController.position.pixels;
       scroller(type, pixels, minScrollExtent, maxScrollExtent);
     });
     getGankioList();
   }
 
-  ScrollController getScrollController() {
-    return controller;
-  }
+  ScrollController getScrollController() => mScrollController;
 
   /// 开始请求数据
   void getGankioList() async {
     final String url = "http://gank.io/api/random/data/$type/20";
     List<ResultsEntity> list;
     try {
-      var dio = new Dio();
+      final dio = new Dio();
       Response<Map<String, dynamic>> response = await dio.get(url);
       list = GankioEntity.fromJson(response.data).results;
     } catch (e) {
@@ -185,15 +175,15 @@ class GankioItemState extends State<GankioItemView>
     }
 
     setState(() {
-      mGankioList = list;
       refreshComplete(type);
+      mGankioList = list;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return new ListView.builder(
-      controller: controller,
+      controller: mScrollController,
       padding: new EdgeInsets.fromLTRB(0, 5, 0, 5),
       itemBuilder: (BuildContext context, int index) => new GestureDetector(
             child: new Padding(

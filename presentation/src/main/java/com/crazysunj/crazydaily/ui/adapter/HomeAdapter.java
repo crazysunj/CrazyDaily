@@ -99,7 +99,7 @@ public class HomeAdapter extends BaseHelperAdapter<MultiTypeIdEntity, BaseViewHo
     }
 
     @Override
-    protected void convert(@NonNull BaseViewHolder holder, MultiTypeIdEntity item) {
+    protected void convert(@NonNull BaseViewHolder holder, @NonNull MultiTypeIdEntity item) {
         switch (item.getItemType()) {
 //            case NeihanItemEntity.TYPE_NEIHAN:
 //                renderNeihan(holder, (NeihanItemEntity) item);
@@ -296,7 +296,9 @@ public class HomeAdapter extends BaseHelperAdapter<MultiTypeIdEntity, BaseViewHo
         holder.setImageResource(R.id.item_weather_icon, WeatherUtil.getWeatherIcon(item.getCode()));
         holder.itemView.setOnClickListener(v -> {
             if (mOnHeaderClickListener != null) {
-                mOnHeaderClickListener.onHeaderClick(mHelper.getLevel(item.getItemType()), location);
+                final int position = holder.getAdapterPosition();
+                mOnHeaderClickListener.onHeaderClick(mHelper.getLevel(item.getItemType()),
+                        ((WeatherXinZhiEntity.FinalEntity) mHelper.getItem(position)).getLocation());
             }
         });
     }
@@ -326,7 +328,11 @@ public class HomeAdapter extends BaseHelperAdapter<MultiTypeIdEntity, BaseViewHo
         optionsView.setTextColor(HomeAdapterHelper.getColor(level));
         optionsView.setOnClickListener(v -> {
             if (mOnHeaderClickListener != null) {
-                mOnHeaderClickListener.onHeaderClick(level, options);
+                final int position = holder.getAdapterPosition();
+                CommonHeaderEntity headerEntity = (CommonHeaderEntity) mHelper.getItem(position);
+                String headerEntityOptions = headerEntity.getOptions();
+                mOnHeaderClickListener.onHeaderClick(level,
+                        headerEntityOptions);
             }
         });
     }
@@ -355,7 +361,10 @@ public class HomeAdapter extends BaseHelperAdapter<MultiTypeIdEntity, BaseViewHo
         optionsView.setTextColor(HomeAdapterHelper.getColor(level));
         optionsView.setOnClickListener(v -> {
             if (mOnHeaderClickListener != null) {
-                mOnHeaderClickListener.onHeaderClick(level, options);
+                final int position = holder.getAdapterPosition();
+                CommonHeaderEntity headerEntity = (CommonHeaderEntity) mHelper.getItem(position);
+                mOnHeaderClickListener.onHeaderClick(level,
+                        headerEntity.getOptions());
             }
         });
     }

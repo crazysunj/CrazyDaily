@@ -194,40 +194,42 @@ public class HomeFragment extends BaseFragment<NewHomePresenter> implements NewH
         }
     }
 
+    private ArrayList<String> mGankioHeader;
+
     private void handleHeaderOptions(int level, String options) {
         switch (level) {
             case HomeAdapterHelper.LEVEL_GANK_IO:
                 if (mGankioDialog == null) {
                     Bundle bundle = new Bundle();
                     bundle.putBoolean(BaseOptionsPickerDialog.CYCLIC_FIRST, true);
-                    ArrayList<String> data = new ArrayList<String>();
-                    data.add(GankioEntity.ResultsEntity.PARAMS_ANDROID);
-                    data.add(GankioEntity.ResultsEntity.PARAMS_IOS);
-                    data.add(GankioEntity.ResultsEntity.PARAMS_H5);
-                    data.add(GankioEntity.ResultsEntity.PARAMS_ALL_WEEX);
-                    data.add(GankioEntity.ResultsEntity.PARAMS_ALL_KOTLIN);
-                    data.add(GankioEntity.ResultsEntity.PARAMS_ALL_FLUTTER);
-                    mGankioDialog = PhoneOptionsPickerDialog.newInstance(bundle, data);
-                    mGankioDialog.setOnoptionsSelectListener((options1, option2, options3) -> {
-                        final String selectOption = data.get(options1);
-                        if (selectOption.equals(options)) {
-                            return;
-                        }
-                        if (GankioEntity.ResultsEntity.PARAMS_ALL_WEEX.equals(selectOption)) {
-                            WeexActivity.start(mActivity, WeexConstant.PAGE_NAME_GANK_IO, WeexConstant.PATH_GANK_IO);
-                            return;
-                        }
-                        if (GankioEntity.ResultsEntity.PARAMS_ALL_KOTLIN.equals(selectOption)) {
-                            GankioActivity.Companion.start(mActivity);
-                            return;
-                        }
-                        if (GankioEntity.ResultsEntity.PARAMS_ALL_FLUTTER.equals(selectOption)) {
-                            CrazyDailyFlutterActivity.start(mActivity);
-                            return;
-                        }
-                        mPresenter.getGankioList(selectOption);
-                    });
+                    mGankioHeader = new ArrayList<>();
+                    mGankioHeader.add(GankioEntity.ResultsEntity.PARAMS_ANDROID);
+                    mGankioHeader.add(GankioEntity.ResultsEntity.PARAMS_IOS);
+                    mGankioHeader.add(GankioEntity.ResultsEntity.PARAMS_H5);
+                    mGankioHeader.add(GankioEntity.ResultsEntity.PARAMS_ALL_WEEX);
+                    mGankioHeader.add(GankioEntity.ResultsEntity.PARAMS_ALL_KOTLIN);
+                    mGankioHeader.add(GankioEntity.ResultsEntity.PARAMS_ALL_FLUTTER);
+                    mGankioDialog = PhoneOptionsPickerDialog.newInstance(bundle, mGankioHeader);
                 }
+                mGankioDialog.setOnoptionsSelectListener((options1, option2, options3) -> {
+                    final String selectOption = mGankioHeader.get(options1);
+                    if (selectOption.equals(options)) {
+                        return;
+                    }
+                    if (GankioEntity.ResultsEntity.PARAMS_ALL_WEEX.equals(selectOption)) {
+                        WeexActivity.start(mActivity, WeexConstant.PAGE_NAME_GANK_IO, WeexConstant.PATH_GANK_IO);
+                        return;
+                    }
+                    if (GankioEntity.ResultsEntity.PARAMS_ALL_KOTLIN.equals(selectOption)) {
+                        GankioActivity.Companion.start(mActivity);
+                        return;
+                    }
+                    if (GankioEntity.ResultsEntity.PARAMS_ALL_FLUTTER.equals(selectOption)) {
+                        CrazyDailyFlutterActivity.start(mActivity);
+                        return;
+                    }
+                    mPresenter.getGankioList(selectOption);
+                });
                 mGankioDialog.show(mActivity.getFragmentManager(), "GankioDialog");
                 break;
             case HomeAdapterHelper.LEVEL_WEATHER:
