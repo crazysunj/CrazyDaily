@@ -31,7 +31,7 @@ import androidx.annotation.Nullable;
  */
 public class FlutterGankioRefreshLayout extends VpSwipeRefreshLayout {
 
-    private boolean isIntercept = false;
+    private boolean isIntercept = true;
 
     public FlutterGankioRefreshLayout(@NonNull Context context) {
         super(context);

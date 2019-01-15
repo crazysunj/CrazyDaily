@@ -20,8 +20,11 @@ class GankioFragmentState extends State<GankioFragment>
     "iOS",
     "前端"
   ];
+
+  /// 用于通知flutter开始刷新
   static const sRefreshEvent =
       const EventChannel('CrazyDaily/flutterRefresh/Gankio');
+  /// 用于flutter的gankio页与原生通信
   static const sGankioEvent =
       const MethodChannel('CrazyDaily/flutterGankioEvent');
   TabController mTabController;
@@ -32,6 +35,15 @@ class GankioFragmentState extends State<GankioFragment>
   void initState() {
     super.initState();
     mTabController = TabController(vsync: this, length: sGankioType.length);
+    mTabController.addListener(() {
+      final int index = mTabController.index;
+      final String type = sGankioType[index];
+      final ScrollPosition scrollPosition =
+          mTabWidgetMap[type].getScrollController().position;
+      // 处理每次切换后的滑动的位置
+      scroller(type, scrollPosition.pixels, scrollPosition.minScrollExtent,
+          scrollPosition.maxScrollExtent);
+    });
     if (mRefreshSubscription == null) {
       mRefreshSubscription =
           sRefreshEvent.receiveBroadcastStream().listen(onRefreshEvent);
@@ -41,17 +53,20 @@ class GankioFragmentState extends State<GankioFragment>
         value: (type) => new GankioItemView(type, refreshComplete, scroller));
   }
 
+  /// 通知子组件刷新
   void onRefreshEvent(Object event) {
     setState(() {
       mTabWidgetMap[sGankioType[mTabController.index]].refresh();
     });
   }
 
+  /// 通知原生刷新完成
   void refreshComplete(String type) async {
     final Map<String, dynamic> params = <String, dynamic>{'type': type};
     await sGankioEvent.invokeMethod('refreshComplete', params);
   }
 
+  /// 回调原生滑动进度
   void scroller(String type, double pixels, double minScrollExtent,
       double maxScrollExtent) async {
     final Map<String, dynamic> params = <String, dynamic>{
@@ -117,6 +132,10 @@ class GankioItemView extends StatefulWidget {
     state.getGankioList();
   }
 
+  ScrollController getScrollController() {
+    return state.getScrollController();
+  }
+
   @override
   State<StatefulWidget> createState() {
     return state;
@@ -139,6 +158,7 @@ class GankioItemState extends State<GankioItemView>
   void initState() {
     super.initState();
     controller = new ScrollController();
+    /// 监听滑动事件
     controller.addListener(() {
       var minScrollExtent = controller.position.minScrollExtent;
       var maxScrollExtent = controller.position.maxScrollExtent;
@@ -148,8 +168,13 @@ class GankioItemState extends State<GankioItemView>
     getGankioList();
   }
 
-  getGankioList() async {
-    final String url = "http://gank.io/api/random/data/$type/10";
+  ScrollController getScrollController() {
+    return controller;
+  }
+
+  /// 开始请求数据
+  void getGankioList() async {
+    final String url = "http://gank.io/api/random/data/$type/20";
     List<ResultsEntity> list;
     try {
       var dio = new Dio();
@@ -251,6 +276,7 @@ class GankioItemState extends State<GankioItemView>
     );
   }
 
+  /// 缓存页面，防止切换重新加载
   @override
   bool get wantKeepAlive => true;
 }
