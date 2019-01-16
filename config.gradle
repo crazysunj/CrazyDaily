@@ -50,11 +50,12 @@ ext {
             roundedimageview      : "2.3.0",
             longImage             : "3.10.0",
             switchButton          : "0.0.3@aar",
-            constraintlayout      : "2.0.0-alpha2",
+            constraintlayout      : "2.0.0-alpha3",
+            appcompat             : "1.1.0-alpha01",
             androidx              : "1.0.0",
-            multidex              : "2.0.0",
+            multidex              : "2.0.1",
             greendao              : "3.2.2",
-            navigation            : "1.0.0-alpha07",
+            navigation            : "1.0.0-alpha09",
             cookie                : "v1.0.1",
     ]
 
@@ -75,7 +76,7 @@ ext {
 
     dependencies = [
             daggerCompiler      : "com.google.dagger:dagger-compiler:${dependVersion.dagger2}",
-            appcompat           : "androidx.appcompat:appcompat:${dependVersion.androidx}",
+            appcompat           : "androidx.appcompat:appcompat:${dependVersion.appcompat}",
             cardview            : "androidx.cardview:cardview:${dependVersion.androidx}",
             material            : "com.google.android.material:material:${dependVersion.androidx}",
             recyclerview        : "androidx.recyclerview:recyclerview:${dependVersion.androidx}",
