@@ -55,6 +55,7 @@ ext {
             multidex              : "2.0.0",
             greendao              : "3.2.2",
             navigation            : "1.0.0-alpha07",
+            cookie                : "v1.0.1",
     ]
 
     dataDependencies = [
@@ -69,6 +70,7 @@ ext {
             logger                  : "com.orhanobut:logger:${dependVersion.logger}",
             niceVieoPlayer          : "com.github.xiaoyanger0825:NiceVieoPlayer:${dependVersion.niceVieoPlayer}",
             annotation              : "androidx.annotation:annotation:${dependVersion.androidx}",
+            cookie                  : "com.github.franmontiel:PersistentCookieJar:${dependVersion.cookie}",
     ]
 
     dependencies = [

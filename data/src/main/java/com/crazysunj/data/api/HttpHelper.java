@@ -30,6 +30,9 @@ import com.crazysunj.data.util.NetworkUtils;
 import com.crazysunj.domain.bus.RxBus;
 import com.crazysunj.domain.bus.event.DownloadEvent;
 import com.crazysunj.domain.constant.CacheConstant;
+import com.franmontiel.persistentcookiejar.PersistentCookieJar;
+import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
+import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,7 +78,7 @@ public class HttpHelper {
     public HttpHelper(Context context) {
         if (mOkHttpClient == null) {
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            //设置缓存 20M
+            // 设置缓存 20M
             Cache cache = new Cache(new File(context.getExternalCacheDir(), CacheConstant.CACHE_DIR_API), 20 * 1024 * 1024);
             builder.cache(cache);
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(new HttpLogger());
@@ -83,11 +86,13 @@ public class HttpHelper {
             builder.addInterceptor(loggingInterceptor);
             builder.addInterceptor(new CrazyDailyCacheInterceptor());
             builder.addNetworkInterceptor(new CrazyDailyCacheNetworkInterceptor());
-            //设置超时
+            // 设置Cookie
+            builder.cookieJar(new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context)));
+            // 设置超时
             builder.connectTimeout(10, TimeUnit.SECONDS);
             builder.readTimeout(20, TimeUnit.SECONDS);
             builder.writeTimeout(20, TimeUnit.SECONDS);
-            //错误重连
+            // 错误重连
             builder.retryOnConnectionFailure(true);
             mOkHttpClient = builder.build();
         }

@@ -49,4 +49,5 @@ dependencies {
     implementation(dataDependencies.logger) {
         exclude group: 'androidx.annotation'
     }
+    implementation dataDependencies.cookie
 }
