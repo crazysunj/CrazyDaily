@@ -17,7 +17,6 @@ package com.crazysunj.crazydaily.flutter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.widget.FrameLayout;
 
 import com.crazysunj.crazydaily.R;
@@ -76,7 +75,7 @@ public class CrazyDailyFlutterActivity extends BaseActivity {
             }
         });
 
-        FlutterGankioEventPlugin.registerWith(pluginRegistry, new FlutterGankioEventPlugin.Callback() {
+        FlutterGankioMethodPlugin.registerWith(pluginRegistry, new FlutterGankioMethodPlugin.Callback() {
             @Override
             public void complete(String type) {
                 mRefreshView.setRefreshing(false);
@@ -99,7 +98,7 @@ public class CrazyDailyFlutterActivity extends BaseActivity {
         });
     }
 
-    private static class FlutterGankioEventPlugin implements MethodChannel.MethodCallHandler {
+    private static class FlutterGankioMethodPlugin implements MethodChannel.MethodCallHandler {
 
         static final String CHANNEL_NAME = "CrazyDaily/flutterGankioEvent";
         private static final String METHOD_REFRESH_COMPLETE = "refreshComplete";
@@ -120,13 +119,13 @@ public class CrazyDailyFlutterActivity extends BaseActivity {
 
         private Callback mCallback;
 
-        private FlutterGankioEventPlugin(Callback callback) {
+        private FlutterGankioMethodPlugin(Callback callback) {
             mCallback = callback;
         }
 
         private static void registerWith(FlutterPluginRegistry pluginRegistry, Callback callback) {
             final MethodChannel channel = new MethodChannel(pluginRegistry.registrarFor(CHANNEL_NAME).messenger(), CHANNEL_NAME);
-            channel.setMethodCallHandler(new FlutterGankioEventPlugin(callback));
+            channel.setMethodCallHandler(new FlutterGankioMethodPlugin(callback));
         }
 
         @Override

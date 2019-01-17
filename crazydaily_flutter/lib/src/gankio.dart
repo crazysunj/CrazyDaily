@@ -186,6 +186,7 @@ class GankioItemState extends State<GankioItemView>
       controller: mScrollController,
       padding: new EdgeInsets.fromLTRB(0, 5, 0, 5),
       itemBuilder: (BuildContext context, int index) => new GestureDetector(
+            key: new Key(mGankioList[index].id),
             child: new Padding(
                 padding: new EdgeInsets.fromLTRB(10, 5, 10, 5),
                 child: new Card(
