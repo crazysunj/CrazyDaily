@@ -19,15 +19,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.FrameLayout;
 
+import com.alibaba.fastjson.JSONObject;
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseActivity;
 
 import butterknife.BindView;
 import io.flutter.app.FlutterPluginRegistry;
 import io.flutter.facade.Flutter;
+import io.flutter.plugin.common.BasicMessageChannel;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
+import io.flutter.plugin.common.StandardMessageCodec;
 import io.flutter.plugins.FlutterRefreshEventPlugin;
 import io.flutter.plugins.GeneratedPluginRegistrant;
 import io.flutter.view.FlutterView;
@@ -47,6 +50,7 @@ public class CrazyDailyFlutterActivity extends BaseActivity {
 
     private String type;
     private EventChannel.EventSink mEventSink;
+    private BasicMessageChannel<Object> mMessageChannel;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, CrazyDailyFlutterActivity.class);
@@ -63,10 +67,15 @@ public class CrazyDailyFlutterActivity extends BaseActivity {
         FlutterView gankioFlutterView = Flutter.createView(this, getLifecycle(), "CrazyDailyGankioFlutter");
         FlutterPluginRegistry pluginRegistry = gankioFlutterView.getPluginRegistry();
         GeneratedPluginRegistrant.registerWith(pluginRegistry);
+        // 原生message通信实例
+        mMessageChannel = new BasicMessageChannel<>(
+                pluginRegistry.registrarFor("CrazyDaily/flutterGankioMessage").messenger(),
+                "CrazyDaily/flutterGankioMessage",
+                StandardMessageCodec.INSTANCE);
         FlutterRefreshEventPlugin.registerWith(pluginRegistry, "Gankio", new EventChannel.StreamHandler() {
             @Override
             public void onListen(Object arguments, EventChannel.EventSink eventSink) {
-                type = arguments == null ? "Android" : arguments.toString();
+                type = arguments == null ? "refresh" : arguments.toString();
                 mEventSink = eventSink;
             }
 
@@ -91,9 +100,22 @@ public class CrazyDailyFlutterActivity extends BaseActivity {
 
     @Override
     protected void initListener() {
-        mRefreshView.setOnRefreshListener(() -> {
-            if (mEventSink != null) {
-                mEventSink.success(type);
+        mRefreshView.setOnRefreshListener(this::onRefreshWithMessage);
+    }
+
+    private void onRefreshWithEvent() {
+        if (mEventSink != null) {
+            mEventSink.success(type);
+        }
+    }
+
+    private void onRefreshWithMessage() {
+        mMessageChannel.send(FlutterMessage.get("refresh").toJson(), o -> {
+            if (o != null) {
+                JSONObject jsonObject = JSONObject.parseObject(o.toString());
+                if (jsonObject != null && FlutterGankioMethodPlugin.METHOD_REFRESH_COMPLETE.equals(jsonObject.get(FlutterGankioMethodPlugin.TYPE))) {
+                    mRefreshView.setRefreshing(false);
+                }
             }
         });
     }

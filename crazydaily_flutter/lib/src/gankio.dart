@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:crazydaily_flutter/src/gankio_entity.dart';
@@ -22,12 +23,14 @@ class GankioFragmentState extends State<GankioFragment>
   ];
 
   /// 用于通知flutter开始刷新
-  static const sRefreshEvent =
-      const EventChannel('CrazyDaily/flutterRefresh/Gankio');
+  final mRefreshEvent = const EventChannel('CrazyDaily/flutterRefresh/Gankio');
 
   /// 用于flutter的gankio页与原生通信
-  static const sGankioEvent =
-      const MethodChannel('CrazyDaily/flutterGankioEvent');
+  final mGankioEvent = const MethodChannel('CrazyDaily/flutterGankioEvent');
+
+  /// 用于flutter与原生通信
+  final mGankioMessage = const BasicMessageChannel<Object>(
+      'CrazyDaily/flutterGankioMessage', StandardMessageCodec());
   TabController mTabController;
   StreamSubscription mRefreshSubscription;
   Map<String, GankioItemView> mTabWidgetMap;
@@ -46,10 +49,27 @@ class GankioFragmentState extends State<GankioFragment>
           scrollPosition.maxScrollExtent);
     });
     mRefreshSubscription ??
-        sRefreshEvent.receiveBroadcastStream().listen(onRefreshEvent);
+        mRefreshEvent.receiveBroadcastStream("refresh").listen(onRefreshEvent);
     mTabWidgetMap = Map.fromIterable(sGankioType,
         key: (type) => type,
         value: (type) => new GankioItemView(type, refreshComplete, scroller));
+    mGankioMessage.setMessageHandler((message) async {
+      if (message == null) {
+        return null;
+      }
+      Map<String, dynamic> messageMap = json.decode(message);
+      if (messageMap["type"] == "refresh") {
+        final type =
+            await mTabWidgetMap[sGankioType[mTabController.index]].refresh();
+        final Map<String, dynamic> params = <String, dynamic>{'type': type};
+        final Map<String, dynamic> messageParams = <String, dynamic>{
+          'type': "refreshComplete",
+          "params": params
+        };
+        return json.encode(messageParams);
+      }
+      return null;
+    });
   }
 
   /// 通知子组件刷新
@@ -62,7 +82,7 @@ class GankioFragmentState extends State<GankioFragment>
   /// 通知原生刷新完成
   void refreshComplete(String type) async {
     final Map<String, dynamic> params = <String, dynamic>{'type': type};
-    await sGankioEvent.invokeMethod('refreshComplete', params);
+    await mGankioEvent.invokeMethod('refreshComplete', params);
   }
 
   /// 回调原生滑动进度
@@ -74,7 +94,7 @@ class GankioFragmentState extends State<GankioFragment>
       'minScrollExtent': minScrollExtent,
       'maxScrollExtent': maxScrollExtent,
     };
-    await sGankioEvent.invokeMethod('scroller', params);
+    await mGankioEvent.invokeMethod('scroller', params);
   }
 
   @override
@@ -123,7 +143,7 @@ class GankioItemView extends StatefulWidget {
           scroller)
       : state = new GankioItemState(type, refreshComplete, scroller);
 
-  void refresh() => state.getGankioList();
+  Future<String> refresh() => state.getGankioList();
 
   ScrollController getScrollController() => state.getScrollController();
 
@@ -163,7 +183,7 @@ class GankioItemState extends State<GankioItemView>
   ScrollController getScrollController() => mScrollController;
 
   /// 开始请求数据
-  void getGankioList() async {
+  Future<String> getGankioList() async {
     final String url = "http://gank.io/api/random/data/$type/20";
     List<ResultsEntity> list;
     try {
@@ -175,9 +195,10 @@ class GankioItemState extends State<GankioItemView>
     }
 
     setState(() {
-      refreshComplete(type);
+//      refreshComplete(type);
       mGankioList = list;
     });
+    return type;
   }
 
   @override
