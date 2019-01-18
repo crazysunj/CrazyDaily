@@ -26,7 +26,7 @@ class GankioFragmentState extends State<GankioFragment>
   final mRefreshEvent = const EventChannel('CrazyDaily/flutterRefresh/Gankio');
 
   /// 用于flutter的gankio页与原生通信
-  final mGankioEvent = const MethodChannel('CrazyDaily/flutterGankioEvent');
+  final mGankioMethod = const MethodChannel('CrazyDaily/flutterGankioMethod');
 
   /// 用于flutter与原生通信
   final mGankioMessage = const BasicMessageChannel<Object>(
@@ -82,7 +82,7 @@ class GankioFragmentState extends State<GankioFragment>
   /// 通知原生刷新完成
   void refreshComplete(String type) async {
     final Map<String, dynamic> params = <String, dynamic>{'type': type};
-    await mGankioEvent.invokeMethod('refreshComplete', params);
+    await mGankioMethod.invokeMethod('refreshComplete', params);
   }
 
   /// 回调原生滑动进度
@@ -94,7 +94,7 @@ class GankioFragmentState extends State<GankioFragment>
       'minScrollExtent': minScrollExtent,
       'maxScrollExtent': maxScrollExtent,
     };
-    await mGankioEvent.invokeMethod('scroller', params);
+    await mGankioMethod.invokeMethod('scroller', params);
   }
 
   @override

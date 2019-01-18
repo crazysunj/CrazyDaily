@@ -122,7 +122,7 @@ public class CrazyDailyFlutterActivity extends BaseActivity {
 
     private static class FlutterGankioMethodPlugin implements MethodChannel.MethodCallHandler {
 
-        static final String CHANNEL_NAME = "CrazyDaily/flutterGankioEvent";
+        static final String CHANNEL_NAME = "CrazyDaily/flutterGankioMethod";
         private static final String METHOD_REFRESH_COMPLETE = "refreshComplete";
         private static final String METHOD_SCROLLER = "scroller";
         private static final String TYPE = "type";
