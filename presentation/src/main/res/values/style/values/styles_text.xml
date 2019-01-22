@@ -134,4 +134,9 @@
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/color_white</item>
     </style>
+
+    <style name="TabLayoutTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">14sp</item>
+    </style>
 </resources>

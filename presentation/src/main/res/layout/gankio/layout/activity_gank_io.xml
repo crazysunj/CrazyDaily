@@ -11,6 +11,9 @@
         android:id="@+id/gank_io_tab"
         android:layout_width="match_parent"
         android:layout_height="@dimen/space_50"
+        app:tabSelectedTextColor="@color/color_333333"
+        app:tabTextColor="@color/color_999999"
+        app:tabTextAppearance="@style/TabLayoutTextAppearance"
         app:tabBackground="@color/color_white" />
 
     <androidx.viewpager.widget.ViewPager
