@@ -1,5 +1,5 @@
 # CrazyDaily
-学习Android的开源项目，基于Material Design + MVP-Clean + Weex + RxJava2 + Retrofit + Dagger2 + Glide + OkHttp + MTRVA + 炫酷控件 + 炫酷动画 + greenDAO
+学习Android的开源项目，基于Material Design + MVP-Clean + Weex + Flutter +  RxJava2 + Retrofit + Dagger2 + Glide + OkHttp + MTRVA + 炫酷控件 + 炫酷动画 + greenDAO
 
 ## 效果图
 ### 首页
@@ -11,6 +11,11 @@
 文章：[一起来玩Weex](http://crazysunj.com/2018/03/16/%E4%B8%80%E8%B5%B7%E6%9D%A5%E7%8E%A9Weex/)
 
 ![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/demo_weex.gif)
+
+### Flutter
+文章：[一起来玩Flutter](http://crazysunj.com/2019/01/22/%E4%B8%80%E8%B5%B7%E6%9D%A5%E7%8E%A9Flutter/)
+
+![](https://github.com/crazysunj/crazysunj.github.io/blob/master/img/ic_app_flutter.gif)
 
 ### 好友列表
 
