@@ -156,6 +156,7 @@ public class MeFragment extends BaseFragment implements PermissionStorage {
 
                     @Override
                     public void onProgressUpdate(Integer... integers) {
+                        // TODO: 2019/1/23 添加通知栏显示下载进度
                     }
                 })
                 .register();
