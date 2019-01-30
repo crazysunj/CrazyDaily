@@ -95,5 +95,6 @@ class CrazyDailyActivityLifecycleCallbacks implements Application.ActivityLifecy
 
     private void restartApp(Activity activity) {
         MainActivity.restart(activity);
+        activity.finish();
     }
 }

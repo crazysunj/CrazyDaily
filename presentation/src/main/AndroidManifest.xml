@@ -137,6 +137,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.MainActivity"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".flutter.CrazyDailyFlutterActivity" />
         <activity android:name=".ui.gankio.GankioActivity" />
