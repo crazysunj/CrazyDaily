@@ -16,14 +16,19 @@
 package com.crazysunj.crazydaily.ui.splash;
 
 import android.animation.Animator;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.crazysunj.crazydaily.R;
+import com.crazysunj.crazydaily.app.App;
 import com.crazysunj.crazydaily.base.BaseActivity;
 import com.crazysunj.crazydaily.presenter.SplashPresenter;
 import com.crazysunj.crazydaily.presenter.contract.SplashContract;
 import com.crazysunj.crazydaily.ui.MainActivity;
 
+import androidx.annotation.Nullable;
 import butterknife.BindView;
 
 /**
@@ -35,6 +40,17 @@ public class SplashActivity extends BaseActivity<SplashPresenter> implements Spl
 
     @BindView(R.id.splash_lottie)
     LottieAnimationView mSplashAnim;
+
+    public static void start(Context context) {
+        Intent intent = new Intent(context, SplashActivity.class);
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        App.sAppState = 0;
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     protected void initListener() {

@@ -33,6 +33,7 @@ import com.crazysunj.crazydaily.module.image.ImageLoader;
 import com.crazysunj.crazydaily.presenter.MainPresenter;
 import com.crazysunj.crazydaily.presenter.contract.MainContract;
 import com.crazysunj.crazydaily.ui.photo.PhotoActivity;
+import com.crazysunj.crazydaily.ui.splash.SplashActivity;
 import com.crazysunj.crazydaily.view.threed.CubeReversalView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -51,6 +52,8 @@ import butterknife.BindView;
  */
 public class MainActivity extends BaseActivity<MainPresenter> implements MainContract.View {
 
+    private static final String RESTART = "restart";
+
     @BindView(R.id.main_navigition)
     BottomNavigationView mNavigation;
 
@@ -66,6 +69,12 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     private boolean isTop = true;
     private List<String> mMeinvList;
 
+    public static void restart(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(RESTART, RESTART);
+        context.startActivity(intent);
+    }
+
     public static void start(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
         context.startActivity(intent);
@@ -75,6 +84,15 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     public void onCreate(@Nullable Bundle savedInstanceState) {
         handleTranslucent();
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (RESTART.equals(intent.getStringExtra(RESTART))) {
+            SplashActivity.start(this);
+            finish();
+        }
     }
 
     private void handleTranslucent() {

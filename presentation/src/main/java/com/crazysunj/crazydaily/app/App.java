@@ -16,6 +16,7 @@
 package com.crazysunj.crazydaily.app;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 
@@ -61,6 +62,12 @@ public class App extends Application {
     private static App sInstance;
     public AppComponent mAppComponent;
     private Set<Activity> mActivities;
+    /**
+     * APP状态 0为正常初始化
+     * -1为被强杀
+     * 如果被强杀那么在主进程将被重新初始化为-1，所以必须重走流程经过Splash界面赋值为0
+     */
+    public static int sAppState;
 
     public static synchronized App getInstance() {
         return sInstance;
@@ -69,16 +76,19 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        getAppComponent();
-        registerActivityLifecycleCallbacks(new CrazyDailyActivityLifecycleCallbacks());
-        initScreenAdapter();
-        ViewTarget.setTagId(R.id.glide_tag);
-        LoggerUtil.init(BuildConfig.DEBUG);
-        initWeex();
-        initX5WebView();
-        initSonic();
-        initPgyer();
-        initLeakCanary();
+        if (isMainProcess()) {
+            sAppState = -1;
+            getAppComponent();
+            registerActivityLifecycleCallbacks(new CrazyDailyActivityLifecycleCallbacks());
+            initScreenAdapter();
+            ViewTarget.setTagId(R.id.glide_tag);
+            LoggerUtil.init(BuildConfig.DEBUG);
+            initWeex();
+            initX5WebView();
+            initSonic();
+            initPgyer();
+            initLeakCanary();
+        }
     }
 
     /**
@@ -182,6 +192,32 @@ public class App extends Application {
         ScreenAdapterManager.unregister(this);
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(0);
+    }
+
+    /**
+     * 获取当前进程名
+     */
+    private String getCurrentProcessName() {
+        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        if (activityManager == null) {
+            return null;
+        }
+        int pid = android.os.Process.myPid();
+        for (ActivityManager.RunningAppProcessInfo process : activityManager.getRunningAppProcesses()) {
+            if (process.pid == pid) {
+                return process.processName;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 判断是否为主进程
+     *
+     * @return boolean
+     */
+    private boolean isMainProcess() {
+        return getPackageName().equals(getCurrentProcessName());
     }
 
     public AppComponent getAppComponent() {

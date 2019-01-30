@@ -20,6 +20,8 @@ import android.app.Application;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.crazysunj.crazydaily.ui.MainActivity;
+
 /**
  * @author: sunjian
  * created on: 2018/12/27 下午3:20
@@ -39,6 +41,10 @@ class CrazyDailyActivityLifecycleCallbacks implements Application.ActivityLifecy
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
         App.getInstance().addActivity(activity);
+        if (App.sAppState == -1 && !(activity instanceof MainActivity)) {
+            // 进程被杀了
+            restartApp(activity);
+        }
     }
 
     @Override
@@ -85,5 +91,9 @@ class CrazyDailyActivityLifecycleCallbacks implements Application.ActivityLifecy
     @Override
     public void onActivityDestroyed(Activity activity) {
         App.getInstance().removeActivity(activity);
+    }
+
+    private void restartApp(Activity activity) {
+        MainActivity.restart(activity);
     }
 }
