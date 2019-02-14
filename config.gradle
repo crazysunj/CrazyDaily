@@ -55,7 +55,7 @@ ext {
             androidx              : "1.0.0",
             multidex              : "2.0.1",
             greendao              : "3.2.2",
-            navigation            : "1.0.0-alpha09",
+            navigation            : "1.0.0-alpha11",
             cookie                : "v1.0.1",
     ]
 

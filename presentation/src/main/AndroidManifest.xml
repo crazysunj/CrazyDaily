@@ -26,7 +26,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning,UnusedAttribute"
+        android:fullBackupContent="@xml/backup_descriptor">
 
         <!-- 7.0共享文件 -->
         <provider
@@ -142,5 +143,4 @@
         <activity android:name=".flutter.CrazyDailyFlutterActivity" />
         <activity android:name=".ui.gankio.GankioActivity" />
     </application>
-
 </manifest>
