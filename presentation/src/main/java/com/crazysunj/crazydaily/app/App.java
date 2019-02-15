@@ -87,8 +87,16 @@ public class App extends Application {
             initX5WebView();
             initSonic();
             initPgyer();
+            initCrashHandler();
             initLeakCanary();
         }
+    }
+
+    /**
+     * 初始化crash异常处理
+     */
+    private void initCrashHandler() {
+        CrazyDailyCrashHandler.init(this);
     }
 
     /**
