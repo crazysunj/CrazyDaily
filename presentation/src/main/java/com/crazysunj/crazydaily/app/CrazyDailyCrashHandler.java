@@ -28,9 +28,11 @@ import android.content.Intent;
 public class CrazyDailyCrashHandler implements Thread.UncaughtExceptionHandler {
 
     private Context context;
+    private final Thread.UncaughtExceptionHandler mDefaultCrashHandler;
 
     private CrazyDailyCrashHandler(Context context) {
         this.context = context;
+        mDefaultCrashHandler = Thread.getDefaultUncaughtExceptionHandler();
     }
 
     private static volatile CrazyDailyCrashHandler sCrashHandler;
@@ -55,6 +57,9 @@ public class CrazyDailyCrashHandler implements Thread.UncaughtExceptionHandler {
      */
     @Override
     public void uncaughtException(Thread t, Throwable e) {
+        if (mDefaultCrashHandler != null) {
+            mDefaultCrashHandler.uncaughtException(t, e);
+        }
         final Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
         PendingIntent restartIntent = PendingIntent.getActivity(
                 context, 0, intent,
