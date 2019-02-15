@@ -28,11 +28,9 @@ import android.content.Intent;
 public class CrazyDailyCrashHandler implements Thread.UncaughtExceptionHandler {
 
     private Context context;
-    private final Thread.UncaughtExceptionHandler mDefaultCrashHandler;
 
     private CrazyDailyCrashHandler(Context context) {
         this.context = context;
-        mDefaultCrashHandler = Thread.getDefaultUncaughtExceptionHandler();
     }
 
     private static volatile CrazyDailyCrashHandler sCrashHandler;
@@ -54,13 +52,14 @@ public class CrazyDailyCrashHandler implements Thread.UncaughtExceptionHandler {
 
     /**
      * crash退出程序，0.5s后重启
+     * 如果在系统onCreate前写的代码产生crash，需要特殊处理
      */
     @Override
     public void uncaughtException(Thread t, Throwable e) {
-        if (mDefaultCrashHandler != null) {
-            mDefaultCrashHandler.uncaughtException(t, e);
-        }
         final Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+        if (intent != null) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
         PendingIntent restartIntent = PendingIntent.getActivity(
                 context, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
