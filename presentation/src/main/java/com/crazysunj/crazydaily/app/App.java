@@ -203,6 +203,21 @@ public class App extends Application {
     }
 
     /**
+     * 异常退出app
+     */
+    public void abortedApp() {
+        if (mActivities != null) {
+            synchronized (this) {
+                for (Activity activity : mActivities) {
+                    activity.finish();
+                }
+            }
+        }
+        android.os.Process.killProcess(android.os.Process.myPid());
+        System.exit(10);
+    }
+
+    /**
      * 获取当前进程名
      */
     private String getCurrentProcessName() {

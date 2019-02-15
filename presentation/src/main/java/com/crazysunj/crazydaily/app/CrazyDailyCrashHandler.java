@@ -68,6 +68,6 @@ public class CrazyDailyCrashHandler implements Thread.UncaughtExceptionHandler {
         if (alarmManager != null) {
             alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 500, restartIntent);
         }
-        App.getInstance().exitApp();
+        App.getInstance().abortedApp();
     }
 }
