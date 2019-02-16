@@ -20,6 +20,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
+import com.pgyersdk.crash.PgyerCrashObservable;
+
 /**
  * @author: sunjian
  * created on: 2019/2/15 上午9:34
@@ -56,6 +58,7 @@ public class CrazyDailyCrashHandler implements Thread.UncaughtExceptionHandler {
      */
     @Override
     public void uncaughtException(Thread t, Throwable e) {
+        PgyerCrashObservable.get().notifyObservers(t, e);
         final Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
         if (intent != null) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
