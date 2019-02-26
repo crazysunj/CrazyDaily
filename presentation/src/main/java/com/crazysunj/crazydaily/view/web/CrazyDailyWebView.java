@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -32,6 +33,7 @@ import com.tencent.smtt.export.external.interfaces.SslError;
 import com.tencent.smtt.export.external.interfaces.SslErrorHandler;
 import com.tencent.smtt.export.external.interfaces.WebResourceRequest;
 import com.tencent.smtt.export.external.interfaces.WebResourceResponse;
+import com.tencent.smtt.sdk.CookieManager;
 import com.tencent.smtt.sdk.DownloadListener;
 import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebSettings;
@@ -98,6 +100,14 @@ public class CrazyDailyWebView extends WebView {
         setttings.setDefaultTextEncodingName("utf-8");//设置编码格式为utf-8
         setttings.setLoadsImagesAutomatically(true);//支持自动加载图片
         setttings.setSavePassword(false);//禁止密码保存在本地
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // https中支持访问http
+            setttings.setMixedContentMode(android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // 支持第三方的cookie同步
+            CookieManager.getInstance().setAcceptThirdPartyCookies(this, true);
+        }
         String ua = setttings.getUserAgentString();
         setttings.setUserAgentString(String.format("%s CrazyDaily %s", ua, DeviceUtil.getVersionName()));//重置ua
         setWebViewClient(new CrazyDailyWebViewClient());
