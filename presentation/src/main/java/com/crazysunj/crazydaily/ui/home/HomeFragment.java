@@ -159,6 +159,7 @@ public class HomeFragment extends BaseFragment<NewHomePresenter> implements NewH
         mAppbar.addOnOffsetChangedListener(this::handleAppbarOffsetChangedListener);
         mToolbar.setNavigationOnClickListener(v -> HomeFragmentPermissionsDispatcher.openQRCodeWithPermissionCheck(this));
         mAdapter.setDownloadCallback(url -> HomeFragmentPermissionsDispatcher.downloadWithPermissionCheck(this, url));
+        mAdapter.setDataChangedCallback(this::handleDataChangeEnd);
     }
 
     @Override
@@ -181,6 +182,15 @@ public class HomeFragment extends BaseFragment<NewHomePresenter> implements NewH
         mPresenter.endBanner();
         NiceVideoPlayerManager.instance().releaseNiceVideoPlayer();
         initData();
+    }
+
+    /**
+     * 处理数据刷新结束的逻辑
+     */
+    private void handleDataChangeEnd(int level) {
+        if (level == HomeAdapterHelper.LEVEL_ZHIHU) {
+            mHomeList.scrollToPosition(0);
+        }
     }
 
     private void handleAppbarOffsetChangedListener(AppBarLayout appBarLayout, int verticalOffset) {

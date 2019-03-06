@@ -13,23 +13,18 @@
   See the License for the specific language governing permissions and
   limitations under the License.
  */
-package com.crazysunj.crazydaily.app;
-
-import com.bumptech.glide.annotation.GlideModule;
-import com.bumptech.glide.module.AppGlideModule;
+package com.crazysunj.crazydaily.ui.adapter;
 
 /**
  * @author: sunjian
- * created on: 2018/4/28 上午10:02
+ * created on: 2019/3/6 下午4:04
  * description: https://github.com/crazysunj/CrazyDaily
  */
-@GlideModule
-public class CrazyDailyGlideModule extends AppGlideModule {
+public interface DataChangedCallback {
     /**
-     * 避免再次解析Manifest
+     * 结束回调
+     *
+     * @param level 当前刷新level
      */
-    @Override
-    public boolean isManifestParsingEnabled() {
-        return false;
-    }
+    void onEnd(int level);
 }

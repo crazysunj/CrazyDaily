@@ -422,4 +422,8 @@ public class HomeAdapter extends BaseHelperAdapter<MultiTypeIdEntity, BaseViewHo
     public interface OnHeaderClickListener {
         void onHeaderClick(int level, String options);
     }
+
+    public void setDataChangedCallback(DataChangedCallback callback) {
+        mHelper.setDataChangedCallback(callback);
+    }
 }

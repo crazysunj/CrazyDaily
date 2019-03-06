@@ -18,6 +18,7 @@ package com.crazysunj.crazydaily.ui.adapter.helper;
 import android.graphics.Color;
 
 import com.crazysunj.crazydaily.R;
+import com.crazysunj.crazydaily.ui.adapter.DataChangedCallback;
 import com.crazysunj.crazydaily.ui.adapter.helper.callback.StringDiffCallBack;
 import com.crazysunj.domain.entity.base.MultiTypeIdEntity;
 import com.crazysunj.domain.entity.gankio.GankioEntity;
@@ -47,6 +48,8 @@ public class HomeAdapterHelper extends AsynAdapterHelper<MultiTypeIdEntity> {
     public static final int LEVEL_WEATHER = 2;
     public static final int LEVEL_NEIHAN = 3;
     public static final int LEVEL_GAOXIAO = 4;
+
+    private DataChangedCallback mDataChangedCallback;
 
     @Inject
     public HomeAdapterHelper() {
@@ -84,6 +87,18 @@ public class HomeAdapterHelper extends AsynAdapterHelper<MultiTypeIdEntity> {
                 .headerResId(R.layout.header_common)
                 .footerResId(R.layout.footer_bottom_line)
                 .register();
+    }
+
+    @Override
+    protected void onEnd() {
+        if (mDataChangedCallback != null) {
+            mDataChangedCallback.onEnd(getCurrentRefreshLevel());
+        }
+        super.onEnd();
+    }
+
+    public void setDataChangedCallback(DataChangedCallback callback) {
+        mDataChangedCallback = callback;
     }
 
     public static int getColor(int level) {
