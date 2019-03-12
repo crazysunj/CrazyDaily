@@ -190,6 +190,7 @@ public class SatelliteMenuView extends FrameLayout {
         FloatingActionButton fab = new FloatingActionButton(context);
         fab.setPadding(dp_6, dp_6, dp_6, dp_6);
         fab.setElevation(dp_3);
+        fab.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         fab.setSize(FloatingActionButton.SIZE_MINI);
         fab.setBackgroundTintList(ColorStateList.valueOf(entity.color));
         fab.setImageResource(entity.res);
@@ -272,6 +273,7 @@ public class SatelliteMenuView extends FrameLayout {
             FloatingActionButton fab = new FloatingActionButton(context);
             fab.setPadding(dp_6, dp_6, dp_6, dp_6);
             fab.setElevation(dp_3);
+            fab.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             fab.setSize(FloatingActionButton.SIZE_MINI);
             fab.setBackgroundTintList(ColorStateList.valueOf(entity.color));
             fab.setImageResource(entity.res);
