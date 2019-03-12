@@ -65,7 +65,6 @@ public class NoteEditText extends LinearLayout {
         ButterKnife.bind(this);
         setOrientation(HORIZONTAL);
         initAttrs(context, attrs);
-        mEditText.setPadding(0, 0, 0, getPaddingBottom());
         mEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -85,7 +84,8 @@ public class NoteEditText extends LinearLayout {
                 }
                 final int height = layout.getHeight();
                 if (preTextHeight != height) {
-                    layoutDelete(height);
+                    int maxHeight = mEditText.getMaxHeight();
+                    layoutDelete(height <= maxHeight ? height : maxHeight);
                 }
                 String input = s.toString();
                 mDelete.setVisibility(input.length() > 0 ? VISIBLE : GONE);
@@ -109,12 +109,19 @@ public class NoteEditText extends LinearLayout {
         Drawable deleteIcon = a.getDrawable(R.styleable.NoteEditText_note_delete_icon);
         mDelete.setImageDrawable(deleteIcon == null ? ContextCompat.getDrawable(context, R.mipmap.ic_delete) : deleteIcon);
         mEditText.setTextSize(TypedValue.COMPLEX_UNIT_PX, a.getDimensionPixelSize(R.styleable.NoteEditText_note_text_size, ScreenUtil.sp2px(context, 16)));
-        mEditText.setMinHeight(a.getDimensionPixelSize(R.styleable.NoteEditText_note_minHeight, ScreenUtil.dp2px(context, 180)));
+        int minHeight = a.getDimensionPixelSize(R.styleable.NoteEditText_note_minHeight, ScreenUtil.dp2px(context, 95));
+        mEditText.setMinHeight(minHeight);
+        int maxHeight = a.getDimensionPixelSize(R.styleable.NoteEditText_note_maxHeight, ScreenUtil.dp2px(context, 120));
+        mEditText.setMaxHeight(maxHeight);
         mEditText.setTextColor(a.getColor(R.styleable.NoteEditText_note_text_color, ContextCompat.getColor(context, R.color.color_333333)));
         mEditText.setHintTextColor(a.getColor(R.styleable.NoteEditText_note_hint_text_color, ContextCompat.getColor(context, R.color.color_b2b2b2)));
         String hint = a.getString(R.styleable.NoteEditText_note_hint_text);
         mEditText.setHint(TextUtils.isEmpty(hint) ? "写点什么呢？" : hint);
         deleteIconTop = a.getDimensionPixelSize(R.styleable.NoteEditText_note_delete_icon_top, deleteIconTop);
+//        LinearLayout.LayoutParams deleteLayoutParams = (LayoutParams) mDelete.getLayoutParams();
+//        deleteLayoutParams.bottomMargin = (int) (mEditText.getTextSize() / 4);
+//        deleteLayoutParams.topMargin = (int) (mEditText.getTextSize() / 4);
+//        mDelete.setLayoutParams(deleteLayoutParams);
         a.recycle();
     }
 
@@ -132,7 +139,9 @@ public class NoteEditText extends LinearLayout {
 
     private void layoutDelete(int height) {
         preTextHeight = height;
-        mDelete.setPadding(0, deleteIconTop + preTextHeight - (int) mEditText.getTextSize(), 0, 0);
+        LinearLayout.LayoutParams deleteLayoutParams = (LayoutParams) mDelete.getLayoutParams();
+        deleteLayoutParams.topMargin = deleteIconTop + preTextHeight - (int) mEditText.getTextSize();
+        mDelete.setLayoutParams(deleteLayoutParams);
     }
 
     public void setOnEditTextListener(OnEditTextListener listener) {

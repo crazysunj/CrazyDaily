@@ -62,6 +62,15 @@
             android:clipToPadding="false"
             android:orientation="vertical">
 
+            <com.crazysunj.crazydaily.view.note.NoteEditText
+                android:id="@+id/note_edit_content_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/space_15"
+                android:paddingEnd="@dimen/space_15"
+                app:note_hint_text="每天写一点点，就多积累一点点"
+                app:note_text_size="@dimen/text_16" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/note_edit_images"
                 android:layout_width="match_parent"
@@ -70,31 +79,20 @@
                 android:clipToPadding="false"
                 android:padding="@dimen/space_10" />
 
-            <com.crazysunj.crazydaily.view.note.NoteEditText
-                android:id="@+id/note_edit_content_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/space_40"
-                android:paddingEnd="@dimen/space_15"
-                android:paddingStart="@dimen/space_15"
-                android:paddingTop="@dimen/space_20"
-                app:note_hint_text="每天写一点点，就多积累一点点"
-                app:note_text_size="@dimen/text_16" />
-
             <View
                 style="@style/horizontal_line"
-                android:layout_marginEnd="@dimen/space_15"
-                android:layout_marginStart="@dimen/space_15" />
+                android:layout_marginStart="@dimen/space_15"
+                android:layout_marginEnd="@dimen/space_15" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingBottom="@dimen/space_15"
-                android:paddingEnd="@dimen/space_15"
                 android:paddingStart="@dimen/space_15"
-                android:paddingTop="@dimen/space_15">
+                android:paddingTop="@dimen/space_15"
+                android:paddingEnd="@dimen/space_15"
+                android:paddingBottom="@dimen/space_15">
 
                 <TextView
                     style="@style/text_16_666666"
