@@ -113,11 +113,20 @@ public class PhotoPickerAdapter extends BaseHelperAdapter<MediaEntity, BaseViewH
     public String[] getSelectImage(int selectCount) {
         String[] images = new String[selectCount];
         for (MediaEntity entity : mData) {
-            if (entity.getIndex() > 0) {
+            if (entity.getIndex() > 0 && entity.getDuration() == 0) {
                 images[selectCount - entity.getIndex()] = entity.getData();
             }
         }
         return images;
+    }
+
+    public String getSelectVideo() {
+        for (MediaEntity entity : mData) {
+            if (entity.getIndex() > 0 && entity.getDuration() > 0) {
+                return entity.getData();
+            }
+        }
+        return null;
     }
 
     public void setOnItemSelectClickListener(OnItemSelectClickListener listener) {

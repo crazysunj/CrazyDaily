@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/space_40"
         android:background="@color/color_white"
-        android:paddingEnd="@dimen/space_10"
-        android:paddingStart="@dimen/space_10">
+        android:paddingStart="@dimen/space_10"
+        android:paddingEnd="@dimen/space_10">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/item_note_date"
@@ -30,27 +30,53 @@
             android:src="@mipmap/ic_more" />
     </RelativeLayout>
 
-    <com.crazysunj.crazydaily.view.photo.PhotoPickerWrapLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/item_note_images"
+        <com.crazysunj.crazydaily.view.photo.PhotoPickerWrapLayout
+            android:id="@+id/item_note_type_image"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:visibility="gone">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/item_note_images_indicator"
-            style="@style/text_12_white"
-            android:layout_width="@dimen/space_30"
-            android:layout_height="@dimen/space_30"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="@dimen/space_10"
-            android:gravity="center"
-            tools:background="@color/color_black"
-            tools:text="1/2" />
-    </com.crazysunj.crazydaily.view.photo.PhotoPickerWrapLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/item_note_images"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/item_note_images_indicator"
+                style="@style/text_12_white"
+                android:layout_width="@dimen/space_30"
+                android:layout_height="@dimen/space_30"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="@dimen/space_10"
+                android:gravity="center"
+                tools:background="@color/color_black"
+                tools:text="1/2" />
+        </com.crazysunj.crazydaily.view.photo.PhotoPickerWrapLayout>
+
+        <FrameLayout
+            android:id="@+id/item_note_type_video"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/space_240">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/item_note_video_thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_player_center_start" />
+        </FrameLayout>
+    </FrameLayout>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/item_note_content"
@@ -65,5 +91,5 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/space_10"
-        android:background="@color/color_cccccc" />
+        android:background="@color/color_eeeeee" />
 </LinearLayout>

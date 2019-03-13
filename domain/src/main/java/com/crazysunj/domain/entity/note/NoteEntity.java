@@ -24,6 +24,7 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.NotNull;
+import org.greenrobot.greendao.annotation.Transient;
 import org.greenrobot.greendao.converter.PropertyConverter;
 
 import java.util.Arrays;
@@ -71,6 +72,10 @@ public class NoteEntity implements Parcelable {
     @Convert(columnType = String.class, converter = StringConverter.class)
     private List<String> images;
     /**
+     * 视频链接
+     */
+    private String videoUrl;
+    /**
      * 文本内容
      */
     @NotNull
@@ -84,14 +89,21 @@ public class NoteEntity implements Parcelable {
      */
     private Integer flag;
 
+    /**
+     * 是否回收不可见状态
+     */
+    @Transient
+    private boolean isRecycler;
+
     public static final int FLAG_SUBMIT = 1;
     public static final int FLAG_DRAFT = 0;
 
-    @Generated(hash = 2062519629)
-    public NoteEntity(Long id, List<String> images, @NotNull String text,
-                      boolean isCanDownload, Integer flag) {
+    @Generated(hash = 740139302)
+    public NoteEntity(Long id, List<String> images, String videoUrl, @NotNull String text, boolean isCanDownload,
+            Integer flag) {
         this.id = id;
         this.images = images;
+        this.videoUrl = videoUrl;
         this.text = text;
         this.isCanDownload = isCanDownload;
         this.flag = flag;
@@ -115,6 +127,14 @@ public class NoteEntity implements Parcelable {
 
     public void setImages(List<String> images) {
         this.images = images;
+    }
+
+    public String getVideoUrl() {
+        return this.videoUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
     }
 
     public String getText() {
@@ -141,11 +161,20 @@ public class NoteEntity implements Parcelable {
         this.flag = flag;
     }
 
+    public boolean isRecycler() {
+        return isRecycler;
+    }
+
+    public void setRecycler(boolean recycler) {
+        isRecycler = recycler;
+    }
+
     @Override
     public String toString() {
         return "NoteEntity{" +
                 "id=" + id +
                 ", images=" + images +
+                ", videoUrl='" + videoUrl + '\'' +
                 ", text='" + text + '\'' +
                 ", isCanDownload=" + isCanDownload +
                 ", flag=" + flag +
@@ -177,14 +206,24 @@ public class NoteEntity implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(this.id);
         dest.writeStringList(this.images);
+        dest.writeString(this.videoUrl);
         dest.writeString(this.text);
         dest.writeByte(this.isCanDownload ? (byte) 1 : (byte) 0);
         dest.writeValue(this.flag);
     }
 
+    public boolean getIsRecycler() {
+        return this.isRecycler;
+    }
+
+    public void setIsRecycler(boolean isRecycler) {
+        this.isRecycler = isRecycler;
+    }
+
     protected NoteEntity(Parcel in) {
         this.id = (Long) in.readValue(Long.class.getClassLoader());
         this.images = in.createStringArrayList();
+        this.videoUrl = in.readString();
         this.text = in.readString();
         this.isCanDownload = in.readByte() != 0;
         this.flag = (Integer) in.readValue(Integer.class.getClassLoader());

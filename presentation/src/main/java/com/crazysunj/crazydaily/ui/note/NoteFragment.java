@@ -17,6 +17,7 @@ package com.crazysunj.crazydaily.ui.note;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -52,6 +53,8 @@ public class NoteFragment extends BaseFragment<NotePresenter> implements NoteCon
     LinearLayout mRoot;
     @BindView(R.id.note_list)
     RecyclerView mNoteList;
+    @BindView(R.id.note_empty)
+    View mNoteEmpty;
     @Inject
     NoteAdapter mAdapter;
     @BindView(R.id.note_back)
@@ -66,6 +69,12 @@ public class NoteFragment extends BaseFragment<NotePresenter> implements NoteCon
     public static void start(Context context) {
         Intent intent = new Intent(context, NoteFragment.class);
         context.startActivity(intent);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mAdapter.onPause();
     }
 
     @Override
@@ -86,6 +95,7 @@ public class NoteFragment extends BaseFragment<NotePresenter> implements NoteCon
     protected void initListener() {
         mBack.setOnClickListener(v -> finish());
         mEdit.setOnClickListener(v -> NoteEditActivity.start(this));
+        mNoteEmpty.setOnClickListener(v -> NoteEditActivity.start(this));
         mAdapter.setOnMenuClickListener(item -> {
             if (mNoteEditDialog == null) {
                 mNoteEditDialog = NoteEditDialog.get();
@@ -118,7 +128,14 @@ public class NoteFragment extends BaseFragment<NotePresenter> implements NoteCon
 
     @Override
     public void showNote(List<NoteEntity> notes) {
-        mAdapter.appendNote(notes);
+        if (mAdapter.isEmpty() && notes.isEmpty()) {
+            mNoteEmpty.setVisibility(View.VISIBLE);
+            mNoteList.setVisibility(View.GONE);
+        } else {
+            mNoteEmpty.setVisibility(View.GONE);
+            mNoteList.setVisibility(View.VISIBLE);
+            mAdapter.appendNote(notes);
+        }
     }
 
     @Override
@@ -131,6 +148,10 @@ public class NoteFragment extends BaseFragment<NotePresenter> implements NoteCon
         if (mNoteEditDialog != null) {
             mNoteEditDialog.dismiss();
         }
+        if (mAdapter.isEmpty()) {
+            mNoteEmpty.setVisibility(View.VISIBLE);
+            mNoteList.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -139,6 +160,10 @@ public class NoteFragment extends BaseFragment<NotePresenter> implements NoteCon
         if (NoteEditActivity.REQUEST_CODE == requestCode && NoteEditActivity.RESULT_CREATE_CODE == resultCode && data != null) {
             NoteEntity noteEntity = data.getParcelableExtra(ActivityConstant.DATA);
             if (noteEntity != null) {
+                if (mAdapter.isEmpty()) {
+                    mNoteEmpty.setVisibility(View.GONE);
+                    mNoteList.setVisibility(View.VISIBLE);
+                }
                 mAdapter.appendNote(noteEntity);
                 RecyclerView.LayoutManager layoutManager = mNoteList.getLayoutManager();
                 if (layoutManager != null) {

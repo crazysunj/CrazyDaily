@@ -27,6 +27,7 @@ public class ActivityConstant {
     public static final String PATH = "path";
     public static final String SELECT_COUNT = "selectCount";
     public static final String IMAGES = "images";
+    public static final String VIDEO = "video";
     public static final String POSITION = "position";
     public static final String DATA = "data";
 }

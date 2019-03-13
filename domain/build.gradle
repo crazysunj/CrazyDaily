@@ -18,7 +18,7 @@ android {
 }
 
 greendao {
-    schemaVersion 1
+    schemaVersion configs.dbVersion
     daoPackage 'com.crazysunj.domain.db'
     targetGenDir 'src/main/java'
 }

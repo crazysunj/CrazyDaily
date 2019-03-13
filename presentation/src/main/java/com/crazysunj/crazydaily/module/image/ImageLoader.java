@@ -78,6 +78,25 @@ public class ImageLoader {
                 .into(imageView);
     }
 
+    public static void load(Context context, String url, OnDrawableCallback callback) {
+        if (context == null) {
+            return;
+        }
+        if (context instanceof Activity && ((Activity) context).isDestroyed()) {
+            return;
+        }
+        GlideApp.with(context)
+                .load(url)
+                .into(new SimpleTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        if (callback != null) {
+                            callback.onDrawable(resource);
+                        }
+                    }
+                });
+    }
+
     public static void loadNoCrop(Context context, String url, ImageView imageView) {
         if (context == null) {
             return;
@@ -252,6 +271,10 @@ public class ImageLoader {
 
     public interface OnFileCallback {
         void onFile(boolean isSuccess);
+    }
+
+    public interface OnDrawableCallback {
+        void onDrawable(Drawable resource);
     }
 
 

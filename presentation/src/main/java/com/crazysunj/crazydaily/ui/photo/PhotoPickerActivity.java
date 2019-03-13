@@ -66,7 +66,8 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
     public static final int REQUEST_CODE = 1;
     public static final int RESULT_CODE = 1;
 
-    public static final int MAX_SELECT_NUMBER = 9;
+    public static final int MAX_IMAGE_SELECT_NUMBER = 9;
+    public static final int MAX_VIDEO_SELECT_NUMBER = 1;
     /**
      * 最后两排的时候加载
      */
@@ -155,9 +156,14 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
         });
         hideTimeInfo();
         mComplete.setOnClickListener(v -> {
-            String[] images = mAdapter.getSelectImage(selectCount);
             Intent intent = new Intent();
-            intent.putExtra(ActivityConstant.IMAGES, images);
+            String videoPath = mAdapter.getSelectVideo();
+            if (videoPath == null) {
+                String[] images = mAdapter.getSelectImage(selectCount);
+                intent.putExtra(ActivityConstant.IMAGES, images);
+            } else {
+                intent.putExtra(ActivityConstant.VIDEO, videoPath);
+            }
             setResult(RESULT_CODE, intent);
             finish();
         });
@@ -241,7 +247,7 @@ public class PhotoPickerActivity extends BaseActivity<PhotoPickerPresenter> impl
      */
     private void handleItemSelect(MediaEntity item) {
         final int currentIndex = item.getIndex();
-        final int maxNum = MAX_SELECT_NUMBER - diffCount;
+        final int maxNum = item.getDuration() > 0 ? MAX_VIDEO_SELECT_NUMBER : MAX_IMAGE_SELECT_NUMBER - diffCount;
         if (currentIndex > 0) {
             selectCount--;
             item.setIndex(0);

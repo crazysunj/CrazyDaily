@@ -18,9 +18,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:contentScrim="@color/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:title="@string/text_me"
+            app:titleEnabled="false">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/me_icon"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/space_200"
@@ -35,7 +37,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:navigationIcon="@mipmap/ic_back"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
                 app:title="@string/text_me" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>

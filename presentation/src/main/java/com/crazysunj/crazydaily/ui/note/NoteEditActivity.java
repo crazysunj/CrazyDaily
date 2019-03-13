@@ -41,6 +41,7 @@ import com.crazysunj.crazydaily.base.BaseActivity;
 import com.crazysunj.crazydaily.base.BaseViewHolder;
 import com.crazysunj.crazydaily.constant.ActivityConstant;
 import com.crazysunj.crazydaily.extension.ItemTouchHelperExtension;
+import com.crazysunj.crazydaily.module.image.ImageLoader;
 import com.crazysunj.crazydaily.presenter.NoteEditPresenter;
 import com.crazysunj.crazydaily.presenter.contract.NoteEditContract;
 import com.crazysunj.crazydaily.ui.adapter.NoteEditAdapter;
@@ -77,6 +78,10 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
     public static final int RESULT_CREATE_CODE = 3;
     public static final int RESULT_EDIT_CODE = 4;
 
+    private static final int STATUS_INIT = 0;
+    private static final int STATUS_IMAGE = 1;
+    private static final int STATUS_VIDEO = 2;
+
     @BindView(R.id.note_edit_cancel)
     TextView mCancel;
     @BindView(R.id.note_edit_submit_btn)
@@ -85,8 +90,14 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
     FrameLayout mSubmit;
     @BindView(R.id.note_edit_toolbar)
     Toolbar mToolbar;
-    @BindView(R.id.note_edit_images)
+    @BindView(R.id.note_edit_select_init)
+    View mInit;
+    @BindView(R.id.note_edit_select_images)
     RecyclerView mImages;
+    @BindView(R.id.note_edit_select_video)
+    View mVideo;
+    @BindView(R.id.note_edit_select_video_thumbnail)
+    ImageView mVideoThumbnail;
     @BindView(R.id.note_edit_content_edit)
     NoteEditText mEdit;
     @BindView(R.id.note_edit_can_image_download)
@@ -104,6 +115,9 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
     private NoteEditAdapter mAdapter;
     private Long mSaveId = null;
     private NoteEntity mEditNote;
+
+    private int mSelectStatus = STATUS_INIT;
+    private String videoUrl;
 
     public static void start(Fragment fragment) {
         start(fragment, null);
@@ -146,6 +160,7 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
 
     @Override
     protected void initData() {
+        switchInit();
         mEditNote = getIntent().getParcelableExtra(ActivityConstant.DATA);
         if (mEditNote == null) {
             mPresenter.getNote();
@@ -163,9 +178,10 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
                 return;
             }
             final String text = mEdit.getText();
-            mPresenter.submitNote(new NoteEntity(mSaveId == null ? System.currentTimeMillis() : mSaveId, mAdapter.getImages(), text, mImageDownload.isChecked(), NoteEntity.FLAG_SUBMIT));
+            mPresenter.submitNote(new NoteEntity(mSaveId == null ? System.currentTimeMillis() : mSaveId, videoUrl == null ? mAdapter.getImages() : null, videoUrl, text, mImageDownload.isChecked(), NoteEntity.FLAG_SUBMIT));
         });
         mAdapter.setOnItemDeleteListener(this::removeImage);
+        mInit.setOnClickListener(v -> PhotoPickerActivity.start(this, 0));
         mAdapter.setOnItemSelectListener(selectCount -> PhotoPickerActivity.start(this, selectCount));
         //noinspection unchecked
         mAdapter.setOnItemClickListener((position, data, view) -> NotePreviewActivity.start(this, position, data, Pair.<View, String>create(view, getString(R.string.transition_note_preview_image))));
@@ -201,7 +217,7 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
                     ssb.setSpan(new ForegroundColorSpan(Color.parseColor("#B2B2B2")), count.length() + 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
                     mSoftKeyBoardView.setText(ssb);
                 }
-                mSubmitBtn.setEnabled(length > 0 && !mAdapter.getImages().isEmpty());
+                mSubmitBtn.setEnabled(length > 0 && (videoUrl != null || !mAdapter.getImages().isEmpty()));
             }
         });
     }
@@ -234,7 +250,7 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
                 .setPositiveColor(Color.parseColor("#F93450"))
                 .setOnPositiveClickListener(v -> {
                     final String text = mEdit.getText();
-                    mPresenter.saveNote(new NoteEntity(mSaveId == null ? System.currentTimeMillis() : mSaveId, mAdapter.getImages(), text, mImageDownload.isChecked(), NoteEntity.FLAG_DRAFT));
+                    mPresenter.saveNote(new NoteEntity(mSaveId == null ? System.currentTimeMillis() : mSaveId, videoUrl == null ? mAdapter.getImages() : null, videoUrl, text, mImageDownload.isChecked(), NoteEntity.FLAG_DRAFT));
                 })
                 .build()
                 .show(this);
@@ -242,10 +258,11 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
 
     private void removeImage(int position) {
         mAdapter.removeImage(position);
-        if (mAdapter.isMaxRemoveImageSize(PhotoPickerActivity.MAX_SELECT_NUMBER - 1)) {
+        if (mAdapter.isMaxRemoveImageSize(PhotoPickerActivity.MAX_IMAGE_SELECT_NUMBER - 1)) {
             mAdapter.addPhotoAddItem();
         }
         if (mAdapter.isMinImageSize()) {
+            switchInit();
             mSubmitBtn.setEnabled(false);
         }
     }
@@ -254,24 +271,69 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (PhotoPickerActivity.REQUEST_CODE == requestCode && PhotoPickerActivity.RESULT_CODE == resultCode && data != null) {
-            String[] images = data.getStringArrayExtra(ActivityConstant.IMAGES);
-            appendImages(Arrays.asList(images));
+            String videoPath = data.getStringExtra(ActivityConstant.VIDEO);
+            if (videoPath == null) {
+                switchImage();
+                String[] images = data.getStringArrayExtra(ActivityConstant.IMAGES);
+                appendImages(Arrays.asList(images));
+                videoUrl = null;
+            } else {
+                switchVideo();
+                showVideoThumbnail(videoPath);
+                videoUrl = videoPath;
+            }
         } else if (NotePreviewActivity.REQUEST_CODE == requestCode && NotePreviewActivity.RESULT_CODE == resultCode && data != null) {
             List<String> images = data.getStringArrayListExtra(ActivityConstant.DATA);
             handleRemoveResult(images);
         }
     }
 
+    private void showVideoThumbnail(String videoPath) {
+        ImageLoader.load(this, videoPath, resource -> {
+            int width = resource.getIntrinsicWidth();
+            int height = resource.getIntrinsicHeight();
+            int defaultHeight = ScreenUtil.dp2px(NoteEditActivity.this, 160);
+            int imageWidth = (int) (defaultHeight * 1.0f * width / height);
+            ViewGroup.LayoutParams params = mVideo.getLayoutParams();
+            params.width = imageWidth;
+            params.height = defaultHeight;
+            mVideo.setLayoutParams(params);
+            mVideoThumbnail.setImageDrawable(resource);
+        });
+    }
+
+    private void switchInit() {
+        mSelectStatus = STATUS_INIT;
+        mInit.setVisibility(View.VISIBLE);
+        mImages.setVisibility(View.GONE);
+        mVideo.setVisibility(View.GONE);
+    }
+
+    private void switchImage() {
+        mSelectStatus = STATUS_IMAGE;
+        mInit.setVisibility(View.GONE);
+        mImages.setVisibility(View.VISIBLE);
+        mVideo.setVisibility(View.GONE);
+    }
+
+    private void switchVideo() {
+        mSelectStatus = STATUS_VIDEO;
+        mInit.setVisibility(View.GONE);
+        mImages.setVisibility(View.GONE);
+        mVideo.setVisibility(View.VISIBLE);
+    }
+
     private void handleRemoveResult(List<String> images) {
-        mAdapter.resetData(images, PhotoPickerActivity.MAX_SELECT_NUMBER);
+        mAdapter.resetData(images, PhotoPickerActivity.MAX_IMAGE_SELECT_NUMBER);
         if (mAdapter.isMinImageSize()) {
+            switchInit();
             mSubmitBtn.setEnabled(false);
         }
     }
 
     private void appendImages(List<String> images) {
         mAdapter.appendImage(images);
-        if (mAdapter.isMaxAddImageSize(PhotoPickerActivity.MAX_SELECT_NUMBER + 1)) {
+        if (mAdapter.isMaxAddImageSize(PhotoPickerActivity.MAX_IMAGE_SELECT_NUMBER + 1)) {
             mAdapter.removePhotoAddItem();
         }
         mSubmitBtn.setEnabled(!images.isEmpty() && mEdit.getText().length() > 0);
@@ -372,8 +434,17 @@ public class NoteEditActivity extends BaseActivity<NoteEditPresenter> implements
 
     @Override
     public void showNote(NoteEntity noteEntity) {
-        List<String> images = noteEntity.getImages();
-        appendImages(images);
+        String videoUrl = noteEntity.getVideoUrl();
+        if (videoUrl == null) {
+            switchImage();
+            List<String> images = noteEntity.getImages();
+            appendImages(images);
+        } else {
+            switchVideo();
+            showVideoThumbnail(videoUrl);
+            mSubmitBtn.setEnabled(mEdit.getText().length() > 0);
+            this.videoUrl = videoUrl;
+        }
         mEdit.setText(noteEntity.getText());
         mImageDownload.setChecked(noteEntity.getIsCanDownload());
         mSaveId = noteEntity.getId();

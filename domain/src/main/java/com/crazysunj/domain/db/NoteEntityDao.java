@@ -29,9 +29,10 @@ public class NoteEntityDao extends AbstractDao<NoteEntity, Long> {
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Images = new Property(1, String.class, "images", false, "IMAGES");
-        public final static Property Text = new Property(2, String.class, "text", false, "TEXT");
-        public final static Property IsCanDownload = new Property(3, boolean.class, "isCanDownload", false, "IS_CAN_DOWNLOAD");
-        public final static Property Flag = new Property(4, Integer.class, "flag", false, "FLAG");
+        public final static Property VideoUrl = new Property(2, String.class, "videoUrl", false, "VIDEO_URL");
+        public final static Property Text = new Property(3, String.class, "text", false, "TEXT");
+        public final static Property IsCanDownload = new Property(4, boolean.class, "isCanDownload", false, "IS_CAN_DOWNLOAD");
+        public final static Property Flag = new Property(5, Integer.class, "flag", false, "FLAG");
     }
 
     private final StringConverter imagesConverter = new StringConverter();
@@ -50,9 +51,10 @@ public class NoteEntityDao extends AbstractDao<NoteEntity, Long> {
         db.execSQL("CREATE TABLE " + constraint + "\"Note\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"IMAGES\" TEXT," + // 1: images
-                "\"TEXT\" TEXT NOT NULL ," + // 2: text
-                "\"IS_CAN_DOWNLOAD\" INTEGER NOT NULL ," + // 3: isCanDownload
-                "\"FLAG\" INTEGER);"); // 4: flag
+                "\"VIDEO_URL\" TEXT," + // 2: videoUrl
+                "\"TEXT\" TEXT NOT NULL ," + // 3: text
+                "\"IS_CAN_DOWNLOAD\" INTEGER NOT NULL ," + // 4: isCanDownload
+                "\"FLAG\" INTEGER);"); // 5: flag
     }
 
     /** Drops the underlying database table. */
@@ -74,12 +76,17 @@ public class NoteEntityDao extends AbstractDao<NoteEntity, Long> {
         if (images != null) {
             stmt.bindString(2, imagesConverter.convertToDatabaseValue(images));
         }
-        stmt.bindString(3, entity.getText());
-        stmt.bindLong(4, entity.getIsCanDownload() ? 1L: 0L);
+ 
+        String videoUrl = entity.getVideoUrl();
+        if (videoUrl != null) {
+            stmt.bindString(3, videoUrl);
+        }
+        stmt.bindString(4, entity.getText());
+        stmt.bindLong(5, entity.getIsCanDownload() ? 1L: 0L);
  
         Integer flag = entity.getFlag();
         if (flag != null) {
-            stmt.bindLong(5, flag);
+            stmt.bindLong(6, flag);
         }
     }
 
@@ -96,12 +103,17 @@ public class NoteEntityDao extends AbstractDao<NoteEntity, Long> {
         if (images != null) {
             stmt.bindString(2, imagesConverter.convertToDatabaseValue(images));
         }
-        stmt.bindString(3, entity.getText());
-        stmt.bindLong(4, entity.getIsCanDownload() ? 1L: 0L);
+ 
+        String videoUrl = entity.getVideoUrl();
+        if (videoUrl != null) {
+            stmt.bindString(3, videoUrl);
+        }
+        stmt.bindString(4, entity.getText());
+        stmt.bindLong(5, entity.getIsCanDownload() ? 1L: 0L);
  
         Integer flag = entity.getFlag();
         if (flag != null) {
-            stmt.bindLong(5, flag);
+            stmt.bindLong(6, flag);
         }
     }
 
@@ -115,9 +127,10 @@ public class NoteEntityDao extends AbstractDao<NoteEntity, Long> {
         NoteEntity entity = new NoteEntity( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : imagesConverter.convertToEntityProperty(cursor.getString(offset + 1)), // images
-            cursor.getString(offset + 2), // text
-            cursor.getShort(offset + 3) != 0, // isCanDownload
-            cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4) // flag
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // videoUrl
+            cursor.getString(offset + 3), // text
+            cursor.getShort(offset + 4) != 0, // isCanDownload
+            cursor.isNull(offset + 5) ? null : cursor.getInt(offset + 5) // flag
         );
         return entity;
     }
@@ -126,9 +139,10 @@ public class NoteEntityDao extends AbstractDao<NoteEntity, Long> {
     public void readEntity(Cursor cursor, NoteEntity entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setImages(cursor.isNull(offset + 1) ? null : imagesConverter.convertToEntityProperty(cursor.getString(offset + 1)));
-        entity.setText(cursor.getString(offset + 2));
-        entity.setIsCanDownload(cursor.getShort(offset + 3) != 0);
-        entity.setFlag(cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4));
+        entity.setVideoUrl(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setText(cursor.getString(offset + 3));
+        entity.setIsCanDownload(cursor.getShort(offset + 4) != 0);
+        entity.setFlag(cursor.isNull(offset + 5) ? null : cursor.getInt(offset + 5));
      }
     
     @Override

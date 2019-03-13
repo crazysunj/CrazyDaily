@@ -71,13 +71,75 @@
                 app:note_hint_text="每天写一点点，就多积累一点点"
                 app:note_text_size="@dimen/text_16" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/note_edit_images"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipChildren="false"
-                android:clipToPadding="false"
-                android:padding="@dimen/space_10" />
+                android:clipToPadding="false">
+
+                <LinearLayout
+                    android:id="@+id/note_edit_select_init"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/space_180"
+                    android:layout_marginStart="@dimen/space_15"
+                    android:layout_marginTop="@dimen/space_25"
+                    android:layout_marginEnd="@dimen/space_15"
+                    android:layout_marginBottom="@dimen/space_25"
+                    android:background="@drawable/shape_dotted_line"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/crazydailyicon"
+                        android:text="@string/ic_add"
+                        android:textColor="@color/color_aaaaaa"
+                        android:textSize="@dimen/text_40" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_10"
+                        android:text="上传图片/视频"
+                        android:textColor="@color/color_aaaaaa"
+                        tools:ignore="HardcodedText" />
+
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/note_edit_select_images"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:padding="@dimen/space_10"
+                    android:visibility="gone" />
+
+                <FrameLayout
+                    android:id="@+id/note_edit_select_video"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_15"
+                    android:layout_marginTop="@dimen/space_25"
+                    android:layout_marginBottom="@dimen/space_25"
+                    android:visibility="gone">
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/note_edit_select_video_thumbnail"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        app:riv_corner_radius="@dimen/space_5" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="@dimen/space_40"
+                        android:layout_height="@dimen/space_40"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_player_center_start" />
+                </FrameLayout>
+            </FrameLayout>
 
             <View
                 style="@style/horizontal_line"
