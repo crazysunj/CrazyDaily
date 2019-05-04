@@ -50,7 +50,8 @@ android {
     aaptOptions {
         // 禁止构建时压缩png图片
         cruncherEnabled false
-        useNewCruncher false
+        // 下面的已经被移除，会一直打开
+//        useNewCruncher false
     }
 
     buildTypes {

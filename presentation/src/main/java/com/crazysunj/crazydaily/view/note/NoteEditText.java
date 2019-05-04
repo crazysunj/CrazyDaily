@@ -118,10 +118,6 @@ public class NoteEditText extends LinearLayout {
         String hint = a.getString(R.styleable.NoteEditText_note_hint_text);
         mEditText.setHint(TextUtils.isEmpty(hint) ? "写点什么呢？" : hint);
         deleteIconTop = a.getDimensionPixelSize(R.styleable.NoteEditText_note_delete_icon_top, deleteIconTop);
-//        LinearLayout.LayoutParams deleteLayoutParams = (LayoutParams) mDelete.getLayoutParams();
-//        deleteLayoutParams.bottomMargin = (int) (mEditText.getTextSize() / 4);
-//        deleteLayoutParams.topMargin = (int) (mEditText.getTextSize() / 4);
-//        mDelete.setLayoutParams(deleteLayoutParams);
         a.recycle();
     }
 
