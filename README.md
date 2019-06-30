@@ -71,6 +71,7 @@
 [下载地址](https://www.pgyer.com/EbHS "https://www.pgyer.com/EbHS")
 
 想干的事（暂时先罗列这么多，版本迭代陆续实现，不分先后，可在develop/develop-x分支提前预览）：
+* AndroidQ适配
 * 加上引导页
 * 添加微信精选，稀土掘金模块
 * 添加音乐模块
