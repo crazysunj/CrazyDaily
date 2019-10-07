@@ -20,7 +20,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.SparseArray;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.core.util.Pair;
 
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseHelperAdapter;
@@ -35,13 +39,12 @@ import com.crazysunj.domain.entity.contact.Contact;
 import com.crazysunj.domain.entity.contact.ContactHeader;
 import com.crazysunj.domain.entity.contact.MultiTypeIndexEntity;
 import com.crazysunj.multitypeadapter.adapter.LoadingEntityAdapter;
+import com.crazysunj.multitypeadapter.entity.LevelData;
 import com.crazysunj.multitypeadapter.helper.AdapterHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.core.util.Pair;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -54,7 +57,7 @@ public class ContactsAdapter extends BaseHelperAdapter<MultiTypeIndexEntity, Con
     private ItemTouchHelperExtension mItemTouchHelper;
 
     public ContactsAdapter(ItemTouchHelperExtension touchHelper) {
-        super(new ContactAdapterHelper(null));
+        super(new ContactAdapterHelper());
         mItemTouchHelper = touchHelper;
         mHelper.setLoadingAdapter(new LoadingEntityAdapter<MultiTypeIndexEntity>() {
             @Override
@@ -75,7 +78,9 @@ public class ContactsAdapter extends BaseHelperAdapter<MultiTypeIndexEntity, Con
     }
 
     public void notifyContacts(List<MultiTypeIndexEntity> contacts) {
-        mHelper.notifyDataByDiff(contacts);
+        SparseArray<LevelData<MultiTypeIndexEntity>> levelData = new SparseArray<>(1);
+        levelData.put(ContactAdapterHelper.CONTACT_LEVEL, new LevelData<>(contacts));
+        mHelper.notifyDataSetChanged(levelData);
     }
 
     public void showLoading() {

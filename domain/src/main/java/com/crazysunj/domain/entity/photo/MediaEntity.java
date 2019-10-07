@@ -15,11 +15,11 @@
  */
 package com.crazysunj.domain.entity.photo;
 
+import androidx.annotation.NonNull;
+
 import com.crazysunj.multitypeadapter.entity.MultiTypeEntity;
 
 import java.util.List;
-
-import androidx.annotation.NonNull;
 
 /**
  * @author: sunjian
@@ -97,11 +97,6 @@ public class MediaEntity implements Comparable<MediaEntity>, MultiTypeEntity {
     @Override
     public int getItemType() {
         return TYPE_PHOTO_PICKER;
-    }
-
-    @Override
-    public long getId() {
-        return id;
     }
 
     public String getData() {

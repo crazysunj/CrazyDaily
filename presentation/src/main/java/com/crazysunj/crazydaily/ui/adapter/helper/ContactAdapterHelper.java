@@ -21,8 +21,6 @@ import com.crazysunj.domain.entity.contact.ContactHeader;
 import com.crazysunj.domain.entity.contact.MultiTypeIndexEntity;
 import com.crazysunj.multitypeadapter.helper.AsynAdapterHelper;
 
-import java.util.List;
-
 /**
  * @author: sunjian
  * created on: 2018/4/17 下午3:54
@@ -32,12 +30,12 @@ public class ContactAdapterHelper extends AsynAdapterHelper<MultiTypeIndexEntity
 
     public static final int CONTACT_LEVEL = 0;
 
-    public ContactAdapterHelper(List<MultiTypeIndexEntity> data) {
-        super(data);
+    public ContactAdapterHelper() {
+        super();
+        registerModule();
     }
 
-    @Override
-    protected void registerModule() {
+    private void registerModule() {
         registerModule(CONTACT_LEVEL)
                 .type(Contact.TYPE)
                 .layoutResId(R.layout.item_contacts)

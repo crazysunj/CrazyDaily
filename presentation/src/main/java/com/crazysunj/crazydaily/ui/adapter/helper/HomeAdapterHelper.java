@@ -17,6 +17,8 @@ package com.crazysunj.crazydaily.ui.adapter.helper;
 
 import android.graphics.Color;
 
+import androidx.recyclerview.widget.DiffUtil;
+
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.ui.adapter.DataChangedCallback;
 import com.crazysunj.crazydaily.ui.adapter.helper.callback.StringDiffCallBack;
@@ -30,8 +32,6 @@ import com.crazysunj.multitypeadapter.helper.AsynAdapterHelper;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import androidx.recyclerview.widget.DiffUtil;
 
 /**
  * @author: sunjian
@@ -53,11 +53,11 @@ public class HomeAdapterHelper extends AsynAdapterHelper<MultiTypeIdEntity> {
 
     @Inject
     public HomeAdapterHelper() {
-        super(null);
+        super();
+        registerModule();
     }
 
-    @Override
-    protected void registerModule() {
+    private void registerModule() {
         registerModule(LEVEL_ZHIHU)
                 .type(ZhihuNewsEntity.StoriesEntity.TYPE_ZHIHU_NEWS)
                 .layoutResId(R.layout.item_zhihu_news)

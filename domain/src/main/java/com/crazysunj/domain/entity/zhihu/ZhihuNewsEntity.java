@@ -97,7 +97,6 @@ public class ZhihuNewsEntity {
             return String.valueOf(id);
         }
 
-        @Override
         public long getId() {
             return id;
         }

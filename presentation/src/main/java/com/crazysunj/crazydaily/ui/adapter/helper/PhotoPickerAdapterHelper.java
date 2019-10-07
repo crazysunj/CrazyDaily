@@ -29,11 +29,11 @@ public class PhotoPickerAdapterHelper extends AsynAdapterHelper<MediaEntity> {
     public static final int LEVEL_PHOTO_PICKER = 0;
 
     public PhotoPickerAdapterHelper() {
-        super(null);
+        super();
+        registerModule();
     }
 
-    @Override
-    protected void registerModule() {
+    private void registerModule() {
         registerModule(LEVEL_PHOTO_PICKER)
                 .type(MediaEntity.TYPE_PHOTO_PICKER)
                 .layoutResId(R.layout.item_photo_picker)

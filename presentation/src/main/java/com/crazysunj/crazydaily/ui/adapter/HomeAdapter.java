@@ -21,6 +21,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
+
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseHelperAdapter;
 import com.crazysunj.crazydaily.base.BaseViewHolder;
@@ -53,8 +56,6 @@ import java.util.Locale;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatImageView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -120,12 +121,16 @@ public class HomeAdapter extends BaseHelperAdapter<MultiTypeIdEntity, BaseViewHo
                 renderGankioHeader(holder, (CommonHeaderEntity) item);
                 break;
             case HomeAdapterHelper.LEVEL_ZHIHU - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
+                renderHeader(holder, (CommonHeaderEntity) item, HomeAdapterHelper.LEVEL_ZHIHU);
+                break;
             case HomeAdapterHelper.LEVEL_GAOXIAO - RecyclerViewAdapterHelper.HEADER_TYPE_DIFFER:
-                renderHeader(holder, (CommonHeaderEntity) item);
+                renderHeader(holder, (CommonHeaderEntity) item, HomeAdapterHelper.LEVEL_GAOXIAO);
                 break;
             case HomeAdapterHelper.LEVEL_ZHIHU - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:
+                renderExpandCollapseFooter(holder, (ExpandCollapseFooterEntity) item, HomeAdapterHelper.LEVEL_ZHIHU);
+                break;
             case HomeAdapterHelper.LEVEL_GANK_IO - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:
-                renderExpandCollapseFooter(holder, (ExpandCollapseFooterEntity) item);
+                renderExpandCollapseFooter(holder, (ExpandCollapseFooterEntity) item, HomeAdapterHelper.LEVEL_GANK_IO);
                 break;
             case HomeAdapterHelper.LEVEL_GAOXIAO - RecyclerViewAdapterHelper.FOOTER_TYPE_DIFFER:
                 renderFooter(holder, (CommonFooterEntity) item);
@@ -297,7 +302,7 @@ public class HomeAdapter extends BaseHelperAdapter<MultiTypeIdEntity, BaseViewHo
         holder.itemView.setOnClickListener(v -> {
             if (mOnHeaderClickListener != null) {
                 final int position = holder.getAdapterPosition();
-                mOnHeaderClickListener.onHeaderClick(mHelper.getLevel(item.getItemType()),
+                mOnHeaderClickListener.onHeaderClick(HomeAdapterHelper.LEVEL_WEATHER,
                         ((WeatherXinZhiEntity.FinalEntity) mHelper.getItem(position)).getLocation());
             }
         });
@@ -320,7 +325,7 @@ public class HomeAdapter extends BaseHelperAdapter<MultiTypeIdEntity, BaseViewHo
     }
 
     private void renderGankioHeader(BaseViewHolder holder, CommonHeaderEntity item) {
-        final int level = mHelper.getLevel(item.getItemType());
+        final int level = HomeAdapterHelper.LEVEL_GANK_IO;
         holder.setText(R.id.header_title, item.getTitle());
         TextView optionsView = holder.getView(R.id.header_options);
         final String options = item.getOptions();
@@ -352,8 +357,7 @@ public class HomeAdapter extends BaseHelperAdapter<MultiTypeIdEntity, BaseViewHo
 
     // ***********************知乎 ***********************
 
-    private void renderHeader(BaseViewHolder holder, CommonHeaderEntity item) {
-        final int level = mHelper.getLevel(item.getItemType());
+    private void renderHeader(BaseViewHolder holder, CommonHeaderEntity item, int level) {
         holder.setText(R.id.header_title, item.getTitle());
         TextView optionsView = holder.getView(R.id.header_options);
         final String options = item.getOptions();
@@ -395,13 +399,13 @@ public class HomeAdapter extends BaseHelperAdapter<MultiTypeIdEntity, BaseViewHo
     }
 
     //*********************** 公共Footer ***********************
-    private void renderExpandCollapseFooter(BaseViewHolder holder, ExpandCollapseFooterEntity item) {
+    private void renderExpandCollapseFooter(BaseViewHolder holder, ExpandCollapseFooterEntity item, int level) {
         String stringId = item.getStringId();
         holder.setText(R.id.footer_title, stringId);
         holder.setImageResource(R.id.footer_icon, item.getIconResId());
         holder.itemView.setOnClickListener(v -> {
             item.switchStatus();
-            mHelper.foldType(mHelper.getLevel(item.getItemType()), item.isFlod());
+            mHelper.foldType(level, item.isFlod());
             mHelper.setData(getPosition(holder), item);
         });
     }

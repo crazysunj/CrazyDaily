@@ -17,6 +17,10 @@ package com.crazysunj.crazydaily.ui.adapter;
 
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
+
 import com.crazysunj.crazydaily.R;
 import com.crazysunj.crazydaily.base.BaseHelperAdapter;
 import com.crazysunj.crazydaily.base.BaseViewHolder;
@@ -28,10 +32,6 @@ import com.crazysunj.domain.entity.photo.MediaEntity;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.AppCompatTextView;
 
 /**
  * @author: sunjian
@@ -89,11 +89,12 @@ public class PhotoPickerAdapter extends BaseHelperAdapter<MediaEntity, BaseViewH
 
     public void resetIndex(int unselectIndex) {
         List<MediaEntity> data = mHelper.getData();
-        for (MediaEntity item : data) {
+        for (int i = 0, size = data.size(); i < size; i++) {
+            MediaEntity item = data.get(i);
             final int index = item.getIndex();
             if (index > unselectIndex) {
                 item.setIndex(index - 1);
-                mHelper.notifyDataChanged(item);
+                mHelper.setData(i, item);
             }
         }
     }
@@ -107,7 +108,12 @@ public class PhotoPickerAdapter extends BaseHelperAdapter<MediaEntity, BaseViewH
     }
 
     public void notifyItem(MediaEntity item) {
-        mHelper.notifyDataChanged(item);
+        List<MediaEntity> data = mHelper.getData();
+        int index = data.indexOf(item);
+        if (index < 0) {
+            return;
+        }
+        mHelper.setData(index, item);
     }
 
     public String[] getSelectImage(int selectCount) {
